@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
-    public interface IValidationHandler
+    public interface IValidatorFactory
     {
         
     }

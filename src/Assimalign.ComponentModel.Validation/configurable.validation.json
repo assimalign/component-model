@@ -1,0 +1,43 @@
+{
+    "$when": {
+        "$condition": {
+            "$or": [
+                {
+                    "$member": "",
+                    "$operator": "",
+                    "$value": "" // $root or true/false or string or numeric
+                }
+            ],
+            "$and": [
+                {
+                    "$member": "",
+                    "$operator": "",
+                    "$value": "" // $root or true/false or string or numeric
+                }
+            ],
+            "$member": "",
+            "$operator": "",
+            "$value": "" // $root or true/false or string or numeric
+        },
+        "$then": {
+            "$ruleFor": {
+                "$member": ""
+            }
+        },
+        "$else": {}
+    },
+    "$ruleFor": {
+        "$member": "FirstName",
+        "$evaluations": [
+            {
+                "$operator": "eq"
+            }
+        ]
+    },
+    "$ruleForEach": {
+        "$member": "",
+        "$condition": {
+
+        }
+    }
+}

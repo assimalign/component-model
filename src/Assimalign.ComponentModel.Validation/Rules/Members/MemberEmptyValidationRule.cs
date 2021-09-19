@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Validators
+namespace Assimalign.ComponentModel.Validation.Rules
 {
-    public interface IValidator
+    public class MemberEmptyValidationRule
     {
         
     }
