@@ -9,12 +9,16 @@ namespace Assimalign.ComponentModel.Validation
     using Assimalign.ComponentModel.Validation.Rules;
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IValidatorRuleSet<T> : ICollection<IValidationRule<T>>, IList<IValidationRule<T>>
     {
         /// <summary>
         /// 
         /// </summary>
-        Func<T, bool> RunWhen { get; }
+        void Evaluate(IValidatorContext<T> context, T instance);
 
     }
 }

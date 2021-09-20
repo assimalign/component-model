@@ -26,4 +26,8 @@
 			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Rules\Methods\" />
+	</ItemGroup>
 </Project>

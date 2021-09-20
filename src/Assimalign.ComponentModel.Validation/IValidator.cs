@@ -33,7 +33,10 @@ namespace Assimalign.ComponentModel.Validation
         ValidationResult Validate(object instance);
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IValidator<T> : IValidator
     {
 
@@ -55,7 +58,7 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         /// <typeparam name="TMember"></typeparam>
         /// <param name="expression"></param>
-        IValidationMemberRule<TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
+        IValidationMember<TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
 
 
         /// <summary>
@@ -63,7 +66,10 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         /// <typeparam name="TMember"></typeparam>
         /// <param name="expression"></param>
-        IValidationMemberRule<IEnumerable<TMember>> RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression);
+        IValidationMember<IEnumerable<TMember>> RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression);
+
+
+        IValidationCondition<T> When(Expression<Func<T, bool>> condition, )
 
     }
 }

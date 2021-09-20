@@ -23,14 +23,15 @@ namespace Assimalign.ComponentModel.Validation.Rules
         string Name { get; }
 
         /// <summary>
-        /// 
+        /// The predicate which evaluates the rule.
         /// </summary>
-        LambdaExpression Rule { get; set; }
+        LambdaExpression Validation { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        ValidationError Error { get; set; }
-
+        /// <param name="context"></param>
+        /// <param name="instance"></param>
+        void Evaluate(IValidatorContext<T> context, T instance);
     }
 }

@@ -7,8 +7,24 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
-    public abstract class ValidationRule<T> : IValidationRule<T>
+    using Assimalign.ComponentModel.Validation.Exceptions;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    internal abstract class ValidationRule<T> : IValidationRule<T>
     {
+        private Expression validation;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected ValidationRule()
+        {
+
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -22,28 +38,31 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <summary>
         /// 
         /// </summary>
-        public virtual Func<T, bool> Rule { get; set;  }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual ValidationError Error { get; set; } = new ValidationError();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        LambdaExpression IValidationRule<T>.Rule { get; set; }
-    }
-
-
-    internal sealed class ValidatorRuleDefault<T> : ValidationRule<T>
-    {
-
-
-        public static IValidationRule<T> Create(Expression<Func<T, bool>> expression)
+        public virtual LambdaExpression Validation
         {
-            return new ValidationRuleDefault<T>(expression);
+            get => validation as LambdaExpression;
+            set
+            {
+                if (value is LambdaExpression lambda && lambda.ReturnType == typeof(bool))
+                {
+                    validation = lambda;
+                } 
+                else
+                {
+                    throw new ValidatorPredicateException($"The predicate for Validation Rule '{this.Name}' is " +
+                        $"either not a LambdaExpression or does not have a return type of 'bool'.");
+                }
+            }
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="instance"></param>
+        public virtual void Evaluate(IValidatorContext<T> context, T instance)
+        {
+            throw new NotImplementedException();
         }
     }
 }

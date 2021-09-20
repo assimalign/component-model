@@ -39,7 +39,6 @@ namespace Assimalign.ComponentModel.Validation
     public abstract class Validator<T> : IValidator<T>
     {
 
-        private readonly IList<IValidationRule> rules = new List<IValidationRule>();
 
         /// <summary>
         /// 
@@ -49,6 +48,10 @@ namespace Assimalign.ComponentModel.Validation
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
         public Validator(string name)
         {
             this.Name = name;
@@ -59,6 +62,9 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ValidatorRuleSet<T> Rules => throw new NotImplementedException();
 
 
@@ -93,9 +99,21 @@ namespace Assimalign.ComponentModel.Validation
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public ValidationResult Validate(T instance)
         {
-            throw new NotImplementedException();
+            var context = new ValidatorContext<T>();
+
+            foreach(var rule in this.Rules)
+            {
+                rule.Evaluate(context, instance);
+            }
+
+            return new ValidationResult(context);
         }
 
         public ValidationResult Validate(object instance)
@@ -103,12 +121,12 @@ namespace Assimalign.ComponentModel.Validation
             throw new NotImplementedException();
         }
 
-        IValidationMemberRule<TMember> IValidator<T>.RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+        IValidationMember<TMember> IValidator<T>.RuleFor<TMember>(Expression<Func<T, TMember>> expression)
         {
             throw new NotImplementedException();
         }
 
-        IValidationMemberRule<IEnumerable<TMember>> IValidator<T>.RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression)
+        IValidationMember<IEnumerable<TMember>> IValidator<T>.RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression)
         {
             throw new NotImplementedException();
         }

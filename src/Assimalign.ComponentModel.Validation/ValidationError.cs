@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class ValidationError
     {
 
@@ -29,8 +32,6 @@ namespace Assimalign.ComponentModel.Validation
         /// The source of the validation error such as a member of method.
         /// </summary>
         public string Source { get; set; }
-
-
 
         /// <summary>
         /// 

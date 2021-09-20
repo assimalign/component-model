@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation.Rules
 {
     public static class ValidationRuleBuilder
     {
@@ -20,10 +20,12 @@ namespace Assimalign.ComponentModel.Validation
         /// <param name="rules"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static IValidatorRuleSet<T> Custom<T>(this IValidatorRuleSet<T> rules, Action<T, ValidatorContext<T>> action)
+        public static IValidatorRuleSet<T> Custom<T>(this IValidatorRuleSet<T> rules, Action<T, IValidatorContext<T>> action)
         {
-
-
+            rules.Add(new CustomValidationRule<T>()
+            {
+                Action = action
+            });
 
             return rules;
         }

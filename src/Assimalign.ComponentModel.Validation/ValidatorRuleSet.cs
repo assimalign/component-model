@@ -1,27 +1,39 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace Assimalign.ComponentModel.Validation
 {
 
     using Assimalign.ComponentModel.Validation.Rules;
-
+    
 
     public sealed class ValidatorRuleSet<T> : IValidatorRuleSet<T>
     {
+
         private IValidationRule<T>[] rules;
 
+        public ValidatorRuleSet()
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public IValidationRule<T> this[int index]
         {
             get => rules[index];
             set => rules[index] = value;
         }
-
-
 
 
         /// <summary>
@@ -31,8 +43,30 @@ namespace Assimalign.ComponentModel.Validation
 
         public bool IsReadOnly => throw new NotImplementedException();
 
-        public Func<T, bool> RunWhen { get; internal set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="instance"></param>
+        public void Evaluate(IValidatorContext<T> context, T instance)
+        {
+            var loopCanceller = new CancellationTokenSource();
+            var loopOptions = new ParallelOptions()
+            {
+                 CancellationToken = loopCanceller.Token
+            };
 
+            // Let's loop through these suckers real fast with some multi-threading
+            Parallel.ForEach(this, rule =>
+            {
+                rule.Evaluate(context, instance);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Add(IValidationRule<T> item)
         {
             throw new NotImplementedException();
@@ -52,6 +86,8 @@ namespace Assimalign.ComponentModel.Validation
         {
             throw new NotImplementedException();
         }
+
+       
 
         public IEnumerator<IValidationRule<T>> GetEnumerator()
         {

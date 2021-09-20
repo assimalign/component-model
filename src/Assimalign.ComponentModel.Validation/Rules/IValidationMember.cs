@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
-    public interface IValidationMemberRule<T> : IValidationRule<T>
+    public interface IValidationMember<T> : IValidationRule<T>
     {
 
         /// <summary>

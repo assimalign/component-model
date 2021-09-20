@@ -4,6 +4,7 @@ using Xunit;
 namespace Assimalign.ComponentModel.ValidationTests
 {
     using Assimalign.ComponentModel.Validation;
+    using Assimalign.ComponentModel.Validation.Rules;
     using System.Collections.Generic;
 
     public class UnitTest1
@@ -21,9 +22,16 @@ namespace Assimalign.ComponentModel.ValidationTests
         public UserValidator()
         {
             RuleForEach(p=>p.NickNames)
-            
+
+
             RuleFor(p => p.FirstName)
-                .
+                .Custom((value, context) =>
+                {
+                    if (value == "Test")
+                    {
+                        context.AddValidationError()
+                    }
+                });
         }
 
     }
