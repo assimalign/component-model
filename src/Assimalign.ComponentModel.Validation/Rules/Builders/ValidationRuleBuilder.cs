@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ValidationRuleBuilder
     {
 
@@ -20,7 +24,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <param name="rules"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static IValidatorRuleSet<T> Custom<T>(this IValidatorRuleSet<T> rules, Action<T, IValidatorContext<T>> action)
+        public static IValidatorRuleSet<T> Custom<T>(this IValidatorRuleSet<T> rules, Action<T, IValidationContext<T>> action)
         {
             rules.Add(new CustomValidationRule<T>()
             {
@@ -29,6 +33,24 @@ namespace Assimalign.ComponentModel.Validation.Rules
 
             return rules;
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="memberRule"></param>
+        /// <returns></returns>
+        public static IValidationMemberRule<T> EmailAddress<T>(this IValidationMemberRule<T> memberRule)
+        {
+            if (memberRule.MemberDelegate is Expression<Func<T, string>> lambda)
+            {
+                memberRule.AddMemberRule(new MemberEmailValidationRule<T>(lambda));
+            }
+
+            return memberRule;
+        }
+
 
 
 

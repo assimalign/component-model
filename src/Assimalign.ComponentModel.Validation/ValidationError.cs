@@ -11,13 +11,6 @@ namespace Assimalign.ComponentModel.Validation
     /// </summary>
     public sealed class ValidationError
     {
-
-
-        public ValidationError()
-        {
-
-        }
-
         /// <summary>
         /// A unique error code for the validation error.
         /// </summary>

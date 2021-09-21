@@ -13,12 +13,11 @@ namespace Assimalign.ComponentModel.Validation
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IValidatorRuleSet<T> : ICollection<IValidationRule<T>>, IList<IValidationRule<T>>
+    public interface IValidatorRuleSet : ICollection<IValidationRule>, IList<IValidationRule>
     {
         /// <summary>
-        /// 
+        /// Evaluates the collection of
         /// </summary>
-        void Evaluate(IValidatorContext<T> context, T instance);
-
+        void Evaluate(IValidationContext context);
     }
 }

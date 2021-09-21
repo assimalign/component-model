@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation
 {
     using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Exceptions;
 
     public sealed class Validator : IValidator
     {
@@ -35,18 +36,22 @@ namespace Assimalign.ComponentModel.Validation
         }
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class Validator<T> : IValidator<T>
     {
+
+        private readonly ValidatorRuleSet rules = new ValidatorRuleSet();
+
 
 
         /// <summary>
         /// 
         /// </summary>
-        protected Validator()
-        {
-            
-        }
+        protected Validator() { }
+
 
         /// <summary>
         /// 
@@ -65,39 +70,8 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        public ValidatorRuleSet<T> Rules => throw new NotImplementedException();
+        public ValidatorRuleSet ValidationRules => rules;
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TMember"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public IValidatorRuleSet<TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
-        {
-            if (expression is MemberExpression member)
-            {
-                
-            }
-            else
-            {
-
-            }
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TMember"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public IValidatorRuleSet<IEnumerable<TMember>> RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// 
@@ -106,27 +80,47 @@ namespace Assimalign.ComponentModel.Validation
         /// <returns></returns>
         public ValidationResult Validate(T instance)
         {
-            var context = new ValidatorContext<T>();
+            var context = new ValidationContext<T>(instance);
 
-            foreach(var rule in this.Rules)
+            foreach(var rule in this.ValidationRules)
             {
-                rule.Evaluate(context, instance);
+                rule.Evaluate(context);
             }
 
-            return new ValidationResult(context);
+            return ValidationResult.Create(context);
         }
 
-        public ValidationResult Validate(object instance)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TMember"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public IValidationMemberRule<T> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+        {
+            if (expression.Body is MemberExpression member)
+            {
+                var rule =  new ValidationMemberRule<T>()
+                {
+                    Member = member,
+                    MemberDelegate = expression
+                };
+
+                ValidationRules.Add(rule);
+                return rule;
+            }
+            else
+            {
+                throw new ValidatorMemberException();
+            }
+        }
+
+        public IValidationMemberRule<T, IEnumerable<TMember>> RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression)
         {
             throw new NotImplementedException();
         }
 
-        IValidationMember<TMember> IValidator<T>.RuleFor<TMember>(Expression<Func<T, TMember>> expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        IValidationMember<IEnumerable<TMember>> IValidator<T>.RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression)
+        public ValidationResult Validate(IValidationContext context)
         {
             throw new NotImplementedException();
         }

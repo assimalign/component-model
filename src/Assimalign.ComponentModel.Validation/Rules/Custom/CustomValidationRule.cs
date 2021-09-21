@@ -12,7 +12,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <summary>
         /// 
         /// </summary>
-        public Action<T, IValidatorContext<T>> Action {  get; set; }
+        public Action<T, IValidationContext<T>> Action {  get; set; }
 
 
 
@@ -22,7 +22,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// </summary>
         /// <param name="context"></param>
         /// <param name="instance"></param>
-        public override void Evaluate(IValidatorContext<T> context, T instance)
+        public override void Evaluate(IValidationContext<T> context, T instance)
         {
             if (Action is not null)
             {

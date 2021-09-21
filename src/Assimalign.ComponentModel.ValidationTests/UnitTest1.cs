@@ -21,10 +21,13 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public UserValidator()
         {
+           
             RuleForEach(p=>p.NickNames)
 
 
             RuleFor(p => p.FirstName)
+                .EmailAddress()
+                
                 .Custom((value, context) =>
                 {
                     if (value == "Test")

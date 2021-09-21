@@ -5,12 +5,13 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Rules
+namespace Assimalign.ComponentModel.Validation
 {
+
     /// <summary>
-    /// A validation rule is a predicate which evaluates true or false.
+    /// 
     /// </summary>
-    public interface IValidationRule<T>
+    public interface IValidationRule
     {
         /// <summary>
         /// The validator which executed the rule.
@@ -23,15 +24,9 @@ namespace Assimalign.ComponentModel.Validation.Rules
         string Name { get; }
 
         /// <summary>
-        /// The predicate which evaluates the rule.
-        /// </summary>
-        LambdaExpression Validation { get; set; }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="instance"></param>
-        void Evaluate(IValidatorContext<T> context, T instance);
+        void Evaluate(IValidationContext context);
     }
 }

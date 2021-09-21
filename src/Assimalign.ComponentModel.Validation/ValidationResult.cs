@@ -40,12 +40,12 @@ namespace Assimalign.ComponentModel.Validation
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static ValidationResult Create<T>(IValidatorContext<T> context)
+        public static ValidationResult Create(IValidationContext context)
         {
             return new ValidationResult()
             {
                 Errors = context.Errors,
-                RulesInvoked = context.RulesInvoked.Select(x=>x.Name),
+                //RulesInvoked = context.Successes.Select(x=>x.Name),
             };
         }
     }

@@ -9,7 +9,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
 {
     using Assimalign.ComponentModel.Validation.Exceptions;
 
-    internal sealed class ValidationCondition<T> : IValidationCondition<T>
+    internal sealed class ValidationCondition<T> : IValidationConditionRule<T>
     {
         /// <summary>
         /// 
@@ -21,32 +21,29 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// </summary>
         public string Name { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public LambdaExpression Validation { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IValidationRule<T>> Rules { get; set; }
+        public IEnumerable<IValidationRule> Rules { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Func<T, bool> Condition { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="instance"></param>
-        public void Evaluate(IValidatorContext<T> context, T instance)
+        public void Evaluate(IValidationContext context)
         {
-            if (Validation is Expression<Func<T, bool>> condition)
+            if (context.ValidationInstance is T instance && Condition.Invoke(instance))
             {
-                if (condition.Compile().Invoke(instance))
+                Parallel.ForEach(this.Rules, rule =>
                 {
-                    Parallel.ForEach(this.Rules, rule =>
-                    {
-                        rule.Evaluate(context, instance);
-                    });
-                }
+                    rule.Evaluate(context);
+                });
             }
             else
             {

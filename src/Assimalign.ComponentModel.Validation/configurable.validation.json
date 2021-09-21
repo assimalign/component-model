@@ -26,14 +26,16 @@
         },
         "$else": {}
     },
-    "$ruleFor": {
-        "$member": "FirstName",
-        "$evaluations": [
-            {
-                "$operator": "eq"
-            }
-        ]
-    },
+    "$ruleFor": [
+       {
+            "$member": "FirstName",
+            "$evaluations": [
+                {
+                    "$operator": "eq"
+                }
+            ]
+       }
+    ],
     "$ruleForEach": {
         "$member": "",
         "$condition": {

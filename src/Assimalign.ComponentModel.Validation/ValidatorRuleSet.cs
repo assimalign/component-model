@@ -13,11 +13,14 @@ namespace Assimalign.ComponentModel.Validation
 
     using Assimalign.ComponentModel.Validation.Rules;
     
-
-    public sealed class ValidatorRuleSet<T> : IValidatorRuleSet<T>
+    /// <summary>
+    /// A rule set is a collection of validation rules to be used to 
+    /// when validating the instance.
+    /// </summary>
+    public sealed class ValidatorRuleSet : IValidatorRuleSet
     {
 
-        private IValidationRule<T>[] rules;
+        private IValidationRule[] rules;
 
         public ValidatorRuleSet()
         {
@@ -29,7 +32,7 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public IValidationRule<T> this[int index]
+        public IValidationRule this[int index]
         {
             get => rules[index];
             set => rules[index] = value;
@@ -48,7 +51,7 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         /// <param name="context"></param>
         /// <param name="instance"></param>
-        public void Evaluate(IValidatorContext<T> context, T instance)
+        public void Evaluate(IValidationContext context)
         {
             var loopCanceller = new CancellationTokenSource();
             var loopOptions = new ParallelOptions()
@@ -59,7 +62,7 @@ namespace Assimalign.ComponentModel.Validation
             // Let's loop through these suckers real fast with some multi-threading
             Parallel.ForEach(this, rule =>
             {
-                rule.Evaluate(context, instance);
+                rule.Evaluate(context);
             });
         }
 
@@ -67,7 +70,7 @@ namespace Assimalign.ComponentModel.Validation
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Add(IValidationRule<T> item)
+        public void Add(IValidationRule item)
         {
             throw new NotImplementedException();
         }
@@ -77,34 +80,34 @@ namespace Assimalign.ComponentModel.Validation
             Array.Clear(rules, 0, rules.Length);
         }
 
-        public bool Contains(IValidationRule<T> item)
+        public bool Contains(IValidationRule item)
         {
             throw new NotImplementedException();
         }
 
-        public void CopyTo(IValidationRule<T>[] array, int arrayIndex)
+        public void CopyTo(IValidationRule[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
 
        
 
-        public IEnumerator<IValidationRule<T>> GetEnumerator()
+        public IEnumerator<IValidationRule> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
-        public int IndexOf(IValidationRule<T> item)
+        public int IndexOf(IValidationRule item)
         {
             throw new NotImplementedException();
         }
 
-        public void Insert(int index, IValidationRule<T> item)
+        public void Insert(int index, IValidationRule item)
         {
             throw new NotImplementedException();
         }
 
-        public bool Remove(IValidationRule<T> item)
+        public bool Remove(IValidationRule item)
         {
             throw new NotImplementedException();
         }
