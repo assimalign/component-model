@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation.Rules
 {
     using Assimalign.ComponentModel.Validation.Exceptions;
+    using System.Collections;
 
     internal sealed class ValidationCondition<T> : IValidationConditionRule<T>
     {
+
+        private 
+
 
         /// <summary>
         /// 
@@ -21,17 +25,13 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IValidationRule> Rules { get; set; }
+        public IValidationRuleSet Rules { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public Func<T, bool> Condition { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public IValidator<T> Validator { get; set; }
 
         /// <summary>
         /// 
@@ -41,8 +41,6 @@ namespace Assimalign.ComponentModel.Validation.Rules
         {
             if (context.ValidationInstance is T instance && Condition.Invoke(instance))
             {
-
-                Validator.Validate(context);
                 Parallel.ForEach(this.Rules, rule =>
                 {
                     rule.Evaluate(context);
@@ -52,6 +50,16 @@ namespace Assimalign.ComponentModel.Validation.Rules
             {
                 throw new ValidatorPredicateException("");
             }
+        }
+
+        public IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression) where TCollection : IEnumerable
+        {
+            throw new NotImplementedException();
         }
     }
 }

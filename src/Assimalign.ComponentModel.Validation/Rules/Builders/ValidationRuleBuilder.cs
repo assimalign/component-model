@@ -24,7 +24,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <param name="rules"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static IValidatorRuleSet<T> Custom<T>(this IValidatorRuleSet<T> rules, Action<T, IValidationContext<T>> action)
+        public static IValidationRuleSet<T> Custom<T>(this IValidationRuleSet<T> rules, Action<T, IValidationContext<T>> action)
         {
             rules.Add(new CustomValidationRule<T>()
             {
@@ -61,7 +61,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <param name="rules"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static IValidatorRuleSet<T> WithMessage<T>(this IValidatorRuleSet<T> rules, string message)
+        public static IValidationRuleSet<T> WithMessage<T>(this IValidationRuleSet<T> rules, string message)
         {
             if (rules.Count == 0)
             {
@@ -83,7 +83,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <param name="rules"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static IValidatorRuleSet<T> WithErrorCode<T>(this IValidatorRuleSet<T> rules, string code)
+        public static IValidationRuleSet<T> WithErrorCode<T>(this IValidationRuleSet<T> rules, string code)
         {
             if (rules.Count == 0)
             {

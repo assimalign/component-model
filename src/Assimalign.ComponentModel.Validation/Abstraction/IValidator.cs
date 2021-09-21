@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
-{
-    using Assimalign.ComponentModel.Validation.Rules;
-    
+{    
 
     /// <summary>
     /// 
@@ -30,9 +26,10 @@ namespace Assimalign.ComponentModel.Validation
 
 
         /// <summary>
-        /// 
+        /// A collection of validation rules to apply 
+        /// to the context being validated.
         /// </summary>
-        ValidatorRuleSet ValidationRules { get; }
+        IValidationRuleSet ValidationRules { get; }
 
 
         /// <summary>
@@ -75,9 +72,9 @@ namespace Assimalign.ComponentModel.Validation
         /// 
         /// </summary>
         /// <param name="condition">What condition is required</param>
-        /// <param name="conditionalValidation">The validation to </param>
+        /// <param name="rules">The validation to </param>
         /// <returns></returns>
-        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidator<T>> conditionalValidation);
+        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> rules);
 
     }
 }

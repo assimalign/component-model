@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation
 {
     /// <summary>
-    /// 
+    /// Represents a validation rule for a property or field of a given type.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TMember"></typeparam>
+    /// <typeparam name="T">Is the type in which the property or field is a member of.</typeparam>
+    /// <typeparam name="TMember">Is either a property or member of type 'T'.</typeparam>
     public interface IValidationMemberRule<T, TMember> : IValidationRule
     {
 

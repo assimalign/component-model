@@ -44,7 +44,7 @@ namespace Assimalign.ComponentModel.Validation
     public abstract class Validator<T> : IValidator<T>
     {
 
-        private readonly ValidatorRuleSet rules = new ValidatorRuleSet();
+        private readonly ValidationRuleSet rules = new ValidationRuleSet();
 
 
 
@@ -71,7 +71,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        public ValidatorRuleSet ValidationRules => rules;
+        public IValidationRuleSet ValidationRules => rules;
 
 
         /// <summary>
@@ -143,18 +143,10 @@ namespace Assimalign.ComponentModel.Validation
 
         
 
-        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidator<T>> conditionalValidator)
+        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> rules)
         {
-            var defaultValidator = new ValidatorDefault();
-            conditionalValidator.Invoke(defaultValidator);
-
+           
             throw new NotImplementedException();
-        }
-
-
-        internal sealed class ValidatorDefault : Validator<T>
-        {
-
         }
     }
 }

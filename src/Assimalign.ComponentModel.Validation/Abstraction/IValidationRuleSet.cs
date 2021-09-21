@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
+    using Assimalign.ComponentModel.Validation.Rules;
+
+
     /// <summary>
-    /// Evaluate Method returns at runtime.
+    /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IValidationMethodRule<T> : IValidationRule
+    public interface IValidationRuleSet : ICollection<IValidationRule>, IList<IValidationRule>
     {
         /// <summary>
-        /// 
+        /// Evaluates the collection of
         /// </summary>
-        MethodInfo Method { get; set; }
+        void Evaluate(IValidationContext context);
     }
 }

@@ -17,12 +17,12 @@ namespace Assimalign.ComponentModel.Validation
     /// A rule set is a collection of validation rules to be used to 
     /// when validating the instance.
     /// </summary>
-    public sealed class ValidatorRuleSet : IValidatorRuleSet
+    public sealed class ValidationRuleSet : IValidationRuleSet
     {
 
         private IValidationRule[] rules;
 
-        public ValidatorRuleSet()
+        public ValidationRuleSet()
         {
 
         }
