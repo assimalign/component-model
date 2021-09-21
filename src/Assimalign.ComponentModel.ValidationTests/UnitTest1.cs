@@ -21,8 +21,16 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public UserValidator()
         {
-           
-            RuleForEach(p=>p.NickNames)
+
+            When(x => x.FirstName == "Chase", validate =>
+              {
+                  validate.RuleFor(p => p.NickNames)
+                  .EmailAddress();
+  
+              });
+
+            RuleForEach(p => p.NickNames);
+                
 
 
             RuleFor(p => p.FirstName)
@@ -42,6 +50,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 
     public class User
     {
+        public int Age { get; set; }
         public string FirstName { get; set; }
 
         public IEnumerable<string> NickNames { get; set; }

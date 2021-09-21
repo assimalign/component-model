@@ -41,7 +41,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <typeparam name="T"></typeparam>
         /// <param name="memberRule"></param>
         /// <returns></returns>
-        public static IValidationMemberRule<T> EmailAddress<T>(this IValidationMemberRule<T> memberRule)
+        public static IValidationMemberRule<T, TMember> EmailAddress<T, TMember>(this IValidationMemberRule<T, TMember> memberRule)
         {
             if (memberRule.MemberDelegate is Expression<Func<T, string>> lambda)
             {

@@ -11,10 +11,6 @@ namespace Assimalign.ComponentModel.Validation.Rules
 
     internal sealed class ValidationCondition<T> : IValidationConditionRule<T>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Validator { get; }
 
         /// <summary>
         /// 
@@ -35,11 +31,18 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <summary>
         /// 
         /// </summary>
+        public IValidator<T> Validator { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="context"></param>
         public void Evaluate(IValidationContext context)
         {
             if (context.ValidationInstance is T instance && Condition.Invoke(instance))
             {
+
+                Validator.Validate(context);
                 Parallel.ForEach(this.Rules, rule =>
                 {
                     rule.Evaluate(context);

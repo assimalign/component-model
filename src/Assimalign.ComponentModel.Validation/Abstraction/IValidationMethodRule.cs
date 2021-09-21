@@ -5,13 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Rules
+namespace Assimalign.ComponentModel.Validation
 {
     /// <summary>
     /// Evaluate Method returns at runtime.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IValidationMethodRule<T> : IValidationRule<T>
+    public interface IValidationMethodRule<T> : IValidationRule
     {
         /// <summary>
         /// 

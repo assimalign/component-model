@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
-    internal class ValidationMemberRule<T> : IValidationMemberRule<T>
+    internal class ValidationMemberRule<T, TMember> : IValidationMemberRule<T, TMember>
     {
         private readonly IList<IValidationRule> rules = new List<IValidationRule>();
 
@@ -16,9 +16,13 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        public MemberExpression Member { get; set; }
+        public MemberExpression Member => 
+            MemberDelegate.Body as MemberExpression;
 
-        public LambdaExpression MemberDelegate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Expression<Func<T, TMember>> MemberDelegate { get; set; }
         
         /// <summary>
         /// 
@@ -35,13 +39,11 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         public IEnumerable<IValidationRule> Rules => rules;
 
-
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rule"></param>
-        public void AddMemberRule(IValidationRule rule) =>
+        public void AddRule(IValidationRule rule) =>
             rules.Add(rule);
 
         /// <summary>

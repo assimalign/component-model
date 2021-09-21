@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation
 {
     using Assimalign.ComponentModel.Validation.Rules;
+    
 
     /// <summary>
     /// 
@@ -47,7 +49,6 @@ namespace Assimalign.ComponentModel.Validation
     /// <typeparam name="T"></typeparam>
     public interface IValidator<T> : IValidator
     {
-
         /// <summary>
         /// 
         /// </summary>
@@ -55,30 +56,28 @@ namespace Assimalign.ComponentModel.Validation
         /// <returns></returns>
         ValidationResult Validate(T instance);
 
-
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TMember"></typeparam>
+        /// <typeparam name="TMember">A member expression is either a field or property of a Type.</typeparam>
         /// <param name="expression"></param>
-        IValidationMemberRule<T> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
-
+        IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TMember"></typeparam>
+        /// <typeparam name="TCollection"></typeparam>
         /// <param name="expression"></param>
-        IValidationMemberRule<T> RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression);
-
+        IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
+            where TCollection : IEnumerable;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="condition"></param>
-        /// <param name=""></param>
+        /// <param name="condition">What condition is required</param>
+        /// <param name="conditionalValidation">The validation to </param>
         /// <returns></returns>
-        //IValidationCondition<T> When(Expression<Func<T, bool>> condition, )
+        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidator<T>> conditionalValidation);
 
     }
 }

@@ -8,6 +8,7 @@ namespace Assimalign.ComponentModel.Validation
 {
     using Assimalign.ComponentModel.Validation.Rules;
     using Assimalign.ComponentModel.Validation.Exceptions;
+    using System.Collections;
 
     public sealed class Validator : IValidator
     {
@@ -93,20 +94,33 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public ValidationResult Validate(IValidationContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TMember"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public IValidationMemberRule<T> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+        public IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
         {
+            // Ensure that the body of the LambdaExpression is 
+            // a valid Member Expression.
             if (expression.Body is MemberExpression member)
             {
-                var rule =  new ValidationMemberRule<T>()
-                {
-                    Member = member,
+                var rule =  new ValidationMemberRule<T, TMember>()
+                { 
                     MemberDelegate = expression
                 };
 
                 ValidationRules.Add(rule);
+
                 return rule;
             }
             else
@@ -115,14 +129,32 @@ namespace Assimalign.ComponentModel.Validation
             }
         }
 
-        public IValidationMemberRule<T, IEnumerable<TMember>> RuleForEach<TMember>(Expression<Func<T, IEnumerable<TMember>>> expression)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
+            where TCollection : IEnumerable
         {
             throw new NotImplementedException();
         }
 
-        public ValidationResult Validate(IValidationContext context)
+        
+
+        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidator<T>> conditionalValidator)
         {
+            var defaultValidator = new ValidatorDefault();
+            conditionalValidator.Invoke(defaultValidator);
+
             throw new NotImplementedException();
+        }
+
+
+        internal sealed class ValidatorDefault : Validator<T>
+        {
+
         }
     }
 }

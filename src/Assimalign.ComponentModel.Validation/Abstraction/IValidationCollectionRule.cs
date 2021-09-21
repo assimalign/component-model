@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,23 +12,14 @@ namespace Assimalign.ComponentModel.Validation
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TMember"></typeparam>
-    public interface IValidationMemberRule<T, TMember> : IValidationRule
+    /// <typeparam name="TCollection"></typeparam>
+    public interface IValidationCollectionRule<T, TCollection> : IValidationRule 
+        where TCollection : IEnumerable
     {
-
-        /// <summary>
-        /// The member of Type 'T' being evaluated for the rule.
-        /// </summary>
-        /// <remarks>
-        /// If the member expression is being set from a Lambda Expression (example: x => x.Member) then 
-        /// the member is the Body (x.Member).
-        /// </remarks>
-        MemberExpression Member { get; }
-
         /// <summary>
         /// 
         /// </summary>
-        Expression<Func<T, TMember>> MemberDelegate { get; set; }
+        Expression<Func<T, IEnumerable<TCollection>>> Delegate { get; set; }
 
         /// <summary>
         /// The validation rules to apply to the member.

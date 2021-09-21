@@ -14,11 +14,6 @@ namespace Assimalign.ComponentModel.Validation
     public interface IValidationRule
     {
         /// <summary>
-        /// The validator which executed the rule.
-        /// </summary>
-        string Validator { get; }
-
-        /// <summary>
         /// A unique name for the rule to evaluate.
         /// </summary>
         string Name { get; }
