@@ -5,7 +5,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+
+namespace Assimalign.ComponentModel.Validation.Abstraction
 {
 
     /// <summary>
@@ -17,6 +18,11 @@ namespace Assimalign.ComponentModel.Validation
         /// A unique name for the rule to evaluate.
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string Message { get; set; }
 
         /// <summary>
         /// 

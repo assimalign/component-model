@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation.Abstraction
 {
     /// <summary>
     /// 
@@ -19,12 +19,12 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        Expression<Func<T, IEnumerable<TCollection>>> Delegate { get; set; }
+        Expression<Func<T, TCollection>> Collection { get; set; }
 
         /// <summary>
-        /// The validation rules to apply to the member.
+        /// 
         /// </summary>
-        IEnumerable<IValidationRule> Rules { get; }
+        IValidationRuleSet Rules { get; }
 
         /// <summary>
         /// 

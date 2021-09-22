@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
+using System.Collections;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
-namespace Assimalign.ComponentModel.Validation.Rules
+
+namespace Assimalign.ComponentModel.Validation.Internals
 {
     using Assimalign.ComponentModel.Validation.Exceptions;
-    using System.Collections;
+    using Assimalign.ComponentModel.Validation.Abstraction;
+    
 
-    internal sealed class ValidationCondition<T> : IValidationConditionRule<T>
+    internal sealed class ValidationConditionRule<T> : IValidationConditionRule<T>
     {
-
-        private 
+        private readonly IValidationRuleSet rules = new ValidationRuleSet();
 
 
         /// <summary>
@@ -25,12 +24,17 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <summary>
         /// 
         /// </summary>
-        public IValidationRuleSet Rules { get; set; }
+        public IValidationRuleSet Rules => rules;
 
         /// <summary>
         /// 
         /// </summary>
         public Func<T, bool> Condition { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Message { get; set; }
 
 
         /// <summary>

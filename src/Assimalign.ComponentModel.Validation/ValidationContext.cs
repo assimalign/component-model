@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
+    using Assimalign.ComponentModel.Validation.Abstraction;
     /// <summary>
     /// 
     /// </summary>
@@ -21,7 +22,7 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         public ValidationContext(T instance)
         {
-           
+           ValidationInstance = instance;
         }
 
         /// <summary>

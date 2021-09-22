@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation.Internals
 {
+    using Assimalign.ComponentModel.Validation.Abstraction;
+
     internal class ValidationMemberRule<T, TMember> : IValidationMemberRule<T, TMember>
     {
         private readonly IList<IValidationRule> rules = new List<IValidationRule>();
@@ -33,6 +35,11 @@ namespace Assimalign.ComponentModel.Validation
         /// 
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Message { get; set; }
 
         /// <summary>
         /// 

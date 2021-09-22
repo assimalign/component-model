@@ -25,7 +25,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable
 
 
 
-        public IValidator<T> Compile<T>()
+        public void Compile<T>()
         {
             throw new NotImplementedException();
         }

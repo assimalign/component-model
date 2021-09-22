@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation.Abstraction
 {
     public interface IValidatorFactory
     {

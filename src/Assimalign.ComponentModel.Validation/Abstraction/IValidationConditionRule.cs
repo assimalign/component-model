@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation.Abstraction
 {
     /// <summary>
     /// Represents a validation rule for which other validation rules should be applied. 

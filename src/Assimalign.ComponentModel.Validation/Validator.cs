@@ -1,27 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace Assimalign.ComponentModel.Validation
 {
     using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Internals;
     using Assimalign.ComponentModel.Validation.Exceptions;
-    using System.Collections;
-
+    using Assimalign.ComponentModel.Validation.Abstraction;
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class Validator : IValidator
     {
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name { get; set; }
 
-        public ValidationResult Validate(object instance)
+        /// <summary>
+        /// 
+        /// </summary>
+        public IValidationRuleSet ValidationRules => throw new NotImplementedException();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public ValidationResult Validate(IValidationContext context)
         {
             throw new NotImplementedException();
         }
 
 
+     
 
 
         /// <summary>
@@ -51,17 +69,8 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        protected Validator() { }
+        protected Validator([CallerMemberName] string name = "") { }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        public Validator(string name)
-        {
-            this.Name = name;
-        }
 
         /// <summary>
         /// 
@@ -129,6 +138,7 @@ namespace Assimalign.ComponentModel.Validation
             }
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -141,11 +151,16 @@ namespace Assimalign.ComponentModel.Validation
             throw new NotImplementedException();
         }
 
-        
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="condition">What condition is required</param>
+        /// <param name="rules">The validation to </param>
+        /// <returns></returns>
         public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> rules)
         {
-           
             throw new NotImplementedException();
         }
     }

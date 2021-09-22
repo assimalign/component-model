@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation.Abstraction
 {
     /// <summary>
     /// Represents a validation rule for a property or field of a given type.

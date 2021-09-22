@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
-    public class MemberEmptyValidationRule
+    using Assimalign.ComponentModel.Validation.Abstraction;
+    public class EmptyValidationRule
     {
         
     }
