@@ -11,7 +11,7 @@ namespace Assimalign.ComponentModel.Validation.Exceptions
     /// </summary>
     public abstract class ValidatorException : Exception
     {
-        private const string messageDefault = "";
+        private const string messageDefault = "An unknown error was caught.";
 
         /// <summary>
         /// 
@@ -27,7 +27,21 @@ namespace Assimalign.ComponentModel.Validation.Exceptions
         /// <param name="message"></param>
         public ValidatorException(string message) : base(message)
         {
-
+            
         }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ErrorCode { get; set; } = ValidatorErrors.UnknownError;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override string Source { get; set; }
+
     }
 }

@@ -15,20 +15,10 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
     /// <typeparam name="TMember">Is either a property or member of type 'T'.</typeparam>
     public interface IValidationMemberRule<T, TMember> : IValidationRule
     {
-
-        /// <summary>
-        /// The member of Type 'T' being evaluated for the rule.
-        /// </summary>
-        /// <remarks>
-        /// If the member expression is being set from a Lambda Expression (example: x => x.Member) then 
-        /// the member is the Body (x.Member).
-        /// </remarks>
-        MemberExpression Member { get; }
-
         /// <summary>
         /// 
         /// </summary>
-        Expression<Func<T, TMember>> MemberDelegate { get; set; }
+        Expression<Func<T, TMember>> Member { get; set; }
 
         /// <summary>
         /// The validation rules to apply to the member.

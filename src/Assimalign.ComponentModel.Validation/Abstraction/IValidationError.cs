@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Assimalign.ComponentModel.Validation.Abstraction
 {
-
     /// <summary>
     /// 
     /// </summary>
-    public interface IValidationRule
+    public interface IValidationError
     {
         /// <summary>
-        /// A unique name for the rule to evaluate.
+        /// A unique error code to use when the validation rule fails.
         /// </summary>
-        string Name { get; }
+        string Code { get; set; }
+
+        /// <summary>
+        /// A unique error message to use when the validation rule fails.
+        /// </summary>
+        string Message { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="context"></param>
-        void Evaluate(IValidationContext context);
+        string Source { get; set; }
     }
 }

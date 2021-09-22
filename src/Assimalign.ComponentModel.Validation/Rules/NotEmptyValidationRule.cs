@@ -11,26 +11,40 @@ namespace Assimalign.ComponentModel.Validation.Rules
     using Assimalign.ComponentModel.Validation.Abstraction;
 
 
-    internal class NotEmptyValidationRule<T, TValue> : IValidationRule
+    internal class NotEmptyValidationRule<T, TValue> : IValidationRule, IValidationError
     {
-        private readonly string name;
-        private readonly Func<T, TValue> outputValue;
 
-        public NotEmptyValidationRule(Expression<Func<T, TValue>> lambda)
+        private readonly Expression<Func<T, TValue>> expression;
+
+        public NotEmptyValidationRule(Expression<Func<T, TValue>> expression)
         {
-            this.outputValue = lambda.Compile();
-            this.name = "NotEmptyValidationRule";
+            this.expression = expression;
+
+            this.Name = "NotEmptyValidationRule";
+            this.Code = "400";
+            this.Message = $"The following property, field, or collection '{expression.Body}' was identified as empty.";
+            this.Source = $"{expression}";
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Name => name;
+        public string Name { get; }
 
         /// <summary>
-        /// 
+        /// A unique error code to use when the validation rule fails.
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// A unique error message to use when the validation rule fails.
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// The source of the validation failure.
+        /// </summary>
+        public string Source { get; set; }
 
         /// <summary>
         /// 
@@ -40,15 +54,16 @@ namespace Assimalign.ComponentModel.Validation.Rules
         {
             if (context.ValidationInstance is T instance)
             {
-                var value = outputValue.Invoke(instance);
+                var value = expression.Compile().Invoke(instance);
 
                 if (IsEmpty(value))
                 {
-                    context.AddFailure(new ValidationError()
-                    {
-
-                    });
+                    context.AddFailure(this);
                 }
+            }
+            else
+            {
+                // TODO: 
             }
         }
 
@@ -58,7 +73,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
             switch (member)
             {
                 case null:
-                case string s when string.IsNullOrWhiteSpace(s):
+                case string stringValue when string.IsNullOrWhiteSpace(stringValue):
                 case ICollection { Count: 0 }:
                 case Array { Length: 0 } c:
                 case IEnumerable e when !e.Cast<object>().Any():

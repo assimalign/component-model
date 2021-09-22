@@ -24,13 +24,13 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// 
         /// </summary>
-        IEnumerable<ValidationError> Errors { get; }
+        IEnumerable<IValidationError> Errors { get; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="error"></param>
-        void AddFailure(ValidationError error);
+        void AddFailure(IValidationError error);
 
         /// <summary>
         /// 

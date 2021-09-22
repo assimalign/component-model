@@ -16,26 +16,72 @@ namespace Assimalign.ComponentModel.Validation
     /// </summary>
     public static class ValidationCollectionRuleExtension
     {
+
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TCollection"></typeparam>
         /// <param name="rule"></param>
+        /// <param name="validation"></param>
         /// <returns></returns>
-        public static IValidationCollectionRule<T, TCollection> NotEmpty<T, TCollection>(this IValidationCollectionRule<T, TCollection> rule)
+        public static IValidationCollectionRule<T, TCollection> Custom<T, TCollection>(this IValidationCollectionRule<T, TCollection> rule, Action<TCollection, IValidationContext> validation)
             where TCollection : IEnumerable
         {
-            if (rule.Collection.Body is MemberExpression ||
-                rule.Collection.Body is MethodCallExpression)
+            rule.AddRule(new CustomValidationRule<T, TCollection>(rule.Collection, validation));
+            return rule;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="rule"></param>
+        /// <param name="message"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static IValidationCollectionRule<T, TCollection> EmailAddress<T, TCollection>(this IValidationCollectionRule<T, TCollection> rule, string message = null, string code = null)
+            where TCollection : IEnumerable
+        {
+            var validator = new EmailValidationRule<T, TCollection>(rule.Collection);
+            if (code is not null)
             {
-                rule.AddRule(new NotEmptyValidationRule<T, TCollection>(rule.Collection));
+                validator.Code = code;
             }
-            else
+            if (message is not null)
             {
-                // TODO: Decide whether to throw an exception if any.
+                validator.Message = message;
             }
-            
+            rule.AddRule(validator);
+            return rule;
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="rule"></param>
+        /// <param name="message"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static IValidationCollectionRule<T, TCollection> NotEmpty<T, TCollection>(this IValidationCollectionRule<T, TCollection> rule, string message = null, string code = null)
+            where TCollection : IEnumerable
+        {
+            var validator = new NotEmptyValidationRule<T, TCollection>(rule.Collection);
+            if (code is not null)
+            {
+                validator.Code = code;
+            }
+            if (message is not null)
+            {
+                validator.Message = message;
+            }
+            rule.AddRule(validator);
             return rule;
         }
     }

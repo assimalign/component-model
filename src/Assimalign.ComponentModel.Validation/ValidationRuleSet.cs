@@ -260,7 +260,7 @@ namespace Assimalign.ComponentModel.Validation
                 current++;
                 if (current < rules.Length)
                 {
-                    return true;
+                    return rules[current] == null ? false : true;
                 }
                 return false;
             }

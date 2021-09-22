@@ -15,7 +15,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { EmailAddress = "ccrawford@eastdilsecured.com" };
+            var user = new User() { EmailAddress = "" };
             var validator = new UserValidator();
             var validation = validator.Validate(user);
         }
@@ -40,7 +40,18 @@ namespace Assimalign.ComponentModel.ValidationTests
             //});
 
             RuleFor(p => p.EmailAddress)
-                .EmailAddress();
+                .NotEmpty()
+                .EmailAddress("Test message to apply to the email failure.", "4556")
+                .Custom((value, context) =>
+                {
+                    if (value== string.Empty)
+                    {
+                        context.AddFailure("", "");
+                    }
+                });
+
+            RuleFor(p => p.Age)
+                .NotEmpty();
                 
        
                 

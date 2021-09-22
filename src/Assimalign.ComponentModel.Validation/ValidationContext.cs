@@ -14,7 +14,7 @@ namespace Assimalign.ComponentModel.Validation
     /// <typeparam name="T"></typeparam>
     public sealed class ValidationContext<T> : IValidationContext
     {
-        private readonly Stack<ValidationError> errors = new Stack<ValidationError>();
+        private readonly Stack<IValidationError> errors = new Stack<IValidationError>();
         private readonly IList<IValidationRule> successes = new List<IValidationRule>();
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// A collection of validation failures that occurred.
         /// </summary>
-        public IEnumerable<ValidationError> Errors => errors;
+        public IEnumerable<IValidationError> Errors => errors;
 
         /// <summary>
         /// 
@@ -44,7 +44,7 @@ namespace Assimalign.ComponentModel.Validation
         /// 
         /// </summary>
         /// <param name="error"></param>
-        public void AddFailure(ValidationError error) => errors.Push(error);
+        public void AddFailure(IValidationError error) => errors.Push(new ValidationError(error));
 
         /// <summary>
         /// 
@@ -61,11 +61,15 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="failureSource"></param>
         /// <param name="failureMessage"></param>
-        public void AddFailure(string propertyName, string failureMessage)
+        public void AddFailure(string failureSource, string failureMessage)
         {
-            throw new NotImplementedException();
+            errors.Push(new ValidationError()
+            {
+                Message = failureMessage,
+                Source = failureSource
+            });
         }
     }
 }

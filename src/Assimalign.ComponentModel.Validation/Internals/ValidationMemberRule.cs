@@ -8,23 +8,33 @@ using System.Text;
 
 namespace Assimalign.ComponentModel.Validation.Internals
 {
+    using Assimalign.ComponentModel.Validation.Exceptions;
     using Assimalign.ComponentModel.Validation.Abstraction;
 
-    internal class ValidationMemberRule<T, TMember> : IValidationMemberRule<T, TMember>
+    internal sealed class ValidationMemberRule<T, TMember> : IValidationMemberRule<T, TMember>
     {
+        private Expression<Func<T, TMember>> member;
         private readonly IList<IValidationRule> rules = new List<IValidationRule>();
 
 
         /// <summary>
         /// 
         /// </summary>
-        public MemberExpression Member => 
-            MemberDelegate.Body as MemberExpression;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Expression<Func<T, TMember>> MemberDelegate { get; set; }
+        public Expression<Func<T, TMember>> Member
+        {
+            get => member;
+            set
+            {
+                if (value.Body is MemberExpression)
+                {
+                    this.member = value;
+                }
+                else
+                {
+                    throw new ValidatorMemberException();
+                }
+            }
+        }
         
         /// <summary>
         /// 

@@ -69,7 +69,10 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        protected Validator([CallerMemberName] string name = "") { }
+        protected Validator([CallerMemberName] string name = "")
+        {
+            this.Name = name;
+        }
 
 
         /// <summary>
@@ -121,21 +124,15 @@ namespace Assimalign.ComponentModel.Validation
         {
             // Ensure that the body of the LambdaExpression is 
             // a valid Member Expression.
-            if (expression.Body is MemberExpression member)
-            {
-                var rule =  new ValidationMemberRule<T, TMember>()
-                { 
-                    MemberDelegate = expression
-                };
 
-                ValidationRules.Add(rule);
-
-                return rule;
-            }
-            else
+            var rule = new ValidationMemberRule<T, TMember>()
             {
-                throw new ValidatorMemberException();
-            }
+                Member = expression
+            };
+
+            ValidationRules.Add(rule);
+
+            return rule;
         }
 
 

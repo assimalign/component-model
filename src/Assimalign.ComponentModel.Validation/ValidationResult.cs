@@ -27,7 +27,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<ValidationError> Errors { get; internal set; }
+        public IEnumerable<IValidationError> Errors { get; internal set; }
 
 
         /// <summary>

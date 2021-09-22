@@ -18,39 +18,48 @@ namespace Assimalign.ComponentModel.Validation
     {
 
 
-        //public static IValidationRule<T> EmailAddress(this IValidationRule<T>)
+
+
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TMember"></typeparam>
+        /// <param name="rule"></param>
+        /// <param name="validation"></param>
+        /// <returns></returns>
+        public static IValidationMemberRule<T, TMember>  Custom<T, TMember>(this IValidationMemberRule<T, TMember> rule, Action<TMember, IValidationContext> validation)
+        {
+            rule.AddRule(new CustomValidationRule<T, TMember>(rule.Member, validation));
+            return rule;
+        }
 
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="rules"></param>
-        /// <param name="action"></param>
+        /// <typeparam name="TMember"></typeparam>
+        /// <param name="rule"></param>
+        /// <param name="message"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        //public static IValidationRuleSet Custom<T>(this IValidationRuleSet<T> rules, Action<T, IValidationContext<T>> action)
-        //{
-        //    rules.Add(new CustomValidationRule<T>()
-        //    {
-        //        Action = action
-        //    });
-
-        //    return rules;
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <typeparam name="TMember"></typeparam>
-        ///// <param name="rule"></param>
-        ///// <returns></returns>
-        //public static IValidationMemberRule<T, TMember> NotEmpty<T, TMember>(this IValidationMemberRule<T, TMember> rule)
-        //{
-        //    rule.AddRule(new MemberNotEmptyValidationRule<T, TMember>());
-        //    return rule;
-        //}
+        public static IValidationMemberRule<T, TMember> NotEmpty<T, TMember>(this IValidationMemberRule<T, TMember> rule, string message = null, string code = null)
+        {
+            var validator = new NotEmptyValidationRule<T, TMember>(rule.Member);
+            if (code is not null)
+            {
+                validator.Code = code;
+            }
+            if (message is not null)
+            {
+                validator.Message = message;
+            }
+            rule.AddRule(validator);
+            return rule;
+        }
 
         ///// <summary>
         ///// 
@@ -65,64 +74,31 @@ namespace Assimalign.ComponentModel.Validation
         //    return rule;
         //}
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TMember"></typeparam>
         /// <param name="rule"></param>
+        /// <param name="message"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        public static IValidationMemberRule<T, TMember> EmailAddress<T, TMember>(this IValidationMemberRule<T, TMember> rule)
+        public static IValidationMemberRule<T, TMember> EmailAddress<T, TMember>(this IValidationMemberRule<T, TMember> rule, string message = null, string code = null)
         {
-            rule.AddRule(new EmailValidationRule<T, TMember>(rule.MemberDelegate));
+            var validator = new EmailValidationRule<T, TMember>(rule.Member);
+            if (code is not null)
+            {
+                validator.Code = code;
+            }
+            if (message is not null)
+            {
+                validator.Message = message;
+            }
+            rule.AddRule(validator);
             return rule;
         }
 
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="rules"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static IValidationRuleSet WithMessage<T>(this IValidationRuleSet rules, string message)
-        {
-            if (rules.Count == 0)
-            {
-                throw new Exception("A message cannot be set without first specifying at least one rule.");
-            }
-            else
-            {
-                //rules[rules.Count].Error.Message = message;
-            }
-
-            return rules;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="rules"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static IValidationRuleSet WithErrorCode<T>(this IValidationRuleSet rules, string code)
-        {
-            if (rules.Count == 0)
-            {
-                throw new Exception("A message cannot be set without first specifying at least one rule.");
-            }
-            else
-            {
-                //rules[rules.Count].Error.Code = code;
-            }
-
-            return rules;
-        }
 
     }
 }
