@@ -127,25 +127,25 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TLeftBound"></typeparam>
-        /// <typeparam name="TRightBound"></typeparam>
+        /// <typeparam name="TLowerBound"></typeparam>
+        /// <typeparam name="TUpperBound"></typeparam>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        IValidationMemberRule<T, TCollection> Between<TLeftBound, TRightBound>(TLeftBound left, TRightBound right)
-            where TLeftBound : struct
-            where TRightBound : struct;
+        IValidationMemberRule<T, TCollection> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
+            where TLowerBound : struct
+            where TUpperBound : struct;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TLeftBound"></typeparam>
-        /// <typeparam name="TRightBound"></typeparam>
+        /// <typeparam name="TLowerBound"></typeparam>
+        /// <typeparam name="TUpperBound"></typeparam>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        IValidationMemberRule<T, TCollection> BetweenOrEqualTo<TLeftBound, TRightBound>(TLeftBound left, TRightBound right)
-            where TLeftBound : struct
-            where TRightBound : struct;
+        IValidationMemberRule<T, TCollection> BetweenOrEqualTo<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
+            where TLowerBound : struct
+            where TUpperBound : struct;
     }
 }
