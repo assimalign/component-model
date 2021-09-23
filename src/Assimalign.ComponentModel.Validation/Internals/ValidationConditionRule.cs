@@ -29,12 +29,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <summary>
         /// 
         /// </summary>
-        public Func<T, bool> Condition { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Message { get; set; }
+        public Expression<Func<T, bool>> Condition { get; set; }
 
 
         /// <summary>
@@ -43,7 +38,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <param name="context"></param>
         public void Evaluate(IValidationContext context)
         {
-            if (context.ValidationInstance is T instance && Condition.Invoke(instance))
+            if (context.ValidationInstance is T instance && Condition.Compile().Invoke(instance))
             {
                 Parallel.ForEach(this.Rules, rule =>
                 {

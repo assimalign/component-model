@@ -22,7 +22,11 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         public ValidationContext(T instance)
         {
-           ValidationInstance = instance;
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+            ValidationInstance = instance;
         }
 
         /// <summary>

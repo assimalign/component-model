@@ -20,6 +20,10 @@ namespace Assimalign.ComponentModel.Validation
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="error"></param>
         internal ValidationError(IValidationError error)
         {
             this.Code = error.Code;

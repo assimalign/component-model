@@ -18,7 +18,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// The Condition in which the child validation rule collection should be applied.
         /// </summary>
-        Func<T, bool> Condition { get; set; }
+        Expression<Func<T, bool>> Condition { get; set; }
 
         /// <summary>
         /// 

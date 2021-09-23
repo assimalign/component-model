@@ -29,7 +29,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// A collection of validation rules to apply 
         /// to the context being validated.
         /// </summary>
-        IValidationRuleSet ValidationRules { get; }
+        IValidationRuleSet Rules { get; }
 
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// 
         /// </summary>
         /// <param name="condition">What condition is required</param>
-        /// <param name="rules">The validation to </param>
+        /// <param name="configure">The validation to </param>
         /// <returns></returns>
-        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> rules);
+        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> configure);
 
     }
 }

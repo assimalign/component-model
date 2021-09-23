@@ -26,7 +26,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        public IValidationRuleSet ValidationRules => throw new NotImplementedException();
+        public IValidationRuleSet Rules => throw new NotImplementedException();
 
         /// <summary>
         /// 
@@ -37,9 +37,6 @@ namespace Assimalign.ComponentModel.Validation
         {
             throw new NotImplementedException();
         }
-
-
-     
 
 
         /// <summary>
@@ -69,7 +66,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        protected Validator([CallerMemberName] string name = "")
+        protected Validator(string name = "")
         {
             this.Name = name;
         }
@@ -83,7 +80,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <summary>
         /// 
         /// </summary>
-        public IValidationRuleSet ValidationRules => rules;
+        public IValidationRuleSet Rules => rules;
 
 
         /// <summary>
@@ -91,17 +88,9 @@ namespace Assimalign.ComponentModel.Validation
         /// </summary>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public ValidationResult Validate(T instance)
-        {
-            var context = new ValidationContext<T>(instance);
+        public ValidationResult Validate(T instance) =>
+            Validate(new ValidationContext<T>(instance));
 
-            foreach(var rule in this.ValidationRules)
-            {
-                rule.Evaluate(context);
-            }
-
-            return ValidationResult.Create(context);
-        }
 
         /// <summary>
         /// 
@@ -110,7 +99,12 @@ namespace Assimalign.ComponentModel.Validation
         /// <returns></returns>
         public ValidationResult Validate(IValidationContext context)
         {
-            throw new NotImplementedException();
+            foreach (var rule in this.Rules)
+            {
+                rule.Evaluate(context);
+            }
+
+            return ValidationResult.Create(context);
         }
 
 
@@ -122,15 +116,12 @@ namespace Assimalign.ComponentModel.Validation
         /// <returns></returns>
         public IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
         {
-            // Ensure that the body of the LambdaExpression is 
-            // a valid Member Expression.
-
             var rule = new ValidationMemberRule<T, TMember>()
             {
                 Member = expression
             };
 
-            ValidationRules.Add(rule);
+            Rules.Add(rule);
 
             return rule;
         }
@@ -145,7 +136,14 @@ namespace Assimalign.ComponentModel.Validation
         public IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
             where TCollection : IEnumerable
         {
-            throw new NotImplementedException();
+            var rule = new ValidationCollectionRule<T, TCollection>()
+            {
+                Collection = expression
+            };
+
+            Rules.Add(rule);
+
+            return rule;
         }
 
 
@@ -154,11 +152,20 @@ namespace Assimalign.ComponentModel.Validation
         /// 
         /// </summary>
         /// <param name="condition">What condition is required</param>
-        /// <param name="rules">The validation to </param>
+        /// <param name="configure">The validation to </param>
         /// <returns></returns>
-        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> rules)
+        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> configure)
         {
-            throw new NotImplementedException();
+            var rule = new ValidationConditionRule<T>()
+            {
+                Condition = condition
+            };
+
+            configure.Invoke(rule);
+
+            Rules.Add(rule);
+
+            return rule;
         }
     }
 }

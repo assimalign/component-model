@@ -27,34 +27,38 @@ namespace Assimalign.ComponentModel.ValidationTests
         public UserValidator()
         {
 
-            //When(x => x.FirstName == "Chase", validation =>
-            //{
-            //    validation.RuleFor(p => p.NickNames)
-            //        .NotEmpty();
+            When(x => x.FirstName == "Chase", validation =>
+            {
+                validation.RuleFor(p => p.NickNames)
+                    .NotEmpty();
 
 
 
-            //    validation.RuleForEach(p => p.Addresses)
-            //        .NotEmpty();
+                validation.RuleForEach(p => p.Addresses)
+                    .NotEmpty();
 
-            //});
+            });
 
-            RuleFor(p => p.EmailAddress)
+            RuleForEach(p => p.NickNames)
                 .NotEmpty()
                 .EmailAddress("Test message to apply to the email failure.", "4556")
                 .Custom((value, context) =>
                 {
-                    if (value== string.Empty)
+                    foreach(var email in value)
                     {
-                        context.AddFailure("", "");
+
                     }
                 });
 
             RuleFor(p => p.Age)
+                .LessThan(0);
+
+            RuleForEach(p => p.EmailAddress)
                 .NotEmpty();
-                
-       
-                
+
+
+            var v = new Nullable<int>();
+
 
 
             //RuleFor(p => p.FirstName)
@@ -74,7 +78,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 
     public class User
     {
-        public int Age { get; set; }
+        public int? Age { get; set; }
         public string FirstName { get; set; }
 
         public string EmailAddress { get; set; }

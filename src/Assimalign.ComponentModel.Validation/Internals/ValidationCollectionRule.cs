@@ -29,16 +29,31 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// </summary>
         public string Name { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Message { get; set; }
+        public IValidator<TCollection> Validator { get; set; }
+
+
+
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rule"></param>
-        public void AddRule(IValidationRule rule) => rules.Add(rule);
+        public IValidationCollectionRule<T, TCollection> AddRule(IValidationRule rule) 
+        {
+            rules.Add(rule);
+            return this;
+        }
+
+        public IValidationCollectionRule<T, TCollection> Empty()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> Equal<TValue>(TValue value) where TValue : IComparable
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 
@@ -56,6 +71,71 @@ namespace Assimalign.ComponentModel.Validation.Internals
                 }
             }
 
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> GreaterThan<TValue>(TValue value) where TValue : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> GreaterThanOrEqualTo<TValue>(TValue value) where TValue : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> LessThan<TValue>(TValue value) where TValue : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> LessThanOrEqualTo<TValue>(TValue value) where TValue : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> NotEmpty()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> NotEqual<TValue>(TValue value) where TValue : IComparable
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> UseValidator(IValidator<TCollection> validator)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public IValidationMemberRule<T, TCollection> Between<TLeftBound, TRightBound>(TLeftBound left, TRightBound right)
+            where TLeftBound : struct
+            where TRightBound : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationMemberRule<T, TCollection> BetweenOrEqualTo<TLeftBound, TRightBound>(TLeftBound left, TRightBound right)
+            where TLeftBound : struct
+            where TRightBound : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> OneOf(Action<IValidationRule> evaluations)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> Null()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IValidationCollectionRule<T, TCollection> NotNull()
+        {
             throw new NotImplementedException();
         }
     }
