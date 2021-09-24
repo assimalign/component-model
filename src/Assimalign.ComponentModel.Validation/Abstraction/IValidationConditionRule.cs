@@ -30,14 +30,14 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// </summary>
         /// <typeparam name="TMember">A member expression is either a field or property of a Type.</typeparam>
         /// <param name="expression"></param>
-        IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
+        IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
         /// <param name="expression"></param>
-        IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
+        IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
             where TCollection : IEnumerable;
     }
 }

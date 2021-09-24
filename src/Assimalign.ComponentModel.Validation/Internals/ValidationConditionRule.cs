@@ -51,12 +51,13 @@ namespace Assimalign.ComponentModel.Validation.Internals
             }
         }
 
-        public IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+        public IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
         {
             throw new NotImplementedException();
         }
 
-        public IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression) where TCollection : IEnumerable
+        public IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression) 
+            where TCollection : IEnumerable
         {
             throw new NotImplementedException();
         }

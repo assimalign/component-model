@@ -41,9 +41,9 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="failureSource"></param>
         /// <param name="failureMessage"></param>
-        void AddFailure(string propertyName, string failureMessage);
+        void AddFailure(string failureSource, string failureMessage);
 
     }
 }

@@ -56,7 +56,7 @@ namespace Assimalign.ComponentModel.Validation
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Validator<T> : IValidator<T>
+    public abstract class Validator<T> : IValidator<T>, IValidationRuleInitializer<T>
     {
 
         private readonly ValidationRuleSet rules = new ValidationRuleSet();
@@ -114,7 +114,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <typeparam name="TMember"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public IValidationMemberRule<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+        public IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
         {
             var rule = new ValidationMemberRule<T, TMember>()
             {
@@ -123,7 +123,7 @@ namespace Assimalign.ComponentModel.Validation
 
             Rules.Add(rule);
 
-            return rule;
+            return new ValidationRuleBuilder<T, TMember>(rule);
         }
 
 
@@ -133,7 +133,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <typeparam name="TCollection"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public IValidationCollectionRule<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
+        public IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
             where TCollection : IEnumerable
         {
             var rule = new ValidationCollectionRule<T, TCollection>()
@@ -143,7 +143,7 @@ namespace Assimalign.ComponentModel.Validation
 
             Rules.Add(rule);
 
-            return rule;
+            return new ValidationRuleBuilder<T, TCollection>(rule);
         }
 
 

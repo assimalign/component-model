@@ -22,7 +22,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         string Message { get; set; }
 
         /// <summary>
-        /// 
+        /// An identifier of the source of the validation error.
         /// </summary>
         string Source { get; set; }
     }

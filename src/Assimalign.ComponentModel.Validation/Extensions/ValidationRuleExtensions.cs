@@ -20,37 +20,6 @@ namespace Assimalign.ComponentModel.Validation
     {
 
 
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TMember"></typeparam>
-        /// <param name="rule"></param>
-        /// <param name="validation"></param>
-        /// <returns></returns>
-        public static IValidationMemberRule<T, TMember>  Custom<T, TMember>(this IValidationMemberRule<T, TMember> rule, Action<TMember, IValidationContext> validation)
-        {
-            rule.AddRule(new CustomValidationRule<T, TMember>(rule.Member, validation));
-            return rule;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TCollection"></typeparam>
-        /// <param name="rule"></param>
-        /// <param name="validation"></param>
-        /// <returns></returns>
-        public static IValidationCollectionRule<T, TCollection> Custom<T, TCollection>(this IValidationCollectionRule<T, TCollection> rule, Action<TCollection, IValidationContext> validation)
-            where TCollection : IEnumerable
-        {
-            rule.AddRule(new CustomValidationRule<T, TCollection>(rule.Collection, validation));
-            return rule;
-        }
-
 
 
 
@@ -58,52 +27,21 @@ namespace Assimalign.ComponentModel.Validation
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TMember"></typeparam>
-        /// <param name="rule"></param>
-        /// <param name="message"></param>
-        /// <param name="code"></param>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="builder"></param>
         /// <returns></returns>
-        public static IValidationMemberRule<T, TMember> EmailAddress<T, TMember>(this IValidationMemberRule<T, TMember> rule, string message = null, string code = null)
+        public static IValidationRuleBuilder<T, TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<T, TValue> builder)
+            where TValue : IEnumerable
         {
-            var validator = new EmailValidationRule<T, TMember>(rule.Member);
-            if (code is not null)
+            if (builder.Current is ValidationMemberRule<T, TValue> member)
             {
-                validator.Code = code;
+                member.AddRule(new EmailValidationRule<T, TValue>(member.Member));
             }
-            if (message is not null)
+            if (builder.Current is ValidationCollectionRule<T, TValue> collection)
             {
-                validator.Message = message;
+                collection.AddRule(new EmailValidationRule<T, TValue>(collection.Collection));
             }
-            rule.AddRule(validator);
-            return rule;
+            return builder;
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TMember"></typeparam>
-        /// <param name="rule"></param>
-        /// <param name="message"></param>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        public static IValidationCollectionRule<T, TCollection> EmailAddress<T, TCollection>(this IValidationCollectionRule<T, TCollection> rule, string message = null, string code = null)
-            where TCollection : IEnumerable
-        {
-            var validator = new EmailValidationRule<T, TCollection>(rule.Collection);
-            if (code is not null)
-            {
-                validator.Code = code;
-            }
-            if (message is not null)
-            {
-                validator.Message = message;
-            }
-            rule.AddRule(validator);
-            return rule;
-        }
-
-
     }
 }

@@ -34,14 +34,24 @@ namespace Assimalign.ComponentModel.ValidationTests
 
 
 
-                validation.RuleForEach(p => p.Addresses)
+                validation.RuleFor(p => p.Age)
+                    .Between(0, 23)
+                    .BetweenOrEqualTo(0, 23)
                     .NotEmpty();
 
             });
 
+            RuleFor(p => p.Details)
+                .ChildRules(child =>
+                {
+                    child.RuleFor(p => p.Ssn)
+                        .NotEmpty();
+
+                });
+
             RuleForEach(p => p.NickNames)
                 .NotEmpty()
-                .EmailAddress("Test message to apply to the email failure.", "4556")
+                .EmailAddress()
                 .Custom((value, context) =>
                 {
                     foreach(var email in value)
@@ -50,10 +60,17 @@ namespace Assimalign.ComponentModel.ValidationTests
                     }
                 });
 
+            int? t = 3;
+
+            if(t == 4)
+
             RuleFor(p => p.Age)
-                .LessThan(0);
+                //.Length(20)
+                
+                .LessThan(23);
 
             RuleForEach(p => p.EmailAddress)
+                
                 .NotEmpty();
 
 
@@ -76,16 +93,28 @@ namespace Assimalign.ComponentModel.ValidationTests
     }
 
 
-    public class User
+    public class User : IComparable
     {
-        public int? Age { get; set; }
+        public int Age { get; set; }
         public string FirstName { get; set; }
 
         public string EmailAddress { get; set; }
 
+        public UserDetails Details { get; set; }
+
         public IEnumerable<string> NickNames { get; set; }
 
         public IEnumerable<UserAddress> Addresses { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class UserDetails
+    {
+        public string Ssn { get; set; }
     }
 
     public class UserAddress
