@@ -9,7 +9,6 @@ namespace Assimalign.ComponentModel.Validation.Internals
     using Assimalign.ComponentModel.Validation.Exceptions;
     using Assimalign.ComponentModel.Validation.Abstraction;
     
-
     internal sealed class ValidationConditionRule<T> : IValidationConditionRule<T>
     {
         private readonly IValidationRuleSet rules = new ValidationRuleSet();
@@ -51,15 +50,41 @@ namespace Assimalign.ComponentModel.Validation.Internals
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TMember"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
         {
-            throw new NotImplementedException();
+            var rule = new ValidationMemberRule<T, TMember>()
+            {
+                Member = expression
+            };
+
+            Rules.Add(rule);
+
+            return new ValidationMemberRuleBuilder<T, TMember>(rule);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression) 
             where TCollection : IEnumerable
         {
-            throw new NotImplementedException();
+            var rule = new ValidationCollectionRule<T, TCollection>()
+            {
+                Collection = expression
+            };
+
+            Rules.Add(rule);
+
+            return new ValidationCollectionRuleBuilder<T, TCollection>(rule);
         }
     }
 }

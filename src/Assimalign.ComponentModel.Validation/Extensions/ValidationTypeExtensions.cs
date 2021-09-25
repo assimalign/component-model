@@ -734,6 +734,25 @@ namespace Assimalign.ComponentModel.Validation.Extensions
 		}
 
 
+		///// <summary>
+		///// 
+		///// </summary>
+		///// <param name="type"></param>
+		///// <param name="checkNullable"></param>
+		//public static bool IsDateTimeType(this Type type, out Type implementation, bool checkNullable = true)
+		//{
+		//	if (checkNullable && type == typeof(Nullable<>).MakeGenericType(typeof(DateTime)))
+		//	{
+		//		return true;
+		//	}
+		//	if (type == typeof(DateTime))
+		//	{
+		//		return true;
+		//	}
+		//	return false;
+		//}
+
+
 		/// <summary>
 		/// 
 		/// </summary>

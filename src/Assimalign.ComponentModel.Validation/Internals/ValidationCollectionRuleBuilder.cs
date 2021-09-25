@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,34 +7,61 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internals
 {
+    using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Internals;
     using Assimalign.ComponentModel.Validation.Abstraction;
 
 
-    internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
+    internal sealed class ValidationCollectionRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
+        where TValue : IEnumerable
     {
-        public ValidationRuleBuilder(IValidationRule current)
+
+        public ValidationCollectionRuleBuilder(IValidationCollectionRule<T, TValue> rule)
         {
-            this.Current = current;
+
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IValidationCollectionRule<T, TValue> CollectionRule { get; }
+
+
+
+
+        IValidationRule IValidationRuleBuilder<T, TValue>.Current => this.CollectionRule;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TLowerBound"></typeparam>
+        /// <typeparam name="TUpperBound"></typeparam>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public IValidationRuleBuilder<T, TValue> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
+            where TLowerBound : struct, IComparable
+            where TUpperBound : struct, IComparable
+        {
+            CollectionRule.AddRule(new BetweenValidationRule<T, TValue, TLowerBound, TUpperBound>(CollectionRule.Collection, left, right));
+            return this;
         }
 
         /// <summary>
-        /// The current rul
+        /// 
         /// </summary>
-        public IValidationRule Current { get; set; }
-
-
-        public IValidationRuleBuilder<T, TValue> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable<TValue>
-            where TUpperBound : struct, IComparable<TValue>
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <typeparam name="TLowerBound"></typeparam>
+        /// <typeparam name="TUpperBound"></typeparam>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable<TValue>
-            where TUpperBound : struct, IComparable<TValue>
+            where TLowerBound : struct, IComparable
+            where TUpperBound : struct, IComparable
         {
-            throw new NotImplementedException();
+            CollectionRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TLowerBound, TUpperBound>(CollectionRule.Collection, left, right));
+            return this;
         }
 
         public IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleInitializer<TValue>> child)
@@ -51,17 +79,17 @@ namespace Assimalign.ComponentModel.Validation.Internals
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> Equal<TNumber>(TNumber value) where TNumber : IComparable<TValue>
+        public IValidationRuleBuilder<T, TValue> Equal<TNumber>(TNumber value) where TNumber : IComparable
         {
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable<TValue>
+        public IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable
         {
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable<TValue>
+        public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable
         {
             throw new NotImplementedException();
         }
@@ -76,12 +104,12 @@ namespace Assimalign.ComponentModel.Validation.Internals
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> LessThan<TNumber>(TNumber value) where TNumber : struct, IComparable<TValue>
+        public IValidationRuleBuilder<T, TValue> LessThan<TNumber>(TNumber value) where TNumber : struct, IComparable
         {
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable<TValue>
+        public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable
         {
             throw new NotImplementedException();
         }
@@ -101,7 +129,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> NotEqual<TNumber>(TNumber value) where TNumber : IComparable<TValue>
+        public IValidationRuleBuilder<T, TValue> NotEqual<TNumber>(TNumber value) where TNumber : IComparable
         {
             throw new NotImplementedException();
         }

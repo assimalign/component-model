@@ -41,6 +41,9 @@ namespace Assimalign.ComponentModel.ValidationTests
 
             });
 
+            RuleForEach(p => p.Ages)
+                .Between(0, 34);
+
             RuleFor(p => p.Details)
                 .ChildRules(child =>
                 {
@@ -95,7 +98,10 @@ namespace Assimalign.ComponentModel.ValidationTests
 
     public class User : IComparable
     {
-        public int Age { get; set; }
+        public int? Age { get; set; }
+
+
+        public int[] Ages { get; set; }
         public string FirstName { get; set; }
 
         public string EmailAddress { get; set; }

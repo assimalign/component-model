@@ -123,7 +123,7 @@ namespace Assimalign.ComponentModel.Validation
 
             Rules.Add(rule);
 
-            return new ValidationRuleBuilder<T, TMember>(rule);
+            return new ValidationMemberRuleBuilder<T, TMember>(rule);
         }
 
 
@@ -143,7 +143,7 @@ namespace Assimalign.ComponentModel.Validation
 
             Rules.Add(rule);
 
-            return new ValidationRuleBuilder<T, TCollection>(rule);
+            return new ValidationCollectionRuleBuilder<T, TCollection>(rule);
         }
 
 

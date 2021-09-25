@@ -97,7 +97,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <typeparam name="TNumber">is of </typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable<TValue>;
+        IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable;
 
         /// <summary>
         /// 
@@ -105,7 +105,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <typeparam name="TNumber"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable<TValue>;
+        IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable;
 
         /// <summary>
         /// 
@@ -113,7 +113,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <typeparam name="TNumber"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> LessThan<TNumber>(TNumber value) where TNumber : struct, IComparable<TValue>;
+        IValidationRuleBuilder<T, TValue> LessThan<TNumber>(TNumber value) where TNumber : struct, IComparable;
 
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <typeparam name="TNumber"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable<TValue>;
+        IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable;
 
         /// <summary>
         /// 
@@ -130,7 +130,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <typeparam name="TNumber"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> Equal<TNumber>(TNumber value) where TNumber : IComparable<TValue>;
+        IValidationRuleBuilder<T, TValue> Equal<TNumber>(TNumber value) where TNumber : IComparable;
 
         /// <summary>
         /// 
@@ -138,7 +138,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <typeparam name="TNumber"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> NotEqual<TNumber>(TNumber value) where TNumber : IComparable<TValue>;
+        IValidationRuleBuilder<T, TValue> NotEqual<TNumber>(TNumber value) where TNumber : IComparable;
 
         /// <summary>
         /// 
@@ -156,8 +156,8 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <param name="right"></param>
         /// <returns></returns>
         IValidationRuleBuilder<T, TValue> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable<TValue>
-            where TUpperBound : struct, IComparable<TValue>;
+            where TLowerBound : struct, IComparable
+            where TUpperBound : struct, IComparable;
 
         /// <summary>
         /// 
@@ -168,8 +168,8 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <param name="right"></param>
         /// <returns></returns>
         IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable<TValue>
-            where TUpperBound : struct, IComparable<TValue>;
+            where TLowerBound : struct, IComparable
+            where TUpperBound : struct, IComparable;
 
         /// <summary>
         /// 
