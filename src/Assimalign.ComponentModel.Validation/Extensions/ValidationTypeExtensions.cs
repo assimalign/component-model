@@ -694,15 +694,20 @@ namespace Assimalign.ComponentModel.Validation.Extensions
 			return false;
 		}
 
+		
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="type"></param>
+		/// <param name="implementation"></param>
+		/// <returns></returns>
 		public static bool IsNullable(this Type type, out Type implementation)
 		{
 			implementation = null;
 			var arguments = type.GenericTypeArguments;
 
+			// Since Nullable only takes one type parameter the length should be equal
+			// to exactly one
 			if (arguments.Any() && arguments.Length == 1)
 			{
 				if (type == typeof(Nullable<>).MakeGenericType(arguments[0]))

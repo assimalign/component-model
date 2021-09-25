@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
     using Assimalign.ComponentModel.Validation.Rules;
     using Assimalign.ComponentModel.Validation.Internals;
     using Assimalign.ComponentModel.Validation.Abstraction;
-    using System.Collections;
+    
 
     internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
     {
@@ -23,23 +24,33 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// 
         /// </summary>
         public IValidationMemberRule<T, TValue> MemberRule { get; }
-
-
         IValidationRule IValidationRuleBuilder<T, TValue>.Current => MemberRule;
 
-        public IValidationRuleBuilder<T, TValue> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable
-            where TUpperBound : struct, IComparable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TBound"></typeparam>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound left, TBound right)
+            where TBound :  IComparable<TBound>
         {
-            MemberRule.AddRule(new BetweenValidationRule<T, TValue, TLowerBound, TUpperBound>(MemberRule.Member, left, right));
+            MemberRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(MemberRule.Member, left, right));
             return this;
         }
 
-        public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable
-            where TUpperBound : struct, IComparable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TBound"></typeparam>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound left, TBound right)
+            where TBound : IComparable<TBound>
         {
-            MemberRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TLowerBound, TUpperBound>(MemberRule.Member, left, right));
+            MemberRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(MemberRule.Member, left, right));
             return this;
         }
 

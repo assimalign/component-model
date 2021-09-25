@@ -32,7 +32,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// <param name="context"></param>
         public void Evaluate(IValidationContext context)
         {
-            if (context.ValidationInstance is T instance)
+            if (context.Instance is T instance)
             {
                 var member = this.expression.Compile().Invoke(instance);
 

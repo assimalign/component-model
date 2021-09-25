@@ -53,7 +53,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <param name="context"></param>
         public void Evaluate(IValidationContext context)
         {
-            if (context.ValidationInstance is T instance)
+            if (context.Instance is T instance)
             {
                 var values = this.Collection.Compile();
 

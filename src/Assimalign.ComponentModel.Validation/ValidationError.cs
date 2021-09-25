@@ -53,7 +53,7 @@ namespace Assimalign.ComponentModel.Validation
         /// <returns></returns>
         public override string ToString()
         {
-            return $"Error {Code}: {Message} {Environment.NewLine} -> Source: {Source}";
+            return $"Error {Code}: {Message} {Environment.NewLine} └─> Source: {Source}";
         }
     }
 }

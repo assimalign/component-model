@@ -23,4 +23,22 @@
     <ProjectReference Include="..\Assimalign.ComponentModel.Validation\Assimalign.ComponentModel.Validation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Rules\BetweenOrEqualToTests\" />
+    <Folder Include="Rules\EqualToTests\" />
+    <Folder Include="Rules\EmptyTests\" />
+    <Folder Include="Rules\EmailTests\" />
+    <Folder Include="Rules\CreditCardTests\" />
+    <Folder Include="Rules\GreaterThanTests\" />
+    <Folder Include="Rules\GreaterThanOrEqualToTests\" />
+    <Folder Include="Rules\LessThanTests\" />
+    <Folder Include="Rules\LessThanOrEqualToTests\" />
+    <Folder Include="Rules\CustomTests\" />
+    <Folder Include="Rules\NotEqualToTests.cs\" />
+    <Folder Include="Rules\NotNullTests\" />
+    <Folder Include="Rules\PhoneNumberTests\" />
+    <Folder Include="Rules\NullTests\" />
+    <Folder Include="Rules\NotEmptyTests\" />
+  </ItemGroup>
+
 </Project>

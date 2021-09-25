@@ -150,26 +150,23 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TLowerBound"></typeparam>
-        /// <typeparam name="TUpperBound"></typeparam>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <typeparam name="TBound"></typeparam>
+        /// <param name="lowerBound"></param>
+        /// <param name="upperBound"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable
-            where TUpperBound : struct, IComparable;
+        IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
+            where TBound : IComparable<TBound>;
+
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TLowerBound"></typeparam>
-        /// <typeparam name="TUpperBound"></typeparam>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <typeparam name="TBound"></typeparam>
+        /// <param name="lowerBound"></param>
+        /// <param name="upperBound"></param>
         /// <returns></returns>
-        IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable
-            where TUpperBound : struct, IComparable;
+        IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
+            where TBound : IComparable<TBound>;
 
         /// <summary>
         /// 

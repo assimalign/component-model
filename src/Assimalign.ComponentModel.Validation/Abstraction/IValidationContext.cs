@@ -14,7 +14,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// The instance to validate.
         /// </summary>
-        object ValidationInstance { get; }
+        object Instance { get; }
 
         /// <summary>
         /// 

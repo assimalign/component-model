@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation
 {
     using Assimalign.ComponentModel.Validation.Abstraction;
+
     /// <summary>
     /// 
     /// </summary>
@@ -26,13 +27,14 @@ namespace Assimalign.ComponentModel.Validation
             {
                 throw new ArgumentNullException(nameof(instance));
             }
-            ValidationInstance = instance;
+            Instance = instance;
         }
 
         /// <summary>
-        /// 
+        /// The instance to validate.
         /// </summary>
-        public object ValidationInstance { get; }
+        public T Instance { get;  }
+        object IValidationContext.Instance => this.Instance;
         
         /// <summary>
         /// A collection of validation failures that occurred.

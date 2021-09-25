@@ -37,7 +37,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <param name="context"></param>
         public void Evaluate(IValidationContext context)
         {
-            if (context.ValidationInstance is T instance && Condition.Compile().Invoke(instance))
+            if (context.Instance is T instance && Condition.Compile().Invoke(instance))
             {
                 Parallel.ForEach(this.Rules, rule =>
                 {

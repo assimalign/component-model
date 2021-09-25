@@ -26,16 +26,17 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public UserValidator()
         {
-
+            int? t = 3;
             When(x => x.FirstName == "Chase", validation =>
             {
                 validation.RuleFor(p => p.NickNames)
+                    .Between(10,25)
                     .NotEmpty();
 
 
 
                 validation.RuleFor(p => p.Age)
-                    .Between(0, 23)
+                    .Between(23, 23)
                     .BetweenOrEqualTo(0, 23)
                     .NotEmpty();
 
@@ -63,7 +64,7 @@ namespace Assimalign.ComponentModel.ValidationTests
                     }
                 });
 
-            int? t = 3;
+            
 
             if(t == 4)
 

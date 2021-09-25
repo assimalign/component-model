@@ -13,13 +13,21 @@ namespace Assimalign.ComponentModel.ValidationTests
     public class DateTimeBetweenValidationRuleTests
     {
 
+        public partial class Person
+        {
+            public DateTime Birthdate { get; set; }
+            public IEnumerable<DateTime> Birthdates { get; set; }
+            public DateTime? BirthdateNullable { get; set; }
+            public IEnumerable<DateTime?>? BirthdatesNullable { get; set; }
+            public IEnumerable<DateTime?>? BirthdatesNullable1 { get; set; }
+        }
 
         [Fact]
         public void DateTimeValidationMemberSuccessTest()
         {
             var person = new Person() { Birthdate = new DateTime(1997,01,01) };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996,01,01), new DateTime(2010,01,01));
+            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996,01,01), new DateTime(2010,01,01));
 
             rule.Evaluate(context);
             Assert.Empty(context.Errors);
@@ -31,7 +39,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         {
             var person = new Person() { Birthdate = new DateTime(2011, 01, 01) };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
 
             rule.Evaluate(context);
             Assert.Single(context.Errors);
@@ -43,7 +51,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         {
             var person = new Person() { Birthdate = new DateTime(1995, 01, 01) };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
 
             rule.Evaluate(context);
             Assert.Single(context.Errors);
@@ -55,22 +63,14 @@ namespace Assimalign.ComponentModel.ValidationTests
         {
             var person = new Person() { BirthdateNullable = null };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
 
             rule.Evaluate(context);
             Assert.Single(context.Errors);
         }
 
 
-        public partial class Person
-        {
-            public DateTime Birthdate { get; set; }
-            public IEnumerable<DateTime> Birthdates { get; set; }
-            public DateTime? BirthdateNullable { get; set; }
-            public IEnumerable<DateTime?>? BirthdatesNullable { get; set; }
-
-            public IEnumerable<DateTime?>? BirthdatesNullable1 { get; set; }
-        }
+        
         
     }
 }

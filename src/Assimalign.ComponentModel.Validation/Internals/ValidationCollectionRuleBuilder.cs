@@ -40,11 +40,10 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public IValidationRuleBuilder<T, TValue> Between<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable
-            where TUpperBound : struct, IComparable
+        public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound left, TBound right)
+            where TBound : IComparable<TBound>
         {
-            CollectionRule.AddRule(new BetweenValidationRule<T, TValue, TLowerBound, TUpperBound>(CollectionRule.Collection, left, right));
+            CollectionRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(CollectionRule.Collection, left, right));
             return this;
         }
 
@@ -56,11 +55,10 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TLowerBound, TUpperBound>(TLowerBound left, TUpperBound right)
-            where TLowerBound : struct, IComparable
-            where TUpperBound : struct, IComparable
+        public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound left, TBound right)
+            where TBound : IComparable<TBound>
         {
-            CollectionRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TLowerBound, TUpperBound>(CollectionRule.Collection, left, right));
+            CollectionRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(CollectionRule.Collection, left, right));
             return this;
         }
 
