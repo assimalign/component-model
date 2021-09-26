@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Assimalign.ComponentModel.ValidationTests.RulesTests.BetweenTests
+namespace Assimalign.ComponentModel.ValidationTests.Rules.Between
 {
     using Assimalign.ComponentModel.Validation;
     using Assimalign.ComponentModel.Validation.Rules;

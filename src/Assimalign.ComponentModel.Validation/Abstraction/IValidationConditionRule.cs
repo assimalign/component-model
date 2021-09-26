@@ -23,21 +23,25 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <summary>
         /// 
         /// </summary>
-        IValidationRuleSet Rules { get; }
+        IValidationRuleSet ConditionRuleSet { get; }
+
+        /// <summary>
+        /// The rule set to run if condition is not valid.
+        /// </summary>
+        IValidationRuleSet DefaultRuleSet { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TMember">A member expression is either a field or property of a Type.</typeparam>
-        /// <param name="expression"></param>
-        IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression);
+        /// <param name="condition">What condition is required</param>
+        /// <param name="configure">The validation to </param>
+        /// <returns></returns>
+        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleInitializer<T>> configure);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TCollection"></typeparam>
-        /// <param name="expression"></param>
-        IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
-            where TCollection : IEnumerable;
+        /// <param name="configure"></param>
+        void Otherwise(Action<IValidationRuleInitializer<T>> configure);
     }
 }

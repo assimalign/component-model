@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenTests
+namespace Assimalign.ComponentModel.ValidationTests.Rules.CreditCardTests
 {
-    public class FloatBetweenValidationTests
+    public class CreditCardFormatTests
     {
         
     }

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
+    using Assimalign.ComponentModel.Validation.Exceptions;
     using Assimalign.ComponentModel.Validation.Abstraction;
 
-
-    internal class CustomValidationRule<T, TValue> : IValidationRule
+    internal sealed class CustomValidationRule<T, TValue> : IValidationRule, IValidationError
     {
         private readonly Expression<Func<T, TValue>> expression;
         private readonly Action<TValue, IValidationContext> validation;
@@ -24,6 +24,9 @@ namespace Assimalign.ComponentModel.Validation.Rules
         }
 
         public string Name { get; }
+        public string Code { get; set; }
+        public string Message { get; set; }
+        public string Source { get; set; }
 
 
         /// <summary>
@@ -37,6 +40,10 @@ namespace Assimalign.ComponentModel.Validation.Rules
                 var member = this.expression.Compile().Invoke(instance);
 
                 validation.Invoke(member, context);
+            }
+            else
+            {
+                throw new ValidatorInternalException("");
             }
         }
     }

@@ -37,6 +37,10 @@ namespace Assimalign.ComponentModel.Validation.Rules
         /// </summary>
         public string Name { get; } = "BetweenOrEqualToValidationRule";
 
+        public string Code { get; set; }
+        public string Message { get; set; }
+        public string Source { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

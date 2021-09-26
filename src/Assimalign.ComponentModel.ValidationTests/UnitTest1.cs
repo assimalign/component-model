@@ -15,7 +15,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { EmailAddress = "" };
+            var user = new User() { FirstName = "Chase"};
             var validator = new UserValidator();
             var validation = validator.Validate(user);
         }
@@ -26,59 +26,49 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public UserValidator()
         {
-            int? t = 3;
             When(x => x.FirstName == "Chase", validation =>
             {
-                validation.RuleFor(p => p.NickNames)
-                    .Between(10,25)
-                    .NotEmpty();
-
-
-
                 validation.RuleFor(p => p.Age)
-                    .Between(23, 23)
-                    .BetweenOrEqualTo(0, 23)
-                    .NotEmpty();
-
+                    .Between(22, 23);
             });
 
-            RuleForEach(p => p.Ages)
-                .Between(0, 34);
+            //RuleForEach(p => p.Ages)
+            //    .Between(0, 34);
 
-            RuleFor(p => p.Details)
-                .ChildRules(child =>
-                {
-                    child.RuleFor(p => p.Ssn)
-                        .NotEmpty();
+            //RuleFor(p => p.Details)
+            //    .ChildRules(child =>
+            //    {
+            //        child.RuleFor(p => p.Ssn)
+            //            .NotEmpty();
 
-                });
+            //    });
 
-            RuleForEach(p => p.NickNames)
-                .NotEmpty()
-                .EmailAddress()
-                .Custom((value, context) =>
-                {
-                    foreach(var email in value)
-                    {
+            //RuleForEach(p => p.NickNames)
+            //    .NotEmpty()
+            //    .EmailAddress()
+            //    .Custom((value, context) =>
+            //    {
+            //        foreach(var email in value)
+            //        {
 
-                    }
-                });
+            //        }
+            //    });
 
             
 
-            if(t == 4)
 
-            RuleFor(p => p.Age)
-                //.Length(20)
+
+            //RuleFor(p => p.Age)
+            //    //.Length(20)
                 
-                .LessThan(23);
+            //    .LessThan(23);
 
-            RuleForEach(p => p.EmailAddress)
+            //RuleForEach(p => p.EmailAddress)
                 
-                .NotEmpty();
+            //    .NotEmpty();
 
 
-            var v = new Nullable<int>();
+            //var v = new Nullable<int>();
 
 
 
@@ -99,7 +89,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 
     public class User : IComparable
     {
-        public int? Age { get; set; }
+        public int Age { get; set; }
 
 
         public int[] Ages { get; set; }

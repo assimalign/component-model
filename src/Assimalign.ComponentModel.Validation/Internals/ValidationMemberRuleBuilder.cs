@@ -17,7 +17,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
 
         public ValidationMemberRuleBuilder(IValidationMemberRule<T, TValue> rule)
         {
-
+            MemberRule = rule;
         }
 
         /// <summary>

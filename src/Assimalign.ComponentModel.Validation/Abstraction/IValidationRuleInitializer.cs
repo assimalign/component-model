@@ -12,8 +12,6 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
     /// </summary>
     public interface IValidationRuleInitializer<T>
     {
-
-        
         /// <summary>
         /// 
         /// </summary>
@@ -35,6 +33,7 @@ namespace Assimalign.ComponentModel.Validation.Abstraction
         /// <param name="condition">What condition is required</param>
         /// <param name="configure">The validation to </param>
         /// <returns></returns>
-        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> configure);
+        IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleInitializer<T>> configure);
+
     }
 }

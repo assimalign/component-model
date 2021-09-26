@@ -154,16 +154,17 @@ namespace Assimalign.ComponentModel.Validation
         /// <param name="condition">What condition is required</param>
         /// <param name="configure">The validation to </param>
         /// <returns></returns>
-        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationConditionRule<T>> configure)
+        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleInitializer<T>> configure)
         {
+            var initializer = new ValidationRuleInitializer<T>();
             var rule = new ValidationConditionRule<T>()
             {
                 Condition = condition
             };
 
-            configure.Invoke(rule);
-
             Rules.Add(rule);
+            configure.Invoke(initializer);
+            rule.ConditionRuleSet.Add(initializer.Current);
 
             return rule;
         }

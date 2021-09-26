@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Assimalign.ComponentModel.ValidationTests.Rules.Between
+namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
 {
     using Assimalign.ComponentModel.Validation;
     using Assimalign.ComponentModel.Validation.Rules;
 
-    public class Int32BetweenValidationRuleTests
+    public class Int32BetweenOrEqualToValidationRuleTests
     {
         public partial class Person
         {
