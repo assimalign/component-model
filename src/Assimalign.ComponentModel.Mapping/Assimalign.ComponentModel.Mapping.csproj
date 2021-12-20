@@ -3,20 +3,15 @@
 	<PropertyGroup>
 		<!--Package Build Configurations-->
 		<Version>1.0.0-pre.0.1</Version>
-		<LangVersion>9.0</LangVersion>
-		<TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
 		<PackageId>Assimalign.ComponentModel.Mapping</PackageId>
 		<AssemblyName>Assimalign.ComponentModel.Mapping</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel.Mapping</RootNamespace>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageTags>Validation</PackageTags>
-
 		<!--Company Branding Information-->
-		<Copyright>© Assimalign LLC 2021</Copyright>
+
 		<PackageIcon>.assimalign.logo.png</PackageIcon>
-		<PackageIconUrl>https://corporate.assets.assimalign.com/assets/logos/.assimalign.logo.png</PackageIconUrl>
-		<PackageProjectUrl>https://github.com/Assimalign-LLC/asal-component-model</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

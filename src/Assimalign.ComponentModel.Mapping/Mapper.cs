@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Assimalign.ComponentModel.Mapping
 {
     using Assimalign.ComponentModel.Mapping.Internal;
     using Assimalign.ComponentModel.Mapping.Abstractions;
+    
 
     /// <summary>
     /// 
@@ -16,6 +18,7 @@ namespace Assimalign.ComponentModel.Mapping
     {
         private readonly MapperOptions options;
         private readonly IList<IMapperProfile> profiles;
+        private readonly static ConcurrentDictionary<Type, MapperPaths> flattenedTypes;
 
         
         /// <summary>
@@ -38,12 +41,24 @@ namespace Assimalign.ComponentModel.Mapping
         /// 
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TDestination"></typeparam>
+        /// <typeparam name="TTarget"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public TDestination Map<TSource, TDestination>(TSource source)
+        public TTarget Map<TSource, TTarget>(TSource source)
+            where TTarget : new()
         {
+            var type = typeof(TSource);
+            var properties = type.GetProperties();
+
+            
+
+            foreach(var property in properties)
+            {
+
+            }
+
+
             throw new NotImplementedException();
         }
 
@@ -51,12 +66,12 @@ namespace Assimalign.ComponentModel.Mapping
         /// 
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TDestination"></typeparam>
+        /// <typeparam name="TTarget"></typeparam>
         /// <param name="source"></param>
-        /// <param name="destination"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
+        public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
         {
             throw new NotImplementedException();
         }
@@ -66,10 +81,10 @@ namespace Assimalign.ComponentModel.Mapping
         /// </summary>
         /// <param name="source"></param>
         /// <param name="sourceType"></param>
-        /// <param name="destinationType"></param>
+        /// <param name="targetType"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public object Map(object source, Type sourceType, Type destinationType)
+        public object Map(object source, Type sourceType, Type targetType)
         {
             throw new NotImplementedException();
         }
@@ -78,12 +93,12 @@ namespace Assimalign.ComponentModel.Mapping
         /// 
         /// </summary>
         /// <param name="source"></param>
-        /// <param name="destination"></param>
+        /// <param name="target"></param>
         /// <param name="sourceType"></param>
-        /// <param name="destinationType"></param>
+        /// <param name="targetType"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public object Map(object source, object destination, Type sourceType, Type destinationType)
+        public object Map(object source, object target, Type sourceType, Type targetType)
         {
             throw new NotImplementedException();
         }

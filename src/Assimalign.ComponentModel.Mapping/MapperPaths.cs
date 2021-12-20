@@ -8,20 +8,47 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping
 {
-    public struct MapperPaths : IDictionary<string, Type>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MapperPaths : IDictionary<string, Type>
     {
+        private int         count;
+        private string[]    keys;
+        private Type[]      values;
+
+        public MapperPaths()
+        {
+
+        }
+        
+
+
         public Type this[string key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public ICollection<string> Keys => throw new NotImplementedException();
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICollection<string> Keys => this.keys;
 
-        public ICollection<Type> Values => throw new NotImplementedException();
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICollection<Type> Values => this.Values;
 
-        public int Count => throw new NotImplementedException();
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Count => this.count;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsReadOnly => throw new NotImplementedException();
 
         public void Add(string key, Type value)
         {
+            
             throw new NotImplementedException();
         }
 

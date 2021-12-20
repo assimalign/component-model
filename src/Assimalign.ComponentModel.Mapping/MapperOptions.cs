@@ -43,7 +43,8 @@ namespace Assimalign.ComponentModel.Mapping
         /// <returns></returns>
         public MapperOptions AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
         {
-            var descriptor = new MapperProfileDescriptor<TSource, TTarget>();
+            var context = new MapperProfileContext();
+            var descriptor = new MapperProfileDescriptor<TSource, TTarget>(context);
 
             if (this.profiles.Contains(profile))
             {
@@ -65,7 +66,8 @@ namespace Assimalign.ComponentModel.Mapping
         public MapperOptions AddProfile<TSource, TTarget>(Func<IMapperProfile<TSource, TTarget>> configure)
         {
             var profile = configure.Invoke();
-            var descriptor = new MapperProfileDescriptor<TSource, TTarget>();
+            var context = new MapperProfileContext();
+            var descriptor = new MapperProfileDescriptor<TSource, TTarget>(context);
 
             if (this.profiles.Contains(profile))
             {

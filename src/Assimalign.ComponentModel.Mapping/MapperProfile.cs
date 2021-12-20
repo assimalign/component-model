@@ -1,36 +1,46 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.ComponentModel.Mapping
 {
     using Assimalign.ComponentModel.Mapping.Abstractions;
-    using System.Diagnostics.CodeAnalysis;
+    
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
     public abstract class MapperProfile<TSource, TTarget> : 
         IMapperProfile<TSource, TTarget>
     {
-
-        private readonly IEnumerable<Delegate> after;
-        private readonly IEnumerable<Delegate> before;
+        private readonly IList<Action<TSource, TTarget>> after;
+        private readonly IList<Action<TSource, TTarget>> before;
 
         public MapperProfile()
         {
-
+            this.before = new List<Action<TSource, TTarget>>();
+            this.after = new List<Action<TSource,TTarget>>();
+            this.Context = new MapperProfileContext();
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public IMapperSource Source { get; }
+        public MapperProfileContext Context { get; }
+
 
         /// <summary>
         /// 
         /// </summary>
-        public IMapperTarget Target { get; }
+        /// <param name="descriptor"></param>
+        public virtual void Configure(IMapperProfileDescriptor descriptor) { }
 
         /// <summary>
         /// 

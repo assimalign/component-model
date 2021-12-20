@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping.Abstractions
+namespace Assimalign.ComponentModel.Mapping.Abstractions;
+
+
+///<summary>
+///
+///</summary>
+public interface IMapperFactory
 {
-    public interface IMapperFactory
-    {
 
-
-        IMapper Create(IEnumerable<IMapperProfile> profiles);
-    }
+    ///<summary>
+    ///
+    ///</summary>
+    IMapper Create(IEnumerable<IMapperProfile> profiles);
 }
