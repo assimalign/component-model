@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
@@ -19,14 +20,13 @@ namespace Assimalign.ComponentModel.Mapping
     public abstract class MapperProfile<TSource, TTarget> : 
         IMapperProfile<TSource, TTarget>
     {
-        private readonly IList<Action<TSource, TTarget>> after;
-        private readonly IList<Action<TSource, TTarget>> before;
+        private readonly IList<IMapperProfile> profiles = new List<IMapperProfile>();
+        private readonly IList<Action<TSource, TTarget>> after = new List<Action<TSource, TTarget>>();
+        private readonly IList<Action<TSource, TTarget>> before = new List<Action<TSource, TTarget>>();
 
         public MapperProfile()
         {
-            this.before = new List<Action<TSource, TTarget>>();
-            this.after = new List<Action<TSource,TTarget>>();
-            this.Context = new MapperProfileContext();
+            this.Context = MapperProfileContext.New<TSource, TTarget>();
         }
 
 
@@ -40,10 +40,20 @@ namespace Assimalign.ComponentModel.Mapping
         /// 
         /// </summary>
         /// <param name="descriptor"></param>
-        public virtual void Configure(IMapperProfileDescriptor descriptor) { }
+        void IMapperProfile.Configure(IMapperProfileDescriptor descriptor)
+        {
+            if (descriptor is IMapperProfileDescriptor<TSource, TTarget> desc)
+            {
+                this.Configure(desc);
+            }
+            else
+            {
+
+            }
+        }
 
         /// <summary>
-        /// 
+        /// Invokes
         /// </summary>
         /// <param name="descriptor"></param>
         public abstract void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
@@ -56,10 +66,13 @@ namespace Assimalign.ComponentModel.Mapping
         /// <typeparam name="TTarget"></typeparam>
         /// <param name="configure"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public static IMapperProfile<TSource, TTarget> Create<TSource, TTarget>(Action<IMapperProfile<TSource, TTarget>> configure)
         {
-            throw new NotImplementedException();
+            var profile = new MapperProfileDefault<TSource, TTarget>();
+
+            configure.Invoke(profile);
+
+            return profile;
         }
 
 

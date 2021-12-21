@@ -13,9 +13,9 @@ namespace Assimalign.ComponentModel.Mapping.Internal
 
     internal sealed class MapperProfileDescriptor : IMapperProfileDescriptor
     {
-        public MapperProfileDescriptor()
+        public MapperProfileDescriptor(MapperProfileContext context)
         {
-            this.Context = new MapperProfileContext();
+            this.Context = context;
         }
 
         public MapperProfileContext Context { get; }

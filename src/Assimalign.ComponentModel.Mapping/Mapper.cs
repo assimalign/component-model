@@ -28,7 +28,7 @@ namespace Assimalign.ComponentModel.Mapping
         public Mapper(MapperOptions options)
         {
             this.options = options;
-            this.profiles = new List<IMapperProfile>();
+            this.profiles = options.Profiles.ToList();
         }
 
         /* Flow
@@ -48,11 +48,12 @@ namespace Assimalign.ComponentModel.Mapping
         public TTarget Map<TSource, TTarget>(TSource source)
             where TTarget : new()
         {
+            var target = new TTarget();
+            var profile = this.profiles.FirstOrDefault(x=>x.SourceType == typeof(TSource) && x.TargetType == typeof(TTarget));
             var type = typeof(TSource);
             var properties = type.GetProperties();
 
             
-
             foreach(var property in properties)
             {
 

@@ -19,11 +19,6 @@ public interface IMapperProfileSourceDescriptor<TTarget>
     void Ingore();
 
     /// <summary>
-    /// Backwards mirroring of the current mapped member.
-    /// </summary>
-    void Reverse();
-
-    /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TMember"></typeparam>

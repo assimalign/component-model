@@ -15,21 +15,22 @@ namespace Assimalign.ComponentModel.Mapping
     /// </summary>
     public sealed partial class MapperOptions
     {
-        private readonly IList<IMapperProfile> profiles;
+        private readonly IDictionary<int, IMapperProfile> profiles;
 
         /// <summary>
         /// 
         /// </summary>
         public MapperOptions()
         {
-            this.profiles = new List<IMapperProfile>();
+            this.profiles = new Dictionary<int, IMapperProfile>();
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IMapperProfile> Profiles => profiles;
+        public IEnumerable<IMapperProfile> Profiles => profiles.Values;
+
 
 
 
@@ -45,14 +46,15 @@ namespace Assimalign.ComponentModel.Mapping
         {
             var context = new MapperProfileContext();
             var descriptor = new MapperProfileDescriptor<TSource, TTarget>(context);
+            var hashcode = HashCode.Combine(profile.Context.SourceType, profile.Context.TargetType);
 
-            if (this.profiles.Contains(profile))
+            if (this.profiles.ContainsKey(hashcode))
             {
                 throw new Exception("Profile already exists");
             }
 
             profile.Configure(descriptor);
-            this.profiles.Add(profile);
+            AddProfile(profile);
             return this;
         }
 
@@ -75,8 +77,26 @@ namespace Assimalign.ComponentModel.Mapping
             }
 
             profile.Configure(descriptor);
-            this.profiles.Add(configure.Invoke());
+            AddProfile(profile);
             return this;
+        }
+
+
+        private void AddProfile(IMapperProfile profile)
+        {
+            this.profiles.Add(profile);
+
+            foreach (var child in profile.Profiles)
+            {
+                if (child.Profiles is not null && child.Profiles.Any())
+                {
+                    AddProfile(child);
+                }
+                else
+                {
+                    this.profiles.Add(child);
+                }
+            }
         }
     }
 }

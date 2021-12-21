@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,16 +10,15 @@ namespace Assimalign.ComponentModel.Mapping.Abstractions;
 /// <summary>
 /// 
 /// </summary>
-public interface IMapperProfile : IEqualityComparer<IMapperProfile>
+public interface IMapperProfile
 {
     /// <summary>
     /// 
     /// </summary>
     MapperProfileContext Context { get; }
 
-
     /// <summary>
-    /// 
+    /// Invokes the Profile descriptor which creates the mapper profile
     /// </summary>
     /// <param name="descriptor"></param>
     void Configure(IMapperProfileDescriptor descriptor);

@@ -15,11 +15,6 @@ public interface IMapperProfileDescriptor
     /// <summary>
     /// 
     /// </summary>
-    MapperProfileContext Context { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TTarget"></typeparam>
     /// <returns></returns>

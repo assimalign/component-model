@@ -17,6 +17,8 @@ namespace Assimalign.ComponentModel.MappingTests
                     .AddProfile(new MapperProfileTest());
             });
 
+            
+
         }
 
 
@@ -56,7 +58,9 @@ namespace Assimalign.ComponentModel.MappingTests
         {
             public override void Configure(IMapperProfileDescriptor<Employee1, Employee2> descriptor)
             {
-                descriptor.DisableDefaultMapping();
+               
+                descriptor
+                    .DisableDefaultMapping();
 
                 descriptor
                     .ForMember(source => source.Details.FirstName, target => target.FirstName)
@@ -69,7 +73,7 @@ namespace Assimalign.ComponentModel.MappingTests
 
 
                 descriptor
-                    .CreateChildProfile(source => source.Details, target => target);
+                    .AddProfile(source => source.Details, target => target);
 
 
                 descriptor
