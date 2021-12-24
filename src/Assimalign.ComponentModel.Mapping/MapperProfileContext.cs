@@ -20,29 +20,31 @@ namespace Assimalign.ComponentModel.Mapping
             this.profiles = new List<IMapperProfile>();
         }
 
-        internal MapperProfileContext(Type sourceType, Type targetType) : this()
+        internal MapperProfileContext(
+            Type sourceType, 
+            Type targetType) : this()
         {
             this.SourceType = sourceType;
             this.TargetType = targetType;
+            this.MapperActions = new List<Delegate>();
         }
 
+
+        internal List<Delegate> MapperActions;
 
 
         /// <summary>
         /// 
         /// </summary>
         public Type SourceType { get; }
-
         /// <summary>
         /// 
         /// </summary>
         public MapperPaths SourcePaths { get; }
-
         /// <summary>
         /// 
         /// </summary>
         public Type TargetType { get; }
-
         /// <summary>
         /// 
         /// </summary>
@@ -63,7 +65,7 @@ namespace Assimalign.ComponentModel.Mapping
         /// <remarks>
         /// 
         /// </remarks>
-        public IEnumerable<IMapperProfile> Profiles { get; }
+        public IEnumerable<IMapperProfile> Profiles => this.profiles;
 
 
         internal void AddSubProfile(IMapperProfile profile)

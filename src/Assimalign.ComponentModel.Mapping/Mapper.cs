@@ -49,18 +49,19 @@ namespace Assimalign.ComponentModel.Mapping
             where TTarget : new()
         {
             var target = new TTarget();
-            var profile = this.profiles.FirstOrDefault(x=>x.SourceType == typeof(TSource) && x.TargetType == typeof(TTarget));
-            var type = typeof(TSource);
-            var properties = type.GetProperties();
-
+            var profile = this.profiles.FirstOrDefault(x=>x.Context.SourceType == typeof(TSource) && x.Context.TargetType == typeof(TTarget));
             
-            foreach(var property in properties)
+            
+            foreach(var action in profile.Context.MapperActions)
             {
-
+                if (action is Action<TSource, TTarget> mapperAction)
+                {
+                    mapperAction.Invoke(source, target);
+                }
             }
 
 
-            throw new NotImplementedException();
+            return target;
         }
 
         /// <summary>

@@ -15,21 +15,21 @@ namespace Assimalign.ComponentModel.Mapping
     /// </summary>
     public sealed partial class MapperOptions
     {
-        private readonly IDictionary<int, IMapperProfile> profiles;
+        private readonly IList<IMapperProfile> profiles;
 
         /// <summary>
         /// 
         /// </summary>
         public MapperOptions()
         {
-            this.profiles = new Dictionary<int, IMapperProfile>();
+            this.profiles = new List<IMapperProfile>();
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IMapperProfile> Profiles => profiles.Values;
+        public IEnumerable<IMapperProfile> Profiles => profiles;
 
 
 
@@ -44,17 +44,18 @@ namespace Assimalign.ComponentModel.Mapping
         /// <returns></returns>
         public MapperOptions AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
         {
-            var context = new MapperProfileContext();
+            var context = new MapperProfileContext(typeof(TSource), typeof(TTarget));
+            ((MapperProfile<TSource,TTarget>)profile).Context = context;
             var descriptor = new MapperProfileDescriptor<TSource, TTarget>(context);
             var hashcode = HashCode.Combine(profile.Context.SourceType, profile.Context.TargetType);
 
-            if (this.profiles.ContainsKey(hashcode))
-            {
-                throw new Exception("Profile already exists");
-            }
+            //if (this.ContainsKey(hashcode))
+            //{
+            //    throw new Exception("Profile already exists");
+            //}
 
             profile.Configure(descriptor);
-            AddProfile(profile);
+            AddProfile(profile as IMapperProfile);
             return this;
         }
 
@@ -86,9 +87,9 @@ namespace Assimalign.ComponentModel.Mapping
         {
             this.profiles.Add(profile);
 
-            foreach (var child in profile.Profiles)
+            foreach (var child in profile.Context.Profiles)
             {
-                if (child.Profiles is not null && child.Profiles.Any())
+                if (child.Context.Profiles is not null && child.Context.Profiles.Any())
                 {
                     AddProfile(child);
                 }

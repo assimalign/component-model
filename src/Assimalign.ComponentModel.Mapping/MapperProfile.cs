@@ -24,6 +24,12 @@ namespace Assimalign.ComponentModel.Mapping
         private readonly IList<Action<TSource, TTarget>> after = new List<Action<TSource, TTarget>>();
         private readonly IList<Action<TSource, TTarget>> before = new List<Action<TSource, TTarget>>();
 
+        public MapperProfile(MapperProfileContext context)
+        {
+            this.Context = context;
+        }
+
+
         public MapperProfile()
         {
             this.Context = MapperProfileContext.New<TSource, TTarget>();
@@ -33,7 +39,7 @@ namespace Assimalign.ComponentModel.Mapping
         /// <summary>
         /// 
         /// </summary>
-        public MapperProfileContext Context { get; }
+        public MapperProfileContext Context { get; internal set; }
 
 
         /// <summary>
@@ -109,22 +115,5 @@ namespace Assimalign.ComponentModel.Mapping
             return paths;
         }
 
-        public bool Equals([AllowNull] IMapperProfile x, [AllowNull] IMapperProfile y)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetHashCode([DisallowNull] IMapperProfile profile)
-        {
-            if (this.Target.TargetType == profile.Target.TargetType &&
-                this.Source.SourceType == profile.Source.SourceType)
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
     }
 }

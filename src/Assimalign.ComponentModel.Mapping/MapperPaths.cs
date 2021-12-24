@@ -19,7 +19,7 @@ namespace Assimalign.ComponentModel.Mapping
 
         public MapperPaths()
         {
-
+            
         }
         
 

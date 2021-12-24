@@ -60,42 +60,35 @@ namespace Assimalign.ComponentModel.MappingTests
             {
                
                 descriptor
-                    .DisableDefaultMapping();
-
-                descriptor
                     .ForMember(source => source.Details.FirstName, target => target.FirstName)
-                    .ForMember(source => source.Details.LastName, target => target.LastName)
-                    .ReverseMap();
-
-                descriptor
-                    .AddProfile(source => source.Details.PayrollTransactions, target => target.Transactions)
-                    .ForMember(source => source.Amount, target => target.Amount);
-
-
-                descriptor
-                    .AddProfile(source => source.Details, target => target);
-
-
-                descriptor
-                    .ForSource(source => source.Details.LastName)
-                    .MapTarget(target => target.LastName.ToLower())
-                    .Reverse();
-
-                descriptor
-                    .ForSource(source => source.Details.FirstName)
-                    .MapTarget(target => target.FirstName)
-                    .Reverse();
-
-                descriptor
-                    .ForSource(source => source.Details)
-                    .Ingore();
-
-                descriptor
-                    .AfterMap((employee1, employee2) =>
-                    {
-
-                    });
+                    .ForMember(source => source.Details.LastName, target => target.LastName);
             }
+        }
+
+
+
+        [Fact]
+        public void MappingTest()
+        {
+            var mapper = Mapping.Mapper.Create(configure =>
+            {
+                configure.AddProfile(new MapperProfileTest());
+            });
+
+
+
+            var employee = new Employee1()
+            {
+                Details = new EmployeeDetails()
+                {
+                    FirstName = "Chase"
+                }
+            };
+
+
+            var results = mapper.Map<Employee1, Employee2>(employee);
+
+            Assert.NotNull(results);
         }
     }
 }

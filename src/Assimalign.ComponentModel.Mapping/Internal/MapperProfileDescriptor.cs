@@ -37,24 +37,44 @@ namespace Assimalign.ComponentModel.Mapping.Internal
             this.Context = context;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public MapperProfileContext Context { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
         public void AfterMap(Action<TSource, TTarget> action)
         {
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
         public void BeforeMap(Action<TSource, TTarget> action)
         {
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void DisableDefaultMapping()
         {
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public IMapperProfileDescriptor<TSource, TTarget> ForMember(string source, string target)
         {
             var sourceMember = sourceType.GetMember(source, BindingFlags.IgnoreCase);
@@ -65,22 +85,105 @@ namespace Assimalign.ComponentModel.Mapping.Internal
         }
 
 
-        public IMapperProfileDescriptor<TSource, TTarget> ForMember<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSourceMember"></typeparam>
+        /// <typeparam name="TTargetMember"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IMapperProfileDescriptor<TSource, TTarget> ForMember<TSourceMember, TTargetMember>(
+            Expression<Func<TSource, TSourceMember>> source, 
+            Expression<Func<TTarget, TTargetMember>> target)
         {
-            var lambdaSource = source as LambdaExpression;
-            var lambdaTarget = target as LambdaExpression;
 
-            if (lambdaSource.ReturnType == lambdaTarget.ReturnType)
+            if (source.Body is MemberExpression sourceMember && 
+                target.Body is MemberExpression targetMember)
             {
+                Action<TSource, TTarget> mapperAction = (sourceItem, targetItem) =>
+                {
+                    var sourceValue = source.Compile().Invoke(sourceItem);
 
-            }
-            else
-            {
-                // TODO: Throw invalid cast exception
+                    if (targetMember.Member is PropertyInfo property)
+                    {
+                        property.SetValue(targetItem, sourceValue);
+                    }
+
+                };
+
+                this.Context.MapperActions.Add(mapperAction);
             }
 
-            throw new NotImplementedException();
+
+
+            //var sourceProperties = sourceType.GetProperties();
+            //var targetProperties = targetType.GetProperties();
+
+            //var properties = (from s in sourceProperties
+            //                  from t in targetProperties
+            //                  where s.Name == t.Name &&
+            //                      s.CanRead &&
+            //                      t.CanWrite &&
+            //                      s.PropertyType.IsPublic &&
+            //                      t.PropertyType.IsPublic &&
+            //                      s.PropertyType == t.PropertyType &&
+            //                      (
+            //                          (s.PropertyType.IsValueType &&
+            //                          t.PropertyType.IsValueType
+            //                          ) ||
+            //                          (s.PropertyType == typeof(string) &&
+            //                          t.PropertyType == typeof(string)
+            //                          )
+            //                      )
+            //                  select new PropertyMap
+            //                  {
+            //                      SourceProperty = s,
+            //                      TargetProperty = t
+            //                  }).ToList();
+
+
+            ///*
+            //    When using the 'ForMember' the parameters:
+            //        1.  MUST BE MemberExpressions
+            //*/
+
+            //if (source.Body is LambdaExpression sourceLambda &&  target.Body is LambdaExpression targetLambda)
+            //{
+            //    if (sourceLambda.Body is MemberExpression sourceMember || targetLambda.Body is MemberExpression targetMember)
+            //    {
+            //        Action<TSource, TTarget> mapping = (sourceItem, targetItem) =>
+            //        {
+            //            var targetType = typeof(TTarget);
+
+            //            var member = targetType.GetMember("").FirstOrDefault();
+
+            //            if (member is PropertyInfo property)
+            //            {
+            //               // property.
+            //            }
+            //        };
+            //    }
+            //    else
+            //    {
+            //        throw new Exception("Invalid Expression");
+            //    }
+            //}
+            //else
+            //{
+            //    throw new Exception();
+            //}
+
+            return this;
         }
+
+
+
+
+
+
 
         public IMapperProfileDescriptor<TSource, TTarget>  Create<TSource, TTarget>()
         {
