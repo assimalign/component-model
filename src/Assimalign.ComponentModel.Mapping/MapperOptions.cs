@@ -34,7 +34,6 @@ namespace Assimalign.ComponentModel.Mapping
 
 
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -43,18 +42,14 @@ namespace Assimalign.ComponentModel.Mapping
         /// <param name="profile"></param>
         /// <returns></returns>
         public MapperOptions AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
-        {
-            var context = new MapperProfileContext(typeof(TSource), typeof(TTarget));
-            ((MapperProfile<TSource,TTarget>)profile).Context = context;
-            var descriptor = new MapperProfileDescriptor<TSource, TTarget>(context);
-            var hashcode = HashCode.Combine(profile.Context.SourceType, profile.Context.TargetType);
+        {   
+            profile.Configure(new MapperProfileDescriptor<TSource, TTarget>(profile.Context));
 
             //if (this.ContainsKey(hashcode))
             //{
             //    throw new Exception("Profile already exists");
             //}
 
-            profile.Configure(descriptor);
             AddProfile(profile as IMapperProfile);
             return this;
         }

@@ -99,82 +99,48 @@ namespace Assimalign.ComponentModel.Mapping.Internal
             Expression<Func<TSource, TSourceMember>> source, 
             Expression<Func<TTarget, TTargetMember>> target)
         {
-
-            if (source.Body is MemberExpression sourceMember && 
-                target.Body is MemberExpression targetMember)
+            if (source.Body is MemberExpression sourceMember && target.Body is MemberExpression targetMember)
             {
-                Action<TSource, TTarget> mapperAction = (sourceItem, targetItem) =>
+                var sourceFunc = source.Compile();
+                var targetFunc = target.Compile();
+
+                // Check if mapped types match
+                if (targetMember.Type != sourceMember.Type)
                 {
-                    var sourceValue = source.Compile().Invoke(sourceItem);
+                    throw new InvalidCastException(
+                        $"Cannot implicitly convert '{sourceMember.Type}' to '{targetMember.Type}'. This is a transformation in must be done in the 'ForTarget()' or 'ForSource()' APIs.");
+                }
+
+                // Create the 'TSource' -> 'TTarget' Mapping
+                Action<TSource, TTarget> forwardMapperAction = (sourceInstance, targetInstance) =>
+                {
+                    var sourceValue = sourceFunc.Invoke(sourceInstance);
 
                     if (targetMember.Member is PropertyInfo property)
                     {
-                        property.SetValue(targetItem, sourceValue);
+                        property.SetValue(targetInstance, sourceValue);
                     }
-
                 };
 
-                this.Context.MapperActions.Add(mapperAction);
+                // Create the reverse 'TSource' <- 'TTarget' Mapping
+                Action<TTarget, TSource> reverseMapperAction = (targetInstance, sourceInstance) =>
+                {
+                    var targetValue = targetFunc.Invoke(targetInstance);
+
+                    if (targetMember.Member is PropertyInfo property)
+                    {
+                        property.SetValue(sourceInstance, targetValue);
+                    }
+                };
+
+                // this.Context.MapperActions.Add(mapperAction);
+
+                // .. TODO: Need to implement Mapper Profile Paths for Class to add delegates to
             }
-
-
-
-            //var sourceProperties = sourceType.GetProperties();
-            //var targetProperties = targetType.GetProperties();
-
-            //var properties = (from s in sourceProperties
-            //                  from t in targetProperties
-            //                  where s.Name == t.Name &&
-            //                      s.CanRead &&
-            //                      t.CanWrite &&
-            //                      s.PropertyType.IsPublic &&
-            //                      t.PropertyType.IsPublic &&
-            //                      s.PropertyType == t.PropertyType &&
-            //                      (
-            //                          (s.PropertyType.IsValueType &&
-            //                          t.PropertyType.IsValueType
-            //                          ) ||
-            //                          (s.PropertyType == typeof(string) &&
-            //                          t.PropertyType == typeof(string)
-            //                          )
-            //                      )
-            //                  select new PropertyMap
-            //                  {
-            //                      SourceProperty = s,
-            //                      TargetProperty = t
-            //                  }).ToList();
-
-
-            ///*
-            //    When using the 'ForMember' the parameters:
-            //        1.  MUST BE MemberExpressions
-            //*/
-
-            //if (source.Body is LambdaExpression sourceLambda &&  target.Body is LambdaExpression targetLambda)
-            //{
-            //    if (sourceLambda.Body is MemberExpression sourceMember || targetLambda.Body is MemberExpression targetMember)
-            //    {
-            //        Action<TSource, TTarget> mapping = (sourceItem, targetItem) =>
-            //        {
-            //            var targetType = typeof(TTarget);
-
-            //            var member = targetType.GetMember("").FirstOrDefault();
-
-            //            if (member is PropertyInfo property)
-            //            {
-            //               // property.
-            //            }
-            //        };
-            //    }
-            //    else
-            //    {
-            //        throw new Exception("Invalid Expression");
-            //    }
-            //}
-            //else
-            //{
-            //    throw new Exception();
-            //}
+            else
+            {
+                throw new ArgumentException("'ForMember' only excepts Lambda Expression that return a Member Expression");
+            }
 
             return this;
         }
@@ -185,7 +151,7 @@ namespace Assimalign.ComponentModel.Mapping.Internal
 
 
 
-        public IMapperProfileDescriptor<TSource, TTarget>  Create<TSource, TTarget>()
+        IMapperProfileDescriptor<TSource, TTarget> IMapperProfileDescriptor.Create<TSource, TTarget>()
         {
             throw new NotImplementedException();
         }

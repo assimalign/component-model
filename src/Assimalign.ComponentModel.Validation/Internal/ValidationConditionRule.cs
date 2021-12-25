@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 
 
-namespace Assimalign.ComponentModel.Validation.Internals
+namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Exceptions;
     using Assimalign.ComponentModel.Validation.Abstraction;
@@ -13,6 +13,12 @@ namespace Assimalign.ComponentModel.Validation.Internals
 
     internal sealed class ValidationConditionRule<T> : IValidationConditionRule<T>
     {
+
+        public ValidationConditionRule()
+        {
+            this.ConditionDefaultRuleSet ??= new ValidationRuleStack();
+        }
+
 
         /// <summary>
         /// 
@@ -22,12 +28,12 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <summary>
         /// 
         /// </summary>
-        public IValidationRuleSet ConditionRuleSet { get; } = new ValidationRuleSet();
+        public IValidationRuleStack ConditionRuleSet { get; set; } 
 
         /// <summary>
         /// The rule set to run if condition is not valid.
         /// </summary>
-        public IValidationRuleSet DefaultRuleSet { get; } = new ValidationRuleSet();
+        public IValidationRuleStack ConditionDefaultRuleSet { get; set; } 
 
         /// <summary>
         /// 
@@ -43,16 +49,16 @@ namespace Assimalign.ComponentModel.Validation.Internals
         {
             if (context.Instance is T instance)
             {
-                if (Condition.Compile().Invoke(instance))
+                if (this.Condition.Compile().Invoke(instance))
                 {
                     Parallel.ForEach(this.ConditionRuleSet, rule =>
                     {
                         rule.Evaluate(context);
                     });
                 }
-                else if (DefaultRuleSet.Any())
+                else if (this.ConditionDefaultRuleSet.Any())
                 {
-                    Parallel.ForEach(this.DefaultRuleSet, rule =>
+                    Parallel.ForEach(this.ConditionDefaultRuleSet, rule =>
                     {
                         rule.Evaluate(context);
                     });
@@ -64,20 +70,18 @@ namespace Assimalign.ComponentModel.Validation.Internals
             }
         }
 
-        public void Otherwise(Action<IValidationRuleInitializer<T>> configure)
+        public void Otherwise(Action<IValidationRuleDescriptor<T>> configure)
         {
-            var initializer = new ValidationRuleInitializer<T>();
+            var descriptor = new ValidationRuleDescriptor<T>();
 
-            configure.Invoke(initializer);
+            configure.Invoke(descriptor);
 
-            DefaultRuleSet.Add(this);
-
-            configure.Invoke(initializer);
+            ConditionDefaultRuleSet.Push(this);
         }
 
-        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleInitializer<T>> configure)
+        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
         {
-            var initializer = new ValidationRuleInitializer<T>();
+            var initializer = new ValidationRuleDescriptor<T>();
             var rule = new ValidationConditionRule<T>()
             {
                 Condition = condition

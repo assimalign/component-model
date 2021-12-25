@@ -20,17 +20,18 @@ namespace Assimalign.ComponentModel.Mapping
             this.profiles = new List<IMapperProfile>();
         }
 
-        internal MapperProfileContext(
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceType"></param>
+        /// <param name="targetType"></param>
+        public MapperProfileContext(
             Type sourceType, 
             Type targetType) : this()
         {
             this.SourceType = sourceType;
             this.TargetType = targetType;
-            this.MapperActions = new List<Delegate>();
         }
-
-
-        internal List<Delegate> MapperActions;
 
 
         /// <summary>

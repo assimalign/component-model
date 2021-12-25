@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Assimalign.ComponentModel.Validation.Internals
+namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Rules;
     using Assimalign.ComponentModel.Validation.Exceptions;
@@ -45,7 +45,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <summary>
         /// 
         /// </summary>
-        public IValidator<TMember> MemberValidator { get; set; }
+       // public IValidator<TMember> MemberValidator { get; set; }
 
         /// <summary>
         /// 
@@ -55,12 +55,12 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IValidationRule> Rules => rules;
+        public ValidationRuleStack MemberRules => rules;
 
         /// <summary>
         /// 
         /// </summary>
-        public IValidator<TMember> Validator { get; set; }
+      //  public IValidator<TMember> Validator { get; set; }
 
         /// <summary>
         /// 

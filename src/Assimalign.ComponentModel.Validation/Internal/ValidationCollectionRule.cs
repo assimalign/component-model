@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 
-namespace Assimalign.ComponentModel.Validation.Internals
+namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Abstraction;
     
@@ -25,7 +25,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
         /// <summary>
         /// 
         /// </summary>
-        public IValidationRuleSet Rules { get; }
+        public IValidationRuleStack Rules { get; }
 
         /// <summary>
         /// 

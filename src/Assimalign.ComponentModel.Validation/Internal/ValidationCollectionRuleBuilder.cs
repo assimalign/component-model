@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Internals
+namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Rules;
-    using Assimalign.ComponentModel.Validation.Internals;
+    using Assimalign.ComponentModel.Validation.Internal;
     using Assimalign.ComponentModel.Validation.Abstraction;
 
 
@@ -62,7 +62,7 @@ namespace Assimalign.ComponentModel.Validation.Internals
             return this;
         }
 
-        public IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleInitializer<TValue>> child)
+        public IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> child)
         {
             throw new NotImplementedException();
         }

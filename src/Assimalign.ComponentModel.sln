@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6796623E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Mapping", "Assimalign.ComponentModel.Mapping\Assimalign.ComponentModel.Mapping.csproj", "{169A7314-0CDA-46FA-BF41-21D24F630DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.ValidationTests", "Assimalign.ComponentModel.ValidationTests\Assimalign.ComponentModel.ValidationTests.csproj", "{E84AD542-1A54-425F-9532-07FB8E5B0F08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.ValidationTests", "Assimalign.ComponentModel.ValidationTests\Assimalign.ComponentModel.ValidationTests.csproj", "{E84AD542-1A54-425F-9532-07FB8E5B0F08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.MappingTests", "Assimalign.ComponentModel.MappingTests\Assimalign.ComponentModel.MappingTests.csproj", "{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.MappingTests", "Assimalign.ComponentModel.MappingTests\Assimalign.ComponentModel.MappingTests.csproj", "{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{C827C7C7-497F-453A-8A6B-1318C266F683}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

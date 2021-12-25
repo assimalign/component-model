@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Mapping.Types
 {
@@ -12,11 +12,18 @@ namespace Assimalign.ComponentModel.Mapping.Types
     /// </summary>
     public record class MapperPath
     {
+        private bool isMapped;
+
+
+        public MapperPath(string path)
+        {
+            this.Path = path;
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Path { get; set; }
+        public string Path { get; }
 
         /// <summary>
         /// 
@@ -26,7 +33,25 @@ namespace Assimalign.ComponentModel.Mapping.Types
         /// <summary>
         /// 
         /// </summary>
-        public MapperPath? NestedPath { get; set;  }
+        public MapperPath? NestedPath { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsMapped => isMapped;
+
+
+
+        internal void SetMapped(bool? isMapped)
+        {
+            if (isMapped is not null)
+            {
+                this.isMapped = isMapped ?? default;
+            }
+        }
+
+
+        //public MapperPath 
 
 
         public static MapperPath Create<T>(string path)
@@ -34,6 +59,20 @@ namespace Assimalign.ComponentModel.Mapping.Types
         {
             return Create(path, typeof(T));
         }
+
+
+        internal static IEnumerable<MapperPath> Create(Type type)
+        {
+            var paths = new List<MapperPath>();
+            var members = type.GetMembers();
+
+
+
+
+
+            return paths;
+        }
+
 
 
         internal static MapperPath Create(string path, Type type)
@@ -44,7 +83,8 @@ namespace Assimalign.ComponentModel.Mapping.Types
                 {
                     if (x.DeclaringType == type)
                     {
-                        return x.MemberType == MemberTypes.Property || x.MemberType == MemberTypes.Field;
+                        return x.MemberType == MemberTypes.Property || 
+                               x.MemberType == MemberTypes.Field;
                     }
                     else
                     {
@@ -56,9 +96,8 @@ namespace Assimalign.ComponentModel.Mapping.Types
             {
                 var nestedPath = paths.Length > 1 ? MapperPath.Create(string.Join('.', paths.Skip(1)), property.PropertyType) : null;
 
-                return new MapperPath()
+                return new MapperPath(paths[0])
                 {
-                    Path = paths[0],
                     PathType = property.PropertyType,
                     NestedPath = nestedPath
                 };
@@ -67,9 +106,8 @@ namespace Assimalign.ComponentModel.Mapping.Types
             {
                 var nestedPath = paths.Length > 1 ? MapperPath.Create(string.Join('.', paths.Skip(1)), field.FieldType) : null;
 
-                return new MapperPath()
+                return new MapperPath(paths[0])
                 {
-                    Path = paths[0],
                     PathType = field.FieldType,
                     NestedPath = nestedPath
                 };

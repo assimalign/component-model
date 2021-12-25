@@ -118,9 +118,4 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// </summary>
     /// <param name="action"></param>
     void AfterMap(Action<TSource, TTarget> action);
-
-    /// <summary>
-    /// Only applies to 
-    /// </summary>
-    void ReverseMap();
 }

@@ -1,172 +1,151 @@
 ﻿using System;
 using System.Text.Json;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation;
+
+
+using Assimalign.ComponentModel.Validation.Rules;
+using Assimalign.ComponentModel.Validation.Internal;
+using Assimalign.ComponentModel.Validation.Exceptions;
+
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class Validator : IValidator
 {
-    using Assimalign.ComponentModel.Validation.Rules;
-    using Assimalign.ComponentModel.Validation.Internals;
-    using Assimalign.ComponentModel.Validation.Exceptions;
-    using Assimalign.ComponentModel.Validation.Abstraction;
-    
+    private readonly ValidationOptions options;
+
+    internal Validator() { }
+
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Validator : IValidator
+    /// <param name="options"></param>
+    public Validator(ValidationOptions options)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name { get; set; }
+        this.options = options;
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public IValidationRuleSet Rules => throw new NotImplementedException();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    public Validator(Action<ValidationOptions> configure)
+    {
+        var options = new ValidationOptions();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public ValidationResult Validate(IValidationContext context)
-        {
-            throw new NotImplementedException();
-        }
+        configure.Invoke(options);
+
+        this.options = options;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <returns></returns>
+    public ValidationResult Validate<T>(T instance)
+    {
+        return Validate(new ValidationContext<T>(instance));
+    }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="json"></param>
-        /// <param name="options"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IValidator BuildFromJson<T>(string json, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<ValidationResult> ValidateAsync<T>(T instance)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Validator<T> : IValidator<T>, IValidationRuleInitializer<T>
+    /// <param name="instance"></param>
+    /// <param name="profile"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public ValidationResult Validate<T>(T instance, string profile)
     {
+        return Validate(new ValidationContext<T>(instance), profile);
+    }
 
-        private readonly ValidationRuleSet rules = new ValidationRuleSet();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public ValidationResult Validate(IValidationContext context)
+    {
+        var profiles = this.options.Profiles
+            .Where(x => x.Value.ValidationType == context.Type)
+            .Select(x=>x.Value);
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected Validator(string name = "")
+        foreach(var profile in profiles)
         {
-            this.Name = name;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IValidationRuleSet Rules => rules;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        public ValidationResult Validate(T instance) =>
-            Validate(new ValidationContext<T>(instance));
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public ValidationResult Validate(IValidationContext context)
-        {
-            foreach (var rule in this.Rules)
+            foreach(var rule in profile.ValidationRules)
             {
                 rule.Evaluate(context);
             }
-
-            return ValidationResult.Create(context);
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TMember"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
-        {
-            var rule = new ValidationMemberRule<T, TMember>()
-            {
-                Member = expression
-            };
-
-            Rules.Add(rule);
-
-            return new ValidationMemberRuleBuilder<T, TMember>(rule);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TCollection"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
-            where TCollection : IEnumerable
-        {
-            var rule = new ValidationCollectionRule<T, TCollection>()
-            {
-                Collection = expression
-            };
-
-            Rules.Add(rule);
-
-            return new ValidationCollectionRuleBuilder<T, TCollection>(rule);
-        }
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="condition">What condition is required</param>
-        /// <param name="configure">The validation to </param>
-        /// <returns></returns>
-        public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleInitializer<T>> configure)
-        {
-            var initializer = new ValidationRuleInitializer<T>();
-            var rule = new ValidationConditionRule<T>()
-            {
-                Condition = condition
-            };
-
-            Rules.Add(rule);
-            configure.Invoke(initializer);
-            rule.ConditionRuleSet.Add(initializer.Current);
-
-            return rule;
-        }
+        return ValidationResult.Create(context);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="profile"></param>
+    /// <returns></returns>
+    public ValidationResult Validate(IValidationContext context, string profile)
+    {
+        var index = HashCode.Combine(profile, context.Type);
+        
+        if (this.options.Profiles.TryGetValue(index, out var profile1))
+        {
+            foreach(var rule in profile1.ValidationRules)
+            {
+                rule.Evaluate(context);
+            }
+        }
+
+        return ValidationResult.Create(context);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public static IValidator Create(Action<ValidationOptions> configure)
+    {
+        var options = new ValidationOptions();
+
+        configure.Invoke(options);
+
+        return new Validator(options);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="json"></param>
+    /// <param name="options"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static IValidator CreateFromConfiguration<T>(string json, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+
 }

@@ -15,6 +15,11 @@ public interface IMapperProfile
     /// <summary>
     /// 
     /// </summary>
+    int ProfileId { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     MapperProfileContext Context { get; }
 
     /// <summary>

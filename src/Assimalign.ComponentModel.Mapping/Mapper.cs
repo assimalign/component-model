@@ -48,20 +48,16 @@ namespace Assimalign.ComponentModel.Mapping
         public TTarget Map<TSource, TTarget>(TSource source)
             where TTarget : new()
         {
-            var target = new TTarget();
-            var profile = this.profiles.FirstOrDefault(x=>x.Context.SourceType == typeof(TSource) && x.Context.TargetType == typeof(TTarget));
-            
-            
-            foreach(var action in profile.Context.MapperActions)
+            var results = this.Map(source, typeof(TSource), typeof(TTarget));
+
+            if (results is TTarget target)
             {
-                if (action is Action<TSource, TTarget> mapperAction)
-                {
-                    mapperAction.Invoke(source, target);
-                }
+                return target;
             }
-
-
-            return target;
+            else
+            {
+                throw new Exception("");
+            }
         }
 
         /// <summary>
@@ -75,7 +71,16 @@ namespace Assimalign.ComponentModel.Mapping
         /// <exception cref="NotImplementedException"></exception>
         public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
         {
-            throw new NotImplementedException();
+            var mapperResults = this.Map(source, target, typeof(TSource), typeof(TTarget));
+
+            if (mapperResults is TTarget target1)
+            {
+                return target1;
+            }
+            else
+            {
+                throw new Exception("");
+            }
         }
 
         /// <summary>
@@ -88,7 +93,21 @@ namespace Assimalign.ComponentModel.Mapping
         /// <exception cref="NotImplementedException"></exception>
         public object Map(object source, Type sourceType, Type targetType)
         {
-            throw new NotImplementedException();
+
+
+            var profile = this.profiles.FirstOrDefault(x => x.Context.SourceType == typeof(TSource) && x.Context.TargetType == typeof(TTarget));
+
+
+            foreach (var action in profile.Context.MapperActions)
+            {
+                if (action is Action<TSource, TTarget> mapperAction)
+                {
+                    mapperAction.Invoke(source, target);
+                }
+            }
+
+
+            return target;
         }
 
         /// <summary>

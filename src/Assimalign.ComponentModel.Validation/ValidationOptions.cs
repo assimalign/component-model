@@ -6,21 +6,48 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
-    using Assimalign.ComponentModel.Validation.Abstraction;
     /// <summary>
     /// 
     /// </summary>
     public sealed class ValidationOptions
     {
-        private IList<IValidationRule> rules = new List<IValidationRule>();
+        private readonly IList<IValidationRule> rules;
+        
+            
+        internal IDictionary<int, IValidationProfile> Profiles { get; } = new Dictionary<int, IValidationProfile>();
 
 
+        public ValidationOptions()
+        {
+            this.rules = new List<IValidationRule>();
+            //this.profiles = new Dictionary<int, IValidationProfile>();
+        }
 
+        
+
+
+        /// <summary>
+        /// The registered profiles for the 
+        /// </summary>
+        //public IEnumerable<IValidationProfile> Profiles => this.profiles.Values;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IValidationRule> RegisteredRules => rules;
+        public IEnumerable<IValidationRule> ValidationRules => rules;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ProfileNameCaseSensitive { get; set; }
+
+        /// <summary>
+        /// Will throw a <see cref="ValidatorException"/> rather than return <see cref="ValidationResult"/>.
+        /// </summary>
+        public bool ThrowExceptionOnFailure { get; set; }
+
+
+
 
 
 
@@ -30,13 +57,28 @@ namespace Assimalign.ComponentModel.Validation
         /// Register an additional Validator not supported within the library.
         /// </summary>
         /// <typeparam name="TValidatorRule"></typeparam>
-        public void RegisterRule<TValidatorRule>()
+        public void AddRule<TValidatorRule>()
             where TValidatorRule : IValidationRule, new()
         {
             rules.Add(new TValidatorRule());
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks></remarks>
+        /// <param name="profile"></param>
+        public void AddProfile(IValidationProfile profile)
+        {
+            if (profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
 
+            var index = HashCode.Combine(profile.Name, profile.ValidationType);
+
+            Profiles[index] = profile;
+        }
     }
 }

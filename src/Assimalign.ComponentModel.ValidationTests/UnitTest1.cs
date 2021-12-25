@@ -6,7 +6,6 @@ using System.Collections.Generic;
 namespace Assimalign.ComponentModel.ValidationTests
 {
     using Assimalign.ComponentModel.Validation;
-    using Assimalign.ComponentModel.Validation.Abstraction;
     using Assimalign.ComponentModel.Validation.Rules;
     
 
@@ -21,7 +20,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         }
     }
 
-    public class UserValidator : Validator<User>
+    public class UserValidator : ValidationProfile<User>
     {
 
         public UserValidator()
@@ -84,6 +83,15 @@ namespace Assimalign.ComponentModel.ValidationTests
             //    });
         }
 
+        public override void Configure(IValidationRuleDescriptor<User> descriptor)
+        {
+
+            descriptor.RuleFor(p => p.Age)
+                .Between(10, 12)
+                .NotEmpty();
+
+            descriptor.RuleForEach(p => p.Addresses);
+        }
     }
 
 

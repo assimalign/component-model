@@ -58,7 +58,12 @@ namespace Assimalign.ComponentModel.MappingTests
         {
             public override void Configure(IMapperProfileDescriptor<Employee1, Employee2> descriptor)
             {
-               
+                descriptor
+                    .BeforeMap((source, target) =>
+                    {
+                        source.Details ??= new EmployeeDetails();
+                    });
+
                 descriptor
                     .ForMember(source => source.Details.FirstName, target => target.FirstName)
                     .ForMember(source => source.Details.LastName, target => target.LastName);
@@ -81,7 +86,8 @@ namespace Assimalign.ComponentModel.MappingTests
             {
                 Details = new EmployeeDetails()
                 {
-                    FirstName = "Chase"
+                    FirstName = "Chase",
+                    LastName = "Crawford"
                 }
             };
 
