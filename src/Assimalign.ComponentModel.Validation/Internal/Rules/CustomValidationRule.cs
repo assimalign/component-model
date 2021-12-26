@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation.Rules
 {
     using Assimalign.ComponentModel.Validation.Exceptions;
-    using Assimalign.ComponentModel.Validation.Abstraction;
+   
 
     internal sealed class CustomValidationRule<T, TValue> : IValidationRule, IValidationError
     {
@@ -43,7 +43,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
             }
             else
             {
-                throw new ValidatorInternalException("");
+                throw new ValidationInternalException("");
             }
         }
     }

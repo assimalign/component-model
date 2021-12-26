@@ -4,66 +4,64 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 
-namespace Assimalign.ComponentModel.Validation.Internal
+namespace Assimalign.ComponentModel.Validation.Internal;
+
+
+internal sealed class ValidationCollectionRule<T, TCollection> : 
+    IValidationCollectionRule<T, TCollection> where TCollection : IEnumerable
 {
-    using Assimalign.ComponentModel.Validation.Abstraction;
-    
-    internal sealed class ValidationCollectionRule<T, TCollection> : IValidationCollectionRule<T, TCollection>
-        where TCollection : IEnumerable
+    // long - index of rule | string - message for indexed rule
+    private readonly IDictionary<long, string> codes = new Dictionary<long, string>();
+    private readonly IDictionary<long, string> messages = new Dictionary<long, string>();
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Expression<Func<T, TCollection>> Collection { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IValidationRuleStack CollectionRules { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    //public IValidator<TCollection> Validator { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rule"></param>
+    public IValidationCollectionRule<T, TCollection> AddRule(IValidationRule rule)
     {
-        // long - index of rule | string - message for indexed rule
-        private readonly IDictionary<long, string> codes = new Dictionary<long, string>();
-        private readonly IDictionary<long, string> messages = new Dictionary<long, string>();
+        this.CollectionRules.Push(rule);
+        return this;
+    }
 
-        private readonly IList<IValidationRule> rules = new List<IValidationRule>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Expression<Func<T, TCollection>> Collection { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IValidationRuleStack Rules { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IValidator<TCollection> Validator { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rule"></param>
-        public IValidationCollectionRule<T, TCollection> AddRule(IValidationRule rule) 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    public void Evaluate(IValidationContext context)
+    {
+        if (context.Instance is T instance)
         {
-            rules.Add(rule);
-            return this;
-        }
+            var values = this.Collection.Compile();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        public void Evaluate(IValidationContext context)
-        {
-            if (context.Instance is T instance)
+            foreach (var value in values.Invoke(instance))
             {
-                var values = this.Collection.Compile();
 
-                foreach(var value in values.Invoke(instance))
-                {
-
-                }
             }
-
-            throw new NotImplementedException();
         }
+
+        throw new NotImplementedException();
     }
 }
+

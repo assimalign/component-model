@@ -45,7 +45,7 @@ public sealed class ValidationContext<T> : IValidationContext
     /// <summary>
     /// 
     /// </summary>
-    public Type Type { get; set; }
+    public Type InstanceType => this.type;
 
     /// <summary>
     /// A collection of validation failures that occurred.

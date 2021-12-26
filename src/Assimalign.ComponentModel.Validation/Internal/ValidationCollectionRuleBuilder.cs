@@ -9,7 +9,7 @@ namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Rules;
     using Assimalign.ComponentModel.Validation.Internal;
-    using Assimalign.ComponentModel.Validation.Abstraction;
+
 
 
     internal sealed class ValidationCollectionRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
@@ -50,8 +50,8 @@ namespace Assimalign.ComponentModel.Validation.Internal
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TLowerBound"></typeparam>
-        /// <typeparam name="TUpperBound"></typeparam>
+        /// <typeparam name="TBound"></typeparam>
+        /// <typeparam name="TBound"></typeparam>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
@@ -142,10 +142,10 @@ namespace Assimalign.ComponentModel.Validation.Internal
             throw new NotImplementedException();
         }
 
-        public IValidationRuleBuilder<T, TValue> UseValidator(IValidator<TValue> validator)
-        {
-            throw new NotImplementedException();
-        }
+        //public IValidationRuleBuilder<T, TValue> UseValidator(IValidator<TValue> validator)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public IValidationRuleBuilder<T, TValue> WithErrorCode(string code)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
-    using Assimalign.ComponentModel.Validation.Abstraction;
+   
     using Assimalign.ComponentModel.Validation.Extensions;
     using Assimalign.ComponentModel.Validation.Exceptions;
 
@@ -42,7 +42,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
                 }
                 else
                 {
-                    throw new ValidatorInvalidEvaluationException(
+                    throw new ValidationInvalidEvaluationException(
                         message: $"",
                         source: $"");
                 }

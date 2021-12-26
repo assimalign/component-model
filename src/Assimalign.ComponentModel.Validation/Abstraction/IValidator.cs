@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -20,7 +16,6 @@ public interface IValidator
     /// <remarks></remarks>
     ValidationResult Validate<T>(T instance);
 
-
     /// <summary>
     /// Validates the <paramref name="instance"/> for each profile that matches the <typeparamref name="T"/>.
     /// </summary>
@@ -34,9 +29,18 @@ public interface IValidator
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="instance">The instance to validate.</param>
-    /// <param name="profile">The name of the profile to use to validate the <paramref name="instance"/>.</param>
+    /// <param name="profileName">The name of the profile to use to validate the <paramref name="instance"/>.</param>
     /// <returns></returns>
-    ValidationResult Validate<T>(T instance, string profile);
+    ValidationResult Validate<T>(T instance, string profileName);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="instance"></param>
+    /// <param name="profileName"></param>
+    /// <returns></returns>
+    Task<ValidationResult> ValidateAsync<T>(T instance, string profileName);
 
     /// <summary>
     /// 
@@ -49,8 +53,23 @@ public interface IValidator
     /// 
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="profile">The name of the profile to use to validate the <see cref="IValidationContext.Instance"/>.</param>
     /// <returns></returns>
-    ValidationResult Validate(IValidationContext context, string profile);
+    Task<ValidationResult> ValidateAsync(IValidationContext context);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="profileName">The name of the profile to use to validate the <see cref="IValidationContext.Instance"/>.</param>
+    /// <returns></returns>
+    ValidationResult Validate(IValidationContext context, string profileName);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="profileName"></param>
+    /// <returns></returns>
+    Task<ValidationResult> ValidateAsync(IValidationContext context, string profileName);
 }
 

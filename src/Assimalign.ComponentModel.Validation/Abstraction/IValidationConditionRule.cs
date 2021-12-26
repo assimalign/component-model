@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -21,7 +18,7 @@ public interface IValidationConditionRule<T> : IValidationRule
     Expression<Func<T, bool>> Condition { get; set; }
 
     /// <summary>
-    /// The rule set to run if condition predicate is 'false'. <see cref="IValidationConditionRule{T}.When(Expression{Func{T, bool}}, Action{IValidationRuleDescriptor{T}})"/>
+    /// The rule set to run if condition predicate is 'true'. <see cref="IValidationConditionRule{T}.When(Expression{Func{T, bool}}, Action{IValidationRuleDescriptor{T}})"/>
     /// </summary>
     IValidationRuleStack ConditionRuleSet { get; }
 
@@ -44,4 +41,3 @@ public interface IValidationConditionRule<T> : IValidationRule
     /// <param name="configure"></param>
     void Otherwise(Action<IValidationRuleDescriptor<T>> configure);
 }
-

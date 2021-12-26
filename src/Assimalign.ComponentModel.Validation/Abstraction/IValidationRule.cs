@@ -11,7 +11,7 @@ public interface IValidationRule
     string Name { get; }
 
     /// <summary>
-    /// 
+    /// Runs the validation rule against the given context.
     /// </summary>
     /// <param name="context"></param>
     void Evaluate(IValidationContext context);

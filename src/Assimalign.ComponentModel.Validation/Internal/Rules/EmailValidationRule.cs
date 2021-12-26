@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
-    using Assimalign.ComponentModel.Validation.Abstraction;
+   
     using Assimalign.ComponentModel.Validation.Exceptions;
 
 
@@ -77,7 +77,7 @@ namespace Assimalign.ComponentModel.Validation.Rules
                 }
                 else
                 {
-                    throw new ValidatorInvalidEvaluationException(
+                    throw new ValidationInvalidEvaluationException(
                         message: "The property, field, or collection type is not valid for Email Validation.",
                         source: $"{this.expression}");
                 }

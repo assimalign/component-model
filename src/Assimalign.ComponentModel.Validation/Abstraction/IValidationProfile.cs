@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.ComponentModel.Validation;
 
 /// <summary>
-/// 
+/// Defines the validation rules for the <see cref="IValidationProfile.ValidationType"/>.
 /// </summary>
 public interface IValidationProfile 
 {

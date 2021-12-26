@@ -7,7 +7,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 {
     using Assimalign.ComponentModel.Validation;
     using Assimalign.ComponentModel.Validation.Rules;
-    
+    using System.Collections;
 
     public class UnitTest1
     {
@@ -15,21 +15,23 @@ namespace Assimalign.ComponentModel.ValidationTests
         public void Test1()
         {
             var user = new User() { FirstName = "Chase"};
-            var validator = new UserValidator();
+
+
+            var validator = Validator.Create(configure =>
+            {
+                configure.AddProfile(new UserValidationProfile());
+            });
+
             var validation = validator.Validate(user);
         }
     }
 
-    public class UserValidator : ValidationProfile<User>
+    public class UserValidationProfile : ValidationProfile<User>
     {
 
-        public UserValidator()
+        public UserValidationProfile()
         {
-            When(x => x.FirstName == "Chase", validation =>
-            {
-                validation.RuleFor(p => p.Age)
-                    .Between(22, 23);
-            });
+
 
             //RuleForEach(p => p.Ages)
             //    .Between(0, 34);
@@ -85,19 +87,35 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
+            descriptor
+                .When(x => x.EmailAddress != null, configure =>
+                  {
+
+                  })
+                .Otherwise(configure =>
+                {
+                    
+                });
+
+            descriptor.RuleFor(x => x.Age)
+                .GreaterThan(10, configure =>
+                {
+                    configure.Message = "";
+                    configure.
+                });
 
             descriptor.RuleFor(p => p.Age)
-                .Between(10, 12)
-                .NotEmpty();
+                .Between(10, 12);
 
-            descriptor.RuleForEach(p => p.Addresses);
+           // descriptor.RuleForEach(p => p.Addresses);
         }
     }
 
 
+
     public class User : IComparable
     {
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
 
         public int[] Ages { get; set; }

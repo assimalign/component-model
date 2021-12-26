@@ -241,9 +241,9 @@ public sealed class ValidationRuleStack : IValidationRuleStack
 	private void Grow(int capacity)
 	{
 		int num = ((array.Length == 0) ? 4 : (2 * array.Length));
-		if ((uint)num > Array.MaxLength)
+		if ((uint)num > 2147483591)
 		{
-			num = Array.MaxLength;
+			num = 2147483591;
 		}
 		if (num < capacity)
 		{
@@ -304,9 +304,9 @@ public sealed class ValidationRuleStack : IValidationRuleStack
 					if (num == array2.Length)
 					{
 						int num2 = num << 1;
-						if ((uint)num2 > Array.MaxLength)
+						if ((uint)num2 > 2147483591)
 						{
-							num2 = ((Array.MaxLength <= num) ? (num + 1) : Array.MaxLength);
+							num2 = ((2147483591 <= num) ? (num + 1) : 2147483591);
 						}
 						Array.Resize(ref array2, num2);
 					}
@@ -322,7 +322,10 @@ public sealed class ValidationRuleStack : IValidationRuleStack
 
     public void Evaluate(IValidationContext context)
     {
-        throw new NotImplementedException();
+		foreach (var rule in this)
+        {
+			rule.Evaluate(context);
+        }
     }
 
     public IEnumerator<IValidationRule> GetEnumerator()

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.ComponentModel.Validation;
+﻿namespace Assimalign.ComponentModel.Validation;
 
 /// <summary>
 /// 
@@ -14,7 +8,7 @@ public interface IValidationError
     /// <summary>
     /// A unique error code to use when the validation rule fails.
     /// </summary>
-    string Code { get; set; }
+    string Code { get; set; } 
 
     /// <summary>
     /// A unique error message to use when the validation rule fails.

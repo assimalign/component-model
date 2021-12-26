@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation
 {
     using Assimalign.ComponentModel.Validation.Rules;
-    using Assimalign.ComponentModel.Validation.Abstraction;
     using Assimalign.ComponentModel.Validation.Internal;
     
 

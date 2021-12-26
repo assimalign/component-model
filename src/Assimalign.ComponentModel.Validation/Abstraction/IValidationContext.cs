@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -12,33 +9,33 @@ namespace Assimalign.ComponentModel.Validation;
 public interface IValidationContext
 {
     /// <summary>
-    /// The instance to validate.
+    /// The instance to apply the validation rules that match the instance type.
     /// </summary>
     object Instance { get; }
 
     /// <summary>
-    /// 
+    /// The instance type being validated.
     /// </summary>
-    Type Type { get; }
+    Type InstanceType { get; }
 
     /// <summary>
-    /// 
+    /// A collection of successful validations.
     /// </summary>
     IEnumerable<IValidationRule> Successes { get; }
 
     /// <summary>
-    /// 
+    /// A collection of validation failures.
     /// </summary>
     IEnumerable<IValidationError> Errors { get; }
 
     /// <summary>
-    /// 
+    /// Adds a validation failure to <see cref="IValidationContext.Errors"/>
     /// </summary>
-    /// <param name="error"></param>
+    /// <param name="error">A description of the validation error.</param>
     void AddFailure(IValidationError error);
 
     /// <summary>
-    /// 
+    /// Adds a generic validation failure to <see cref="IValidationContext.Errors"/>
     /// </summary>
     /// <param name="failureMessage"></param>
     void AddFailure(string failureMessage);
@@ -50,4 +47,3 @@ public interface IValidationContext
     /// <param name="failureMessage"></param>
     void AddFailure(string failureSource, string failureMessage);
 }
-

@@ -10,7 +10,6 @@ namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Rules;
     using Assimalign.ComponentModel.Validation.Exceptions;
-    using Assimalign.ComponentModel.Validation.Abstraction;
 
     internal sealed class ValidationMemberRule<T, TMember> : IValidationMemberRule<T, TMember>
     {
@@ -20,7 +19,12 @@ namespace Assimalign.ComponentModel.Validation.Internal
 
 
         private Expression<Func<T, TMember>> member;
-        private readonly Stack<IValidationRule> rules = new Stack<IValidationRule>();
+
+        public ValidationMemberRule()
+        {
+            this.MemberRules ??= new ValidationRuleStack();
+        }
+
 
 
         /// <summary>
@@ -37,7 +41,7 @@ namespace Assimalign.ComponentModel.Validation.Internal
                 }
                 else
                 {
-                    throw new ValidatorMemberException();
+                    throw new ValidationMemberException();
                 }
             }
         }
@@ -55,7 +59,7 @@ namespace Assimalign.ComponentModel.Validation.Internal
         /// <summary>
         /// 
         /// </summary>
-        public ValidationRuleStack MemberRules => rules;
+        public IValidationRuleStack MemberRules { get; set; } 
 
         /// <summary>
         /// 
@@ -68,7 +72,7 @@ namespace Assimalign.ComponentModel.Validation.Internal
         /// <param name="rule"></param>
         public IValidationMemberRule<T, TMember> AddRule(IValidationRule rule)
         {
-            rules.Push(rule);
+            MemberRules.Push(rule);
             return this;
         }
             
@@ -81,7 +85,7 @@ namespace Assimalign.ComponentModel.Validation.Internal
         {
             if (context.Instance is T instance)
             {
-                Parallel.ForEach(this.Rules, (rule, state, index) =>
+                Parallel.ForEach(this.MemberRules, (rule, state, index) =>
                 {
                     if (codes.TryGetValue(index, out var code))
                     {

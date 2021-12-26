@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Rules
 {
-    using Assimalign.ComponentModel.Validation.Abstraction;
+   
 
 
     internal class NotEmptyValidationRule<T, TValue> : IValidationRule, IValidationError

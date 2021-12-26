@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
 /// <summary>
-/// 
+/// A rule for validating each value in a collection.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TCollection"></typeparam>
@@ -24,7 +20,7 @@ public interface IValidationCollectionRule<T, TCollection> : IValidationRule
     /// <summary>
     /// The set of validation rules to apply to each value in the collection.
     /// </summary>
-    IValidationRuleStack CollectionRuleRules { get; }
+    IValidationRuleStack CollectionRules { get; }
 
 
     /// <summary>

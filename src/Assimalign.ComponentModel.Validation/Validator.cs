@@ -53,7 +53,8 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate<T>(T instance)
     {
-        return Validate(new ValidationContext<T>(instance));
+        var context = new ValidationContext<T>(instance) as IValidationContext;
+        return Validate(context);
     }
 
 
@@ -84,11 +85,13 @@ public sealed class Validator : IValidator
     public ValidationResult Validate(IValidationContext context)
     {
         var profiles = this.options.Profiles
-            .Where(x => x.Value.ValidationType == context.Type)
+            .Where(x => x.Value.ValidationType == context.InstanceType)
             .Select(x=>x.Value);
 
         foreach(var profile in profiles)
         {
+            profile.Configure();
+
             foreach(var rule in profile.ValidationRules)
             {
                 rule.Evaluate(context);
@@ -106,7 +109,7 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate(IValidationContext context, string profile)
     {
-        var index = HashCode.Combine(profile, context.Type);
+        var index = HashCode.Combine(profile, context.InstanceType);
         
         if (this.options.Profiles.TryGetValue(index, out var profile1))
         {
@@ -146,6 +149,4 @@ public sealed class Validator : IValidator
     {
         throw new NotImplementedException();
     }
-
-
 }
