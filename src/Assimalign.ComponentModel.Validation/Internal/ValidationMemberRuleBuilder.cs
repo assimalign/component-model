@@ -70,15 +70,15 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
     /// 
     /// </summary>
     /// <typeparam name="TBound"></typeparam>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
     /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : IComparable<TBound>
     {
         return BetweenOrEqualTo<TBound>(lowerBound, upperBound, configure =>
         {
-
+            configure.Message = "";
         });
     }
 
@@ -105,14 +105,23 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
         return this;
     }
 
+
     public IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> child)
     {
+        
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="validation"></param>
+    /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> Custom(Action<TValue, IValidationContext> validation)
     {
-        throw new NotImplementedException();
+        MemberRule.AddRule(new CustomValidationRule<T, TValue>(MemberRule.Member, validation));
+
+        return this;
     }
 
     public IValidationRuleBuilder<T, TValue> Empty()

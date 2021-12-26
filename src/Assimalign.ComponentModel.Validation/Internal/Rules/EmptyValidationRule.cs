@@ -1,39 +1,63 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Rules
+namespace Assimalign.ComponentModel.Validation.Internal.Rules;
+
+
+internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
 {
+    private readonly string name;
+    private readonly Expression<Func<T, TValue>> expression;
 
-
-    internal class EmptyValidationRule<T, TValue> : IValidationRule
+    public EmptyValidationRule(Expression<Func<T, TValue>> expression)
     {
-        private readonly string name;
-        private readonly Expression<Func<T, TValue>> expression;
+        this.expression = expression;
+    }
 
-        public EmptyValidationRule(Expression<Func<T, TValue>> expression)
+
+    public string Name => this.name;
+
+    public void Evaluate(IValidationContext context)
+    {
+        if (context.Instance is T instance)
         {
-            this.expression = expression;
+            var value = this.GetValue(instance);
+
+            if (value is null)
+            {
+                return;
+            }
+
+            if (typeof(TValue) == typeof(string))
+            {
+
+            }
+            else if (typeof(TValue) == typeof(IEnumerable))
+            {
+
+            }
         }
-
-
-        public string Name => this.name;
-
-        public void Evaluate(IValidationContext context)
+        else
         {
-            if (context.Instance is T instance)
-            {
-                var value = expression.Compile().Invoke(instance);
+
+        }
+    }
 
 
-            }
-            else
-            {
-
-            }
+    private TValue GetValue(T instance)
+    {
+        try
+        {
+            return expression.Compile().Invoke(instance);
+        }
+        catch(Exception exception)
+        {
+            return default(TValue);
         }
     }
 }
