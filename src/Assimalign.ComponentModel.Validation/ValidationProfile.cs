@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -47,7 +43,12 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     /// <summary>
     /// 
     /// </summary>
-    public void Configure()
+    public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    void IValidationProfile.Configure()
     {
         this.Configure(new ValidationRuleDescriptor<T>()
         {
@@ -96,6 +97,11 @@ public abstract class ValidationProfile : IValidationProfile
     /// 
     /// </summary>
     public IValidationRuleStack ValidationRules => this.rules;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
 
 
     /// <summary>

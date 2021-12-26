@@ -8,10 +8,10 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal;
 
 
-using Assimalign.ComponentModel.Validation.Exceptions;
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
-internal sealed class ValidationConditionRule<T> : IValidationConditionRule<T>
+internal sealed class ValidationConditionRule<T> : IValidationCondition<T>
 {
 
     public ValidationConditionRule()
@@ -85,7 +85,7 @@ internal sealed class ValidationConditionRule<T> : IValidationConditionRule<T>
         }
     }
 
-    public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
         var descriptor = new ValidationRuleDescriptor<T>()
         {

@@ -33,13 +33,26 @@ internal sealed class CustomValidationRule<T, TValue> : IValidationRule, IValida
     {
         if (context.Instance is T instance)
         {
-            var member = this.expression.Compile().Invoke(instance);
+            var member = this.GetValue(instance);
 
             validation.Invoke(member, context);
         }
         else
         {
             throw new ValidationInternalException("");
+        }
+    }
+
+
+    private TValue GetValue(T instance)
+    {
+        try
+        {
+            return this.expression.Compile().Invoke(instance);
+        }
+        catch
+        {
+            return default(TValue);
         }
     }
 }

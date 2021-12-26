@@ -98,10 +98,10 @@ namespace Assimalign.ComponentModel.ValidationTests
                 });
 
             descriptor.RuleFor(x => x.Age)
-                .GreaterThan(10, configure =>
+                .GreaterThan(10, error =>
                 {
-                    configure.Message = "";
-                    configure.
+                    error.Message = "";
+                    error.Code = "400-235";
                 });
 
             descriptor.RuleFor(p => p.Age)

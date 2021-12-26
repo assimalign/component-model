@@ -35,13 +35,18 @@ public interface IValidationProfile
     IValidationRuleStack ValidationRules { get; }
 
     /// <summary>
+    /// 
+    /// </summary>
+    ValidationMode ValidationMode { get; }
+
+    /// <summary>
     /// Configures the validation rules for the specified type.
     /// </summary>
     void Configure();
 }
 
 /// <summary>
-/// 
+///  Configures the validation rules for the specified type.
 /// </summary>
 public interface IValidationProfile<T> : IValidationProfile
 {

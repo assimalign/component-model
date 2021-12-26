@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -29,10 +26,10 @@ public interface IValidationRuleDescriptor<T>
         where TValue : IEnumerable;
 
     /// <summary>
-    /// 
+    /// Encapsulates a set of validation rules that are evaluated if the condition <paramref name="condition"/> is true.
     /// </summary>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
+    IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
 }

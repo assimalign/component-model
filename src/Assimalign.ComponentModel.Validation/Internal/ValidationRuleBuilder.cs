@@ -9,23 +9,19 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 
 using Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
+internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
 {
 
-    public ValidationMemberRuleBuilder(IValidationMemberRule<T, TValue> rule)
+    public ValidationRuleBuilder(IValidationRule rule)
     {
-        MemberRule = rule;
+        this.Rule = rule;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public IValidationMemberRule<T, TValue> MemberRule { get; }
+    public IValidationRule Rule { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    IValidationRule IValidationRuleBuilder<T, TValue>.Current => MemberRule;
 
     /// <summary>
     /// 
@@ -37,11 +33,15 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
     public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : IComparable<TBound>
     {
-        return Between<TBound>(lowerBound, upperBound, configure =>
+        if (this.Rule is IValidationMemberRule<T, TValue> MemberRule)
         {
-            configure.Message = $"One of the following items in '{string.Join('.', MemberRule.Member.Body.ToString().Split('.').Skip(1))}' is not within bounds of: {lowerBound} and {upperBound}.";
-            configure.Source = MemberRule.Member.ToString();
-        });
+            return Between<TBound>(lowerBound, upperBound, configure =>
+            {
+                configure.Message = $"One of the following items in '{string.Join('.', MemberRule.Member.Body.ToString().Split('.').Skip(1))}' is not within bounds of: {lowerBound} and {upperBound}.";
+                configure.Source = MemberRule.Member.ToString();
+            });
+        }
+        
     }
 
     /// <summary>
@@ -129,9 +129,31 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
         throw new NotImplementedException();
     }
 
-    public IValidationRuleBuilder<T, TValue> Equal<TNumber>(TNumber value) where TNumber : IComparable
+    public IValidationRuleBuilder<T, TValue> Empty(Action<IValidationError> configure)
     {
         throw new NotImplementedException();
+    }
+
+    public IValidationRuleBuilder<T, TValue> Equal<TValueCompare>(TValueCompare value) 
+    {
+        return this.Equal<TValueCompare>(value, configure =>
+        {
+
+        });
+    }
+
+    public IValidationRuleBuilder<T, TValue> Equal<TValueCompare>(TValueCompare value, Action<IValidationError> configure)
+    {
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        this.MemberRule.AddRule(new EqaulToValidationRule<T, TValue, TValueCompare>(MemberRule.Member, value)
+        {
+            Error = error
+        });
+
+        return this;
     }
 
     public IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable
@@ -145,6 +167,11 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
     }
 
     public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable
+    {
+        throw new NotImplementedException();
+    }
+
+    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : struct, IComparable
     {
         throw new NotImplementedException();
     }
@@ -174,7 +201,22 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
         throw new NotImplementedException();
     }
 
+    public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : struct, IComparable
+    {
+        throw new NotImplementedException();
+    }
+
     public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable
+    {
+        throw new NotImplementedException();
+    }
+
+    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value) where TArgument : struct, IComparable
+    {
+        throw new NotImplementedException();
+    }
+
+    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : struct, IComparable
     {
         throw new NotImplementedException();
     }
@@ -204,7 +246,17 @@ internal sealed class ValidationMemberRuleBuilder<T, TValue> : IValidationRuleBu
         throw new NotImplementedException();
     }
 
+    public IValidationRuleBuilder<T, TValue> NotEmpty(Action<IValidationError> configure)
+    {
+        throw new NotImplementedException();
+    }
+
     public IValidationRuleBuilder<T, TValue> NotEqual<TNumber>(TNumber value) where TNumber : IComparable
+    {
+        throw new NotImplementedException();
+    }
+
+    public IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : IComparable
     {
         throw new NotImplementedException();
     }

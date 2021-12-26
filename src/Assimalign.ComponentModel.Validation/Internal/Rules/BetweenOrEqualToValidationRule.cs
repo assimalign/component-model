@@ -35,6 +35,9 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
     /// </summary>
     public string Name { get; } = "BetweenOrEqualToValidationRule";
 
+    /// <summary>
+    /// 
+    /// </summary>
     public IValidationError Error { get; set; }
 
     /// <summary>
@@ -53,22 +56,14 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
                 {
                     if (item is TBound a && isOutOfBounds(a))
                     {
-                        context.AddFailure(new ValidationError()
-                        {
-                            Message = $"One of the following items in '{GetNameOfValue}' is not within bounds of: {lower} & {upper}.",
-                            Source = expression.Body.ToString()
-                        });
+                        context.AddFailure(this.Error);
                         return;
                     }
                 }
             }
             if (value is TBound b && isOutOfBounds(b))
             {
-                context.AddFailure(new ValidationError()
-                {
-                    Message = $"The value of '{GetNameOfValue}' is not within bounds of: {lower} & {upper}.",
-                    Source = expression.Body.ToString()
-                });
+                context.AddFailure(this.Error);
             }
         }
         else

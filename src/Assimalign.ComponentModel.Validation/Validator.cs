@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Assimalign.ComponentModel.Validation;
 
 using Assimalign.ComponentModel.Validation.Rules;
 using Assimalign.ComponentModel.Validation.Internal;
-using Assimalign.ComponentModel.Validation.Exceptions;
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
 /// <summary>
@@ -34,7 +35,7 @@ public sealed class Validator : IValidator
     }
 
     /// <summary>
-    /// 
+    /// A fluent constructor for configuring the validator options.
     /// </summary>
     /// <param name="configure"></param>
     public Validator(Action<ValidationOptions> configure)
@@ -58,7 +59,7 @@ public sealed class Validator : IValidator
     }
 
 
-    public Task<ValidationResult> ValidateAsync<T>(T instance)
+    public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -98,6 +99,12 @@ public sealed class Validator : IValidator
             }
         }
 
+        // Let's throw exception for any validation failure if requested.
+        if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
+        {
+            throw new ValidationFailureException(context.Errors);
+        }
+
         return ValidationResult.Create(context);
     }
 
@@ -117,6 +124,12 @@ public sealed class Validator : IValidator
             {
                 rule.Evaluate(context);
             }
+        }
+
+        // Let's throw exception for any validation failure if requested.
+        if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
+        {
+            throw new ValidationFailureException(context.Errors);
         }
 
         return ValidationResult.Create(context);
@@ -146,6 +159,21 @@ public sealed class Validator : IValidator
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public static IValidator CreateFromConfiguration<T>(string json, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidationResult> ValidateAsync<T>(T instance, string profileName, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ValidationResult> ValidateAsync(IValidationContext context, string profileName, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

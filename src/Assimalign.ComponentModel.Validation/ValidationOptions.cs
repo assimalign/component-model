@@ -42,7 +42,7 @@ namespace Assimalign.ComponentModel.Validation
         public bool ProfileNameCaseSensitive { get; set; }
 
         /// <summary>
-        /// Will throw a <see cref="ValidationException"/> rather than return <see cref="ValidationResult"/>.
+        /// Will throw a <see cref="ValidationFailureException"/> rather than return <see cref="ValidationResult"/>.
         /// </summary>
         public bool ThrowExceptionOnFailure { get; set; }
 

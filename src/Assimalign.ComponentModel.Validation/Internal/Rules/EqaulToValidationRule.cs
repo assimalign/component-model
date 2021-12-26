@@ -10,22 +10,52 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
 internal sealed class EqaulToValidationRule<T, TValue, TValueCompare> : IValidationRule
-    where TValue : IComparable
-    where TValueCompare : IComparable
 {
-
+    private readonly Func<TValue, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public EqaulToValidationRule(Expression<Func<T, TValue>> expression, TValueCompare compare)
+    public EqaulToValidationRule(Expression<Func<T, TValue>> expression, TValueCompare value)
     {
         this.expression = expression;
+        this.isEqualTo = x => x.Equals(value);
+
+        
     }
 
-    public string Name => throw new NotImplementedException();
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IValidationError Error { get; set; }
 
     public void Evaluate(IValidationContext context)
     {
-        throw new NotImplementedException();
+        if (context.Instance is T instance)
+        {
+            var value = this.GetValue(instance);
+
+            if (!this.isEqualTo(value))
+            {
+                context.AddFailure(this.Error);
+            }
+        }
+    }
+
+
+    private TValue GetValue(T instance)
+    {
+        try
+        {
+            return this.expression.Compile().Invoke(instance);
+        }
+        catch
+        {
+            return default(TValue);
+        }
     }
 }
 

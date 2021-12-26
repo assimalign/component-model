@@ -9,14 +9,10 @@ using System.Text;
 namespace Assimalign.ComponentModel.Validation.Internal
 {
     using Assimalign.ComponentModel.Validation.Rules;
-    using Assimalign.ComponentModel.Validation.Exceptions;
+    using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
     internal sealed class ValidationMemberRule<T, TMember> : IValidationMemberRule<T, TMember>
     {
-        // long - index of rule | string - message for indexed rule
-        private readonly IDictionary<long, string> codes = new Dictionary<long, string>();
-        private readonly IDictionary<long, string> messages = new Dictionary<long, string>();
-
 
         private Expression<Func<T, TMember>> member;
 
@@ -49,22 +45,12 @@ namespace Assimalign.ComponentModel.Validation.Internal
         /// <summary>
         /// 
         /// </summary>
-       // public IValidator<TMember> MemberValidator { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public string Name { get; }
 
         /// <summary>
         /// 
         /// </summary>
         public IValidationRuleStack MemberRules { get; set; } 
-
-        /// <summary>
-        /// 
-        /// </summary>
-      //  public IValidator<TMember> Validator { get; set; }
 
         /// <summary>
         /// 
@@ -86,17 +72,7 @@ namespace Assimalign.ComponentModel.Validation.Internal
             if (context.Instance is T instance)
             {
                 Parallel.ForEach(this.MemberRules, (rule, state, index) =>
-                {
-                    if (codes.TryGetValue(index, out var code))
-                    {
-
-                    }
-
-                    if (messages.TryGetValue(index, out var message))
-                    {
-
-                    }
-                    
+                {                   
                     rule.Evaluate(context);
                 });
             }

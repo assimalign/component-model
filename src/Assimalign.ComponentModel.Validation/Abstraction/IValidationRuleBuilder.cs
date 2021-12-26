@@ -10,22 +10,6 @@ namespace Assimalign.ComponentModel.Validation;
 /// <typeparam name="TValue"></typeparam>
 public interface IValidationRuleBuilder<T, TValue>
 {
-
-
-    /// <summary>
-    /// The Rule being configured for the instance if the validation rule initializer.
-    /// </summary>
-    IValidationRule Current { get; }
-
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    /// IValidationCollectionRule<T, TCollection> OneOf(Func<IValidationCollectionRule<T, TCollection>, IEnumerable<IValidationCollectionRule<T, TCollection>>> evaluations);
-
-
     /// <summary>
     /// Adds a custom validation rule that encapsulates custom logic.
     /// </summary>
@@ -128,6 +112,13 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> NotEmpty();
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IValidationRuleBuilder<T, TValue> NotEmpty(Action<IValidationError> configure);
+
+    /// <summary>
     /// Validates whether the member is empty.
     /// </summary>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
@@ -136,68 +127,121 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TNumber">is of </typeparam>
-    /// <param name="value"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable;
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IValidationRuleBuilder<T, TValue> Empty(Action<IValidationError> configure);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TNumber"></typeparam>
+    /// <typeparam name="TArgument">is of </typeparam>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value) 
+        where TArgument : struct, IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <param name="confiure"></param>
     /// <returns></returns>
-    IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value, Action<IValidationError> confiure) 
-        where TNumber : struct, IComparable;
+    IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> confiure) 
+        where TArgument : struct, IComparable;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TNumber"></typeparam>
+    /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable;
+    IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value) 
+        where TArgument : struct, IComparable;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TNumber"></typeparam>
+    /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> LessThan<TNumber>(TNumber value) where TNumber : struct, IComparable;
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TNumber"></typeparam>
-    /// <param name="value"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TNumber"></typeparam>
-    /// <param name="value"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> Equal<TNumber>(TNumber value) where TNumber : IComparable;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TNumber"></typeparam>
-    /// <param name="value"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEqual<TNumber>(TNumber value) where TNumber : IComparable;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="validator"></param>
+    /// <param name="configure"></param>
     /// <returns></returns>
-    //IValidationRuleBuilder<T, TValue> UseValidator(IValidator<TValue> validator);
+    IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : struct, IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value)
+        where TArgument : struct, IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : struct, IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value) 
+        where TArgument : struct, IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : struct, IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    IValidationRuleBuilder<T, TValue> Equal<TArgument>(TArgument value);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IValidationRuleBuilder<T, TValue> Equal<TArgument>(TArgument value, Action<IValidationError> configure);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value) 
+        where TArgument : IComparable;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgument"></typeparam>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -220,7 +264,6 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : IComparable<TBound>;
 
-
     /// <summary>
     /// 
     /// </summary>
@@ -241,22 +284,6 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : IComparable<TBound>;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="code"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> WithErrorCode(string code);
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="message"></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> WithErrorMessage(string message);
-
 
     /// <summary>
     /// 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -20,9 +21,10 @@ public interface IValidator
     /// Validates the <paramref name="instance"/> for each profile that matches the <typeparamref name="T"/>.
     /// </summary>
     /// <param name="instance"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <remarks></remarks>
-    Task<ValidationResult> ValidateAsync<T>(T instance);
+    Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
@@ -39,8 +41,9 @@ public interface IValidator
     /// <typeparam name="T"></typeparam>
     /// <param name="instance"></param>
     /// <param name="profileName"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ValidationResult> ValidateAsync<T>(T instance, string profileName);
+    Task<ValidationResult> ValidateAsync<T>(T instance, string profileName, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
@@ -53,8 +56,9 @@ public interface IValidator
     /// 
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ValidationResult> ValidateAsync(IValidationContext context);
+    Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
@@ -69,7 +73,8 @@ public interface IValidator
     /// </summary>
     /// <param name="context"></param>
     /// <param name="profileName"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ValidationResult> ValidateAsync(IValidationContext context, string profileName);
+    Task<ValidationResult> ValidateAsync(IValidationContext context, string profileName, CancellationToken cancellationToken);
 }
 

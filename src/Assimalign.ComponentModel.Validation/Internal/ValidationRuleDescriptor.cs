@@ -12,7 +12,6 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 {
 
-
     /// <summary>
     /// 
     /// </summary>
@@ -29,6 +28,10 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <returns></returns>
     public IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
         if (expression.Body is not MemberExpression)
         {
             throw new ArgumentException($"The following expression must be a member of type: {nameof(T)}");
@@ -41,7 +44,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 
         this.ValidationRules.Push(rule);
 
-        return new ValidationMemberRuleBuilder<T, TMember>(rule);
+        return new ValidationRuleBuilder<T, TMember>(rule);
     }
 
 
@@ -55,6 +58,15 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     public IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
         where TCollection : IEnumerable
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
+        if (expression.Body is not MemberExpression)
+        {
+            throw new ArgumentException($"The following expression must be a member of type: {nameof(T)}");
+        }
+
         var rule = new ValidationCollectionRule<T, TCollection>()
         {
             Collection = expression
@@ -62,7 +74,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 
         this.ValidationRules.Push(rule);
 
-        return new ValidationCollectionRuleBuilder<T, TCollection>(rule);
+        return new ValidationRuleBuilder<T, TCollection>(rule);
     }
 
 
@@ -75,7 +87,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    public IValidationConditionRule<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
         var rule = new ValidationConditionRule<T>()
         {

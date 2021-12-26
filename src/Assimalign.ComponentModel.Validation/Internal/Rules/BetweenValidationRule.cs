@@ -58,22 +58,14 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
                 {
                     if (item is TBound a && isOutOfBounds(a))
                     {
-                        context.AddFailure(new ValidationError()
-                        {
-                            Message = $"One of the following items in '{GetNameOfValue}' is not within bounds of: {lower} and {upper}.",
-                            Source = expression.Body.ToString()
-                        });
+                        context.AddFailure(this.Error);
                         return;
                     }
                 }
             }
             if (value is TBound b && isOutOfBounds(b))
             {
-                context.AddFailure(new ValidationError()
-                {
-                    Message = $"The value of '{GetNameOfValue}' is not within bounds of: {lower} & {upper}.",
-                    Source = expression.Body.ToString()
-                });
+                context.AddFailure(this.Error);
             }
         }
         else
