@@ -9,7 +9,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// <summary>
 /// 
 /// </summary>
-public class ValidationError : IValidationError
+public sealed class ValidationError : IValidationError
 {
 
     public ValidationError()

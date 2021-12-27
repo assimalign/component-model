@@ -10,7 +10,6 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageTags>Validation</PackageTags>
 		<!--Company Branding Information-->
-
 		<PackageIcon>.assimalign.logo.png</PackageIcon>
 	</PropertyGroup>
 
