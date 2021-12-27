@@ -28,7 +28,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     /// <param name="upperBound"></param>
     /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
-        where TBound : IComparable<TBound>
+        where TBound : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -53,7 +53,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     /// <param name="upperBound"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure) where TBound : IComparable<TBound>
+    public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure) 
+        where TBound : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -82,7 +83,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     /// <param name="upperBound"></param>
     /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
-        where TBound : IComparable<TBound>
+        where TBound : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -108,7 +109,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     /// <param name="configure"></param>
     /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
-        where TBound : IComparable<TBound>
+        where TBound : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -190,7 +191,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value) 
-        where TArgument : struct, IComparable
+        where TArgument : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -208,7 +209,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> configure) 
-        where TArgument : struct, IComparable
+        where TArgument : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -229,12 +230,14 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) 
+        where TNumber : IComparable
     {
         throw new NotImplementedException();
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) 
+        where TArgument : IComparable
     {
         throw new NotImplementedException();
     }
@@ -260,7 +263,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value) 
-        where TArgument : struct, IComparable<TArgument>
+        where TArgument : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -278,7 +281,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure) 
-        where TArgument : struct, IComparable<TArgument>
+        where TArgument : IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -299,17 +302,20 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) 
+        where TNumber : IComparable
     {
         throw new NotImplementedException();
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value) where TArgument : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value) 
+        where TArgument : IComparable
     {
         throw new NotImplementedException();
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) 
+        where TArgument : IComparable
     {
         throw new NotImplementedException();
     }

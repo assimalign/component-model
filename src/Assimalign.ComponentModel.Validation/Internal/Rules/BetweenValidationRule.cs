@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -9,20 +8,39 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
-internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule, IComparer<TBound>
-    where TBound : IComparable<TBound>
+internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
+    where TBound : IComparable
 {
     private readonly TBound lower;
     private readonly TBound upper;
-    private readonly Func<TBound, bool> isOutOfBounds;
+    private readonly Func<TBound, TBound, object, bool> isOutOfBounds;
     private readonly Expression<Func<T, TValue>> expression;
 
     public BetweenValidationRule(Expression<Func<T, TValue>> expression, TBound lower, TBound upper)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
+        if (lower is null)
+        {
+            throw new ArgumentNullException(nameof(lower));
+        }
+        if (upper is null)
+        {
+            throw new ArgumentNullException(nameof(upper));
+        }
+
         this.lower = lower;
         this.upper = upper;
         this.expression = expression;
-        this.isOutOfBounds = x => Compare(x, lower) < 0 || Compare(x, upper) > 0;
+        this.isOutOfBounds = (lower, upper, value) =>
+        {
+            var lowerResults = lower.CompareTo(value);
+            var upperResults = upper.CompareTo(value);
+
+            return lowerResults >= 0 || upperResults <= 0;
+        };
     }
 
     /// <summary>
@@ -50,20 +68,31 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
     {
         if (context.Instance is T instance)
         {
-            var value = this.expression.Compile().Invoke(instance);
+            var value = this.GetValue(instance);
 
-            if (value is IEnumerable enumerable)
+            if (value is null)
+            {
+                context.AddFailure(this.Error);
+            }
+            else if (value is IEnumerable enumerable)
             {
                 foreach (var item in enumerable)
                 {
-                    if (item is TBound a && isOutOfBounds(a))
+                    object obj = item;
+
+                    if (item is not TBound && item is IConvertible convertible)
+                    {
+                        obj = convertible.ToType(typeof(TBound), default);
+                    }
+
+                    if (obj is null || isOutOfBounds(this.lower, this.upper, obj))
                     {
                         context.AddFailure(this.Error);
-                        return;
+                        break;
                     }
                 }
             }
-            if (value is TBound b && isOutOfBounds(b))
+            else if (isOutOfBounds(this.lower, this.upper, value))
             {
                 context.AddFailure(this.Error);
             }
@@ -75,11 +104,23 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public int Compare(TBound left, TBound right) => left.CompareTo(right);
+
+    private object GetValue(T instance)
+    {
+        try
+        {
+            var value = expression.Compile().Invoke(instance);
+
+            if (value is not TBound && value is IConvertible convertible)
+            {
+                return convertible.ToType(typeof(TBound), default);
+            }
+
+            return value;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

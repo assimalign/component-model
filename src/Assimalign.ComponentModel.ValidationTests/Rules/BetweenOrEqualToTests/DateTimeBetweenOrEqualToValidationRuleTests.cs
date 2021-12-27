@@ -12,22 +12,76 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
 
     public class DateTimeBetweenOrEqualToValidationRuleTests
     {
-
-        public partial class Person
+        public partial class TestClass
         {
             public DateTime Birthdate { get; set; }
-            public IEnumerable<DateTime> Birthdates { get; set; }
             public DateTime? BirthdateNullable { get; set; }
-            public IEnumerable<DateTime?>? BirthdatesNullable { get; set; }
+            public IEnumerable<DateTime> Birthdates { get; set; }
+            public IEnumerable<DateTime?> BirthdatesNullable { get; set; }
             public IEnumerable<DateTime?>? BirthdatesNullable1 { get; set; }
+            public IEnumerable<DateTime>? BirthdatesNullable2 { get; set; }
+        }
+
+        [Fact]
+        public void EnumerableDateTimeValidationMemberSuccessTest()
+        {
+            var person = new TestClass() 
+            { 
+                Birthdates = new DateTime[] 
+                {
+                    new DateTime(1997, 01, 01)
+                }
+            };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, IEnumerable<DateTime>, DateTime>(x => x.Birthdates, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+
+            rule.Evaluate(context);
+            Assert.Empty(context.Errors);
+        }
+
+
+        [Fact]
+        public void NullableEnumerableDateTimeValidationMemberSuccessTest()
+        {
+            var person = new TestClass()
+            {
+                BirthdatesNullable = new DateTime?[]
+                {
+                    new DateTime(1997, 01, 01)
+                }
+            };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, IEnumerable<DateTime?>, DateTime>(x => x.BirthdatesNullable, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+
+            rule.Evaluate(context);
+            Assert.Empty(context.Errors);
+        }
+
+
+        [Fact]
+        public void NullableEnumerableDateTimeValidationMemberFailureTest()
+        {
+            var person = new TestClass()
+            {
+                BirthdatesNullable = new DateTime?[]
+                {
+                    new DateTime(1997, 01, 01),
+                    null
+                }
+            };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, IEnumerable<DateTime?>, DateTime>(x => x.BirthdatesNullable, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+
+            rule.Evaluate(context);
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
         public void DateTimeValidationMemberSuccessTest()
         {
-            var person = new Person() { Birthdate = new DateTime(1997,01,01) };
-            var context = new ValidationContext<Person>(person);
-            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996,01,01), new DateTime(2010,01,01));
+            var person = new TestClass() { Birthdate = new DateTime(1997,01,01) };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996,01,01), new DateTime(2010,01,01));
 
             rule.Evaluate(context);
             Assert.Empty(context.Errors);
@@ -37,9 +91,9 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         [Fact]
         public void DateTimeValidationMemberUpperBoundFailureTest()
         {
-            var person = new Person() { Birthdate = new DateTime(2011, 01, 01) };
-            var context = new ValidationContext<Person>(person);
-            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
+            var person = new TestClass() { Birthdate = new DateTime(2011, 01, 01) };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
             {
                 Error = new ValidationError()
                 {
@@ -57,9 +111,9 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         [Fact]
         public void DateTimeValidationMemberLowerBoundFailureTest()
         {
-            var person = new Person() { Birthdate = new DateTime(1995, 01, 01) };
-            var context = new ValidationContext<Person>(person);
-            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
+            var person = new TestClass() { Birthdate = new DateTime(1995, 01, 01) };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
             {
                 Error = new ValidationError()
                 {
@@ -77,9 +131,9 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         [Fact]
         public void DateTimeValidationMemberLowerBoundNullFailureTest()
         {
-            var person = new Person() { BirthdateNullable = null };
-            var context = new ValidationContext<Person>(person);
-            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
+            var person = new TestClass() { BirthdateNullable = null };
+            var context = new ValidationContext<TestClass>(person);
+            var rule = new BetweenOrEqualToValidationRule<TestClass, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
             {
                 Error = new ValidationError()
                 {

@@ -12,7 +12,7 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidationRule, IComparer<TArgument>
-    where TArgument : IComparable<TArgument>
+    where TArgument : IComparable
 {
     private readonly Func<TArgument, bool> isLessThan;
     private readonly Expression<Func<T, TValue>> expression;

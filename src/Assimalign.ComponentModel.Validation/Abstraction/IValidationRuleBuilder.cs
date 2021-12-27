@@ -138,7 +138,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value) 
-        where TArgument : struct, IComparable;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -148,7 +148,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="confiure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> confiure)
-        where TArgument : struct, IComparable;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -157,7 +157,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value) 
-        where TArgument : struct, IComparable;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -167,7 +167,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="configure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
-        where TArgument : struct, IComparable;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -176,7 +176,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value)
-        where TArgument : struct, IComparable<TArgument>;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -186,7 +186,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="configure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure)
-        where TArgument : struct, IComparable<TArgument>;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -195,7 +195,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value) 
-        where TArgument : struct, IComparable;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -205,7 +205,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="configure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
-        where TArgument : struct, IComparable;
+        where TArgument : IComparable;
 
     /// <summary>
     /// 
@@ -251,7 +251,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="upperBound"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
-        where TBound : IComparable<TBound>;
+        where TBound : IComparable;
 
     /// <summary>
     /// 
@@ -262,7 +262,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="configure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
-        where TBound : IComparable<TBound>;
+        where TBound : IComparable;
 
     /// <summary>
     /// 
@@ -272,7 +272,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="upperBound"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
-        where TBound : IComparable<TBound>;
+        where TBound : IComparable;
 
     /// <summary>
     /// 
@@ -283,7 +283,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="configure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
-        where TBound : IComparable<TBound>;
+        where TBound : IComparable;
 
     /// <summary>
     /// 

@@ -73,18 +73,13 @@ internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidat
     }
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="instance"></param>
-    /// <returns></returns>
     private object GetValue(T instance)
     {
         try
         {
             var value = expression.Compile().Invoke(instance);
 
-            if (value is IConvertible convertible)
+            if (value is not TArgument && value is IConvertible convertible)
             {
                 return convertible.ToType(typeof(TArgument), default);
             }

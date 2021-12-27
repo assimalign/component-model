@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{C827C7C7-497F-453A-8A6B-1318C266F683}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Core", "Assimalign.ComponentModel.Core\Assimalign.ComponentModel.Core.csproj", "{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{169A7314-0CDA-46FA-BF41-21D24F630DCE} = {C314584B-F572-4824-91CE-611E1E28D8BE}
 		{E84AD542-1A54-425F-9532-07FB8E5B0F08} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
 		{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
+		{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53} = {C314584B-F572-4824-91CE-611E1E28D8BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB64B35-D4BC-43E2-B8F1-A3DDAA061175}

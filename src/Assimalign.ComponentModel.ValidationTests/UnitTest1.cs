@@ -14,7 +14,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { FirstName = "Chase", Age = 9};
+            var user = new User() { FirstName = "Chase", Age = 11};
 
           
             var validator = Validator.Create(configure =>
@@ -105,7 +105,7 @@ namespace Assimalign.ComponentModel.ValidationTests
             //    });
 
             descriptor.RuleFor(p => p.Age)
-                .GreaterThan(10);
+                .Between(10,15);
 
            // descriptor.RuleForEach(p => p.Addresses);
         }
