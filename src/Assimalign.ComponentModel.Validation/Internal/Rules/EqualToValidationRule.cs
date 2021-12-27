@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq.Expressions;
 
 
@@ -7,6 +8,7 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationRule
 {
+    private readonly TArgument argument;
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
@@ -21,6 +23,7 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
             throw new ArgumentNullException(nameof(argument));
         }
 
+        this.argument = argument;
         this.expression = expression;
         this.isEqualTo = x => x.Equals(argument);        
     }
@@ -35,7 +38,19 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
         {
             var value = this.GetValue(instance);
 
-            if (!this.isEqualTo(value))
+            if (value is null)
+            {
+                context.AddFailure(this.Error);
+            }
+            else if (argument is IEquatable<TArgument> equatable && value is TArgument equatableArgument && !equatable.Equals(equatableArgument))
+            {
+                context.AddFailure(this.Error);
+            }
+            else if (argument is IEqualityComparer comparer && !comparer.Equals(value))
+            {
+                context.AddFailure(this.Error);
+            }
+            else if (!this.isEqualTo(value))
             {
                 context.AddFailure(this.Error);
             }
@@ -47,7 +62,14 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
     {
         try
         {
-            return this.expression.Compile().Invoke(instance);
+            var value = this.expression.Compile().Invoke(instance);
+
+            if (value is not TArgument && value is IConvertible convertable) // Need to convert when trying to compare
+            {
+                return convertable.ToType(typeof(TArgument), default);
+            }
+
+            return value;
         }
         catch
         {

@@ -98,12 +98,12 @@ public sealed class Validator : IValidator
 
             var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
             {
-                rule.Evaluate(context);
-
                 if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                 {
                     tokenSource.Cancel();
                 }
+
+                rule.Evaluate(context);
             });
 
             if (!results.IsCompleted)

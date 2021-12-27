@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,55 +12,55 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
-internal sealed class ValidationCondition<T> : IValidationCondition<T>
+internal sealed class ValidationRuleCondition<T> : IValidationRuleCondition<T>
 {
 
-    public ValidationCondition()
+    public ValidationRuleCondition()
     {
         this.ConditionDefaultRuleSet ??= new ValidationRuleStack();
     }
 
+    public ValidationMode ValidationMode { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Name { get; }
+    public string Name => nameof(ValidationRuleCondition<T>);
 
-    /// <summary>
-    /// 
-    /// </summary>
     public IValidationRuleStack ConditionRuleSet { get; set; }
 
-    /// <summary>
-    /// The rule set to run if condition is not valid.
-    /// </summary>
     public IValidationRuleStack ConditionDefaultRuleSet { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
     public Expression<Func<T, bool>> Condition { get; set; }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
+            var tokenSource = new CancellationTokenSource();
+            var parallelOptions = new ParallelOptions()
+            {
+                CancellationToken = tokenSource.Token
+            };
+
             if (this.Condition.Compile().Invoke(instance))
             {
                 Parallel.ForEach(this.ConditionRuleSet, rule =>
                 {
+                    if (this.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                    {
+                        tokenSource.Cancel();
+                    }
+
                     rule.Evaluate(context);
                 });
             }
-            else if (this.ConditionDefaultRuleSet.Any())
+            else if (this.ConditionDefaultRuleSet is not null && this.ConditionDefaultRuleSet.Any())
             {
                 Parallel.ForEach(this.ConditionDefaultRuleSet, rule =>
                 {
+                    if (this.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                    {
+                        tokenSource.Cancel();
+                    }
+
                     rule.Evaluate(context);
                 });
             }
@@ -74,30 +75,25 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
     {
         var descriptor = new ValidationRuleDescriptor<T>()
         {
-            ValidationRules = new ValidationRuleStack()
+            ValidationRules = this.ConditionDefaultRuleSet
         };
 
         configure.Invoke(descriptor);
-
-        foreach(var rule in descriptor.ValidationRules)
-        {
-            this.ConditionDefaultRuleSet.Push(rule);
-        }
     }
 
-    public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationRuleCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
         var descriptor = new ValidationRuleDescriptor<T>()
         {
             ValidationRules = new ValidationRuleStack()
         };
 
-        var rule = new ValidationCondition<T>()
+        var rule = new ValidationRuleCondition<T>()
         {
             Condition = condition
         };
 
-        //ConditionRuleSet.Add(rule);
+        ConditionRuleSet.Push(rule);
 
         configure.Invoke(descriptor);
 

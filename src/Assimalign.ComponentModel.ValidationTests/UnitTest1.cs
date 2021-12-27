@@ -96,7 +96,7 @@ namespace Assimalign.ComponentModel.ValidationTests
             //      })
             //    .Otherwise(configure =>
             //    {
-                    
+
             //    });
 
             //descriptor.RuleFor(x => x.Age)
@@ -106,9 +106,11 @@ namespace Assimalign.ComponentModel.ValidationTests
             //        error.Code = "400-235";
             //    });
 
+            descriptor.RuleFor(p => p.FirstName)
+                .MaxLength(255);
+
             descriptor.RuleFor(p => p.Age)
-                .Empty()
-                .EqualTo(10);
+                .EqualTo(11);
 
            // descriptor.RuleForEach(p => p.Addresses);
         }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
 
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 {
@@ -29,7 +30,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         }
         if (expression.Body is not MemberExpression)
         {
-            throw new ArgumentException($"The following expression must be a member of type: {nameof(T)}");
+            throw new ValidationInvalidMemberException(expression);
         }
 
         var rule = new ValidationRule<T, TValue>()
@@ -58,7 +59,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         }
         if (expression.Body is not MemberExpression)
         {
-            throw new ArgumentException($"The following expression must be a member of type: {nameof(T)}");
+            throw new ValidationInvalidMemberException(expression);
         }
 
         var rule = new ValidationRule<T, TValue>()
@@ -79,9 +80,9 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationRuleCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
-        var rule = new ValidationCondition<T>()
+        var rule = new ValidationRuleCondition<T>()
         {
             Condition = condition,
             ConditionRuleSet = new ValidationRuleStack()
@@ -91,10 +92,10 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         {
             ValidationRules =  rule.ConditionRuleSet
         };
-
-        // this.ValidationRules.Push(rule);
         
         configure.Invoke(descriptor);
+
+        this.ValidationRules.Push(rule);
 
         return rule;
     }
