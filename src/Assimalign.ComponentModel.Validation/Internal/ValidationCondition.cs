@@ -11,10 +11,10 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
-internal sealed class ValidationConditionRule<T> : IValidationCondition<T>
+internal sealed class ValidationCondition<T> : IValidationCondition<T>
 {
 
-    public ValidationConditionRule()
+    public ValidationCondition()
     {
         this.ConditionDefaultRuleSet ??= new ValidationRuleStack();
     }
@@ -92,7 +92,7 @@ internal sealed class ValidationConditionRule<T> : IValidationCondition<T>
             ValidationRules = new ValidationRuleStack()
         };
 
-        var rule = new ValidationConditionRule<T>()
+        var rule = new ValidationCondition<T>()
         {
             Condition = condition
         };

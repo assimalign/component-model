@@ -1,6 +1,7 @@
-﻿using Assimalign.ComponentModel.Validation.Rules;
+﻿
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,8 @@ namespace Assimalign.ComponentModel.Validation;
 public sealed class ValidationContext<T> : IValidationContext
 {
     private readonly Type type;
-    private readonly Stack<IValidationError> errors;
-    private readonly IList<IValidationRule> successes;
+    private readonly ConcurrentStack<IValidationError> errors;
+    private readonly ConcurrentStack<IValidationRule> successes;
 
     /// <summary>
     /// 
@@ -29,8 +30,8 @@ public sealed class ValidationContext<T> : IValidationContext
         }
 
         this.type = typeof(T);
-        this.errors = new Stack<IValidationError>();
-        this.successes = new List<IValidationRule>();
+        this.errors = new ConcurrentStack<IValidationError>();
+        this.successes = new ConcurrentStack<IValidationRule>();
 
         Instance = instance;
     }

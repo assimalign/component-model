@@ -8,10 +8,11 @@ using Xunit;
 namespace Assimalign.ComponentModel.ValidationTests.Rules.Between
 {
     using Assimalign.ComponentModel.Validation;
-    using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Internal.Rules;
 
     public class DateTimeBetweenValidationRuleTests
     {
+        
 
         public partial class Person
         {
@@ -68,9 +69,5 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.Between
             rule.Evaluate(context);
             Assert.Single(context.Errors);
         }
-
-
-        
-        
     }
 }

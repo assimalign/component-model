@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Assimalign.ComponentModel.ValidationTests
 {
     using Assimalign.ComponentModel.Validation;
-    using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Internal.Rules;
     using System.Collections;
 
     public class UnitTest1
@@ -14,9 +14,9 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { FirstName = "Chase"};
+            var user = new User() { FirstName = "Chase", Age = 9};
 
-
+          
             var validator = Validator.Create(configure =>
             {
                 configure.AddProfile(new UserValidationProfile());
@@ -87,25 +87,25 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
-            descriptor
-                .When(x => x.EmailAddress != null, configure =>
-                  {
+            //descriptor
+            //    .When(x => x.EmailAddress != null, configure =>
+            //      {
 
-                  })
-                .Otherwise(configure =>
-                {
+            //      })
+            //    .Otherwise(configure =>
+            //    {
                     
-                });
+            //    });
 
-            descriptor.RuleFor(x => x.Age)
-                .GreaterThan(10, error =>
-                {
-                    error.Message = "";
-                    error.Code = "400-235";
-                });
+            //descriptor.RuleFor(x => x.Age)
+            //    .GreaterThan(10, error =>
+            //    {
+            //        error.Message = "The Age property must be greater the 10.";
+            //        error.Code = "400-235";
+            //    });
 
             descriptor.RuleFor(p => p.Age)
-                .Between(10, 12);
+                .GreaterThan(10);
 
            // descriptor.RuleForEach(p => p.Addresses);
         }
@@ -115,7 +115,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 
     public class User : IComparable
     {
-        public int? Age { get; set; }
+        public long? Age { get; set; }
 
 
         public int[] Ages { get; set; }

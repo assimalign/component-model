@@ -23,10 +23,10 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TMember"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public IValidationRuleBuilder<T, TMember> RuleFor<TMember>(Expression<Func<T, TMember>> expression)
+    public IValidationRuleBuilder<T, TValue> RuleFor<TValue>(Expression<Func<T, TValue>> expression)
     {
         if (expression is null)
         {
@@ -37,14 +37,14 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
             throw new ArgumentException($"The following expression must be a member of type: {nameof(T)}");
         }
 
-        var rule = new ValidationMemberRule<T, TMember>()
+        var rule = new ValidationRule<T, TValue>()
         {
-            Member = expression
+            ValidationExpression = expression
         };
 
         this.ValidationRules.Push(rule);
 
-        return new ValidationRuleBuilder<T, TMember>(rule);
+        return new ValidationRuleBuilder<T, TValue>(rule);
     }
 
 
@@ -52,11 +52,11 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TCollection"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public IValidationRuleBuilder<T, TCollection> RuleForEach<TCollection>(Expression<Func<T, TCollection>> expression)
-        where TCollection : IEnumerable
+    public IValidationRuleBuilder<T, TValue> RuleForEach<TValue>(Expression<Func<T, TValue>> expression)
+        where TValue : IEnumerable
     {
         if (expression is null)
         {
@@ -67,14 +67,14 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
             throw new ArgumentException($"The following expression must be a member of type: {nameof(T)}");
         }
 
-        var rule = new ValidationCollectionRule<T, TCollection>()
+        var rule = new ValidationRule<T, TValue>()
         {
-            Collection = expression
+            ValidationExpression = expression
         };
 
         this.ValidationRules.Push(rule);
 
-        return new ValidationRuleBuilder<T, TCollection>(rule);
+        return new ValidationRuleBuilder<T, TValue>(rule);
     }
 
 
@@ -89,7 +89,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <returns></returns>
     public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
-        var rule = new ValidationConditionRule<T>()
+        var rule = new ValidationCondition<T>()
         {
             Condition = condition,
             ConditionRuleSet = new ValidationRuleStack()
@@ -100,7 +100,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
             ValidationRules =  rule.ConditionRuleSet
         };
 
-        this.ValidationRules.Push(rule);
+        // this.ValidationRules.Push(rule);
         
         configure.Invoke(descriptor);
 

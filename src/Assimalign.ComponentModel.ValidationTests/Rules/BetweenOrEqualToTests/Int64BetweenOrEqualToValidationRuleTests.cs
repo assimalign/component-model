@@ -8,7 +8,7 @@ using Xunit;
 namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
 {
     using Assimalign.ComponentModel.Validation;
-    using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Internal.Rules;
 
     /*
      NOTES: 

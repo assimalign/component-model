@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation
 {
-    using Assimalign.ComponentModel.Validation.Rules;
+    
     using Assimalign.ComponentModel.Validation.Internal;
     
 
@@ -32,14 +32,14 @@ namespace Assimalign.ComponentModel.Validation
         public static IValidationRuleBuilder<T, TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<T, TValue> builder)
             where TValue : IEnumerable
         {
-            if (builder.Current is ValidationMemberRule<T, TValue> member)
-            {
-                member.AddRule(new EmailValidationRule<T, TValue>(member.Member));
-            }
-            if (builder.Current is ValidationCollectionRule<T, TValue> collection)
-            {
-                collection.AddRule(new EmailValidationRule<T, TValue>(collection.Collection));
-            }
+            //if (builder.Current is ValidationRule<T, TValue> member)
+            //{
+            //    member.AddRule(new EmailValidationRule<T, TValue>(member.ValidationExpression));
+            //}
+            //if (builder.Current is ValidationCollectionRule<T, TValue> collection)
+            //{
+            //    collection.AddRule(new EmailValidationRule<T, TValue>(collection.Collection));
+            //}
             return builder;
         }
     }

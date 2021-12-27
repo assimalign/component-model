@@ -6,81 +6,78 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Rules
+namespace Assimalign.ComponentModel.Validation.Internal.Rules;
+
+
+internal class NotEmptyValidationRule<T, TValue> : IValidationRule, IValidationError
 {
-   
 
+    private readonly Expression<Func<T, TValue>> expression;
 
-    internal class NotEmptyValidationRule<T, TValue> : IValidationRule, IValidationError
+    public NotEmptyValidationRule(Expression<Func<T, TValue>> expression)
     {
+        this.expression = expression;
 
-        private readonly Expression<Func<T, TValue>> expression;
+        this.Name = "NotEmptyValidationRule";
+        this.Code = "400";
+        this.Message = $"The following property, field, or collection '{expression.Body}' was identified as empty.";
+        this.Source = $"{expression}";
+    }
 
-        public NotEmptyValidationRule(Expression<Func<T, TValue>> expression)
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// A unique error code to use when the validation rule fails.
+    /// </summary>
+    public string Code { get; set; }
+
+    /// <summary>
+    /// A unique error message to use when the validation rule fails.
+    /// </summary>
+    public string Message { get; set; }
+
+    /// <summary>
+    /// The source of the validation failure.
+    /// </summary>
+    public string Source { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    public void Evaluate(IValidationContext context)
+    {
+        if (context.Instance is T instance)
         {
-            this.expression = expression;
+            var value = expression.Compile().Invoke(instance);
 
-            this.Name = "NotEmptyValidationRule";
-            this.Code = "400";
-            this.Message = $"The following property, field, or collection '{expression.Body}' was identified as empty.";
-            this.Source = $"{expression}";
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// A unique error code to use when the validation rule fails.
-        /// </summary>
-        public string Code { get; set; }
-
-        /// <summary>
-        /// A unique error message to use when the validation rule fails.
-        /// </summary>
-        public string Message { get; set; }
-
-        /// <summary>
-        /// The source of the validation failure.
-        /// </summary>
-        public string Source { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        public void Evaluate(IValidationContext context)
-        {
-            if (context.Instance is T instance)
+            if (IsEmpty(value))
             {
-                var value = expression.Compile().Invoke(instance);
-
-                if (IsEmpty(value))
-                {
-                    context.AddFailure(this);
-                }
-            }
-            else
-            {
-                // TODO: 
+                context.AddFailure(this);
             }
         }
-
-
-        private bool IsEmpty(TValue member)
+        else
         {
-            switch (member)
-            {
-                case null:
-                case string stringValue when string.IsNullOrWhiteSpace(stringValue):
-                case ICollection { Count: 0 }:
-                case Array { Length: 0 } c:
-                case IEnumerable e when !e.Cast<object>().Any():
-                    return true;
-            }
-
-            return false;
+            // TODO: 
         }
+    }
+
+
+    private bool IsEmpty(TValue member)
+    {
+        switch (member)
+        {
+            case null:
+            case string stringValue when string.IsNullOrWhiteSpace(stringValue):
+            case ICollection { Count: 0 }:
+            case Array { Length: 0 } c:
+            case IEnumerable e when !e.Cast<object>().Any():
+                return true;
+        }
+
+        return false;
     }
 }

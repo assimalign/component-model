@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
 
 using Assimalign.ComponentModel.Validation.Internal.Rules;
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
 {
 
-    public ValidationRuleBuilder(IValidationRule rule)
+    public ValidationRuleBuilder(IValidationRule validationRule)
     {
-        this.Rule = rule;
+        this.ValidationRule = validationRule;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public IValidationRule Rule { get; }
+    public IValidationRule ValidationRule { get; }
 
 
     /// <summary>
@@ -33,15 +30,19 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : IComparable<TBound>
     {
-        if (this.Rule is IValidationMemberRule<T, TValue> MemberRule)
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
             return Between<TBound>(lowerBound, upperBound, configure =>
             {
-                configure.Message = $"One of the following items in '{string.Join('.', MemberRule.Member.Body.ToString().Split('.').Skip(1))}' is not within bounds of: {lowerBound} and {upperBound}.";
-                configure.Source = MemberRule.Member.ToString();
+                configure.Message = $"One of the following items in '{string.Join('.', validationRule.ValidationExpression.Body.ToString().Split('.').Skip(1))}' " +
+                                    $"is not within bounds of: {lowerBound} and {upperBound}.";
+                configure.Source = validationRule.ValidationExpression.Body.ToString();
             });
         }
-        
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
     /// <summary>
@@ -54,16 +55,23 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure) where TBound : IComparable<TBound>
     {
-        var error = new ValidationError();
-
-        configure.Invoke(error);
-
-        MemberRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(MemberRule.Member, lowerBound, upperBound)
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
-            Error = error
-        });
+            var error = new ValidationError();
 
-        return this;
+            configure.Invoke(error);
+
+            validationRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(validationRule.ValidationExpression, lowerBound, upperBound)
+            {
+                Error = error
+            });
+
+            return this;
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
     /// <summary>
@@ -76,10 +84,19 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : IComparable<TBound>
     {
-        return BetweenOrEqualTo<TBound>(lowerBound, upperBound, configure =>
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
-            configure.Message = "";
-        });
+            return BetweenOrEqualTo<TBound>(lowerBound, upperBound, configure =>
+            {
+                configure.Message = $"One of the following items in '{string.Join('.', validationRule.ValidationExpression.Body.ToString().Split('.').Skip(1))}' " +
+                                    $"is not within bounds of: {lowerBound} and {upperBound}.";
+                configure.Source = validationRule.ValidationExpression.Body.ToString();
+            });
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
     /// <summary>
@@ -93,16 +110,23 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : IComparable<TBound>
     {
-        var error = new ValidationError();
-
-        configure.Invoke(error);
-
-        MemberRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(MemberRule.Member, lowerBound, upperBound)
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
-            Error = error
-        });
+            var error = new ValidationError();
 
-        return this;
+            configure.Invoke(error);
+
+            validationRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(validationRule.ValidationExpression, lowerBound, upperBound)
+            {
+                Error = error
+            });
+
+            return this;
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
 
@@ -119,9 +143,16 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     /// <returns></returns>
     public IValidationRuleBuilder<T, TValue> Custom(Action<TValue, IValidationContext> validation)
     {
-        MemberRule.AddRule(new CustomValidationRule<T, TValue>(MemberRule.Member, validation));
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        {
+            validationRule.AddRule(new CustomValidationRule<T, TValue>(validationRule.ValidationExpression, validation));
 
-        return this;
+            return this;
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
     public IValidationRuleBuilder<T, TValue> Empty()
@@ -144,26 +175,58 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
     public IValidationRuleBuilder<T, TValue> Equal<TValueCompare>(TValueCompare value, Action<IValidationError> configure)
     {
-        var error = new ValidationError();
+        throw new NotImplementedException();
 
-        configure.Invoke(error);
+        //var error = new ValidationError();
 
-        this.MemberRule.AddRule(new EqaulToValidationRule<T, TValue, TValueCompare>(MemberRule.Member, value)
+        //configure.Invoke(error);
+
+        //this.MemberRule.AddRule(new EqaulToValidationRule<T, TValue, TValueCompare>(MemberRule.Member, value)
+        //{
+        //    Error = error
+        //});
+
+        //return this;
+    }
+
+    public IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value) 
+        where TArgument : struct, IComparable
+    {
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
-            Error = error
-        });
-
-        return this;
+            return GreaterThan<TArgument>(value, error =>
+            {
+                error.Code = "400";
+                error.Message = $"The following expression: {validationRule.ValidationExpression} must be greater than {value}.";
+                error.Source = validationRule.ValidationExpression.ToString();
+            });
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value) where TNumber : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> configure) 
+        where TArgument : struct, IComparable
     {
-        throw new NotImplementedException();
-    }
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        {
+            var error = new ValidationError();
 
-    public IValidationRuleBuilder<T, TValue> GreaterThan<TNumber>(TNumber value, Action<IValidationError> confiure) where TNumber : struct, IComparable
-    {
-        throw new NotImplementedException();
+            configure.Invoke(error);
+
+            validationRule.AddRule(new GreaterThanValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            {
+                Error = error
+            });
+
+            return this;
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
     public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TNumber>(TNumber value) where TNumber : struct, IComparable
@@ -196,14 +259,44 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         throw new NotImplementedException();
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThan<TNumber>(TNumber value) where TNumber : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value) 
+        where TArgument : struct, IComparable<TArgument>
     {
-        throw new NotImplementedException();
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        {
+            return LessThan<TArgument>(value, error =>
+            {
+                error.Code = "400";
+                error.Message = $"The following expression: {validationRule.ValidationExpression} must be less than {value}.";
+                error.Source = validationRule.ValidationExpression.ToString();
+            });
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure) where TArgument : struct, IComparable
+    public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure) 
+        where TArgument : struct, IComparable<TArgument>
     {
-        throw new NotImplementedException();
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        {
+            var error = new ValidationError();
+
+            configure.Invoke(error);
+
+            validationRule.AddRule(new LessThanValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            {
+                Error = error
+            });
+
+            return this;
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
     }
 
     public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TNumber>(TValue value) where TNumber : struct, IComparable

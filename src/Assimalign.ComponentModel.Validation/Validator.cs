@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 namespace Assimalign.ComponentModel.Validation;
 
 
-using Assimalign.ComponentModel.Validation.Rules;
+
 using Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
@@ -91,11 +91,25 @@ public sealed class Validator : IValidator
 
         foreach(var profile in profiles)
         {
-            profile.Configure();
+            var tokenSource = new CancellationTokenSource();
+            var parallelOptions = new ParallelOptions()
+            {
+                CancellationToken = tokenSource.Token
+            };
 
-            foreach(var rule in profile.ValidationRules)
+            var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
             {
                 rule.Evaluate(context);
+
+                if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                {
+                    tokenSource.Cancel();
+                }
+            });
+
+            if (!results.IsCompleted)
+            {
+                throw new ValidationInternalException("");
             }
         }
 

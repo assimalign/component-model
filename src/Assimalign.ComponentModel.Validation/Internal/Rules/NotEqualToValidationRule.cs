@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Rules
+namespace Assimalign.ComponentModel.Validation.Internal.Rules;
+
+internal sealed class NotEqualToValidationRule
 {
-    public class NotEqualToValidationRule
-    {
-        
-    }
+
 }
+

@@ -8,7 +8,7 @@ using Xunit;
 namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
 {
     using Assimalign.ComponentModel.Validation;
-    using Assimalign.ComponentModel.Validation.Rules;
+    using Assimalign.ComponentModel.Validation.Internal.Rules;
 
     public class DateTimeBetweenOrEqualToValidationRuleTests
     {
@@ -27,7 +27,7 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         {
             var person = new Person() { Birthdate = new DateTime(1997,01,01) };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996,01,01), new DateTime(2010,01,01));
+            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996,01,01), new DateTime(2010,01,01));
 
             rule.Evaluate(context);
             Assert.Empty(context.Errors);
@@ -39,7 +39,15 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         {
             var person = new Person() { Birthdate = new DateTime(2011, 01, 01) };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
+            {
+                Error = new ValidationError()
+                {
+                    Code = "400",
+                    Message = "Test Error Message",
+                    Source = "Birthdate"
+                }
+            };
 
             rule.Evaluate(context);
             Assert.Single(context.Errors);
@@ -51,7 +59,15 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         {
             var person = new Person() { Birthdate = new DateTime(1995, 01, 01) };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
+            {
+                Error = new ValidationError()
+                {
+                    Code = "400",
+                    Message = "Test Error Message",
+                    Source = "Birthdate"
+                }
+            };
 
             rule.Evaluate(context);
             Assert.Single(context.Errors);
@@ -63,14 +79,18 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
         {
             var person = new Person() { BirthdateNullable = null };
             var context = new ValidationContext<Person>(person);
-            var rule = new BetweenValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
+            var rule = new BetweenOrEqualToValidationRule<Person, DateTime, DateTime>(x => x.Birthdate, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01))
+            {
+                Error = new ValidationError()
+                {
+                    Code = "400",
+                    Message = "Test Error Message",
+                    Source = "Birthdate"
+                }
+            };
 
             rule.Evaluate(context);
             Assert.Single(context.Errors);
         }
-
-
-        
-        
     }
 }

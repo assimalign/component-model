@@ -7,7 +7,11 @@ namespace Assimalign.ComponentModel.Validation;
 /// <summary>
 /// 
 /// </summary>
-public interface IValidationRuleStack : IEnumerable<IValidationRule>, IEnumerable, ICollection, IReadOnlyCollection<IValidationRule>
+public interface IValidationRuleStack : 
+    IEnumerable<IValidationRule>, 
+    IEnumerable, 
+    ICollection, 
+    IReadOnlyCollection<IValidationRule>
 {
     /// <summary>
     /// 
@@ -46,4 +50,3 @@ public interface IValidationRuleStack : IEnumerable<IValidationRule>, IEnumerabl
     /// </summary>
     void Evaluate(IValidationContext context);
 }
-

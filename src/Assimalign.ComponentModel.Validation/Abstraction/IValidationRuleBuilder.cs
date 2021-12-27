@@ -147,7 +147,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <param name="confiure"></param>
     /// <returns></returns>
-    IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> confiure) 
+    IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> confiure)
         where TArgument : struct, IComparable;
 
     /// <summary>
@@ -176,7 +176,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value)
-        where TArgument : struct, IComparable;
+        where TArgument : struct, IComparable<TArgument>;
 
     /// <summary>
     /// 
@@ -186,7 +186,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="configure"></param>
     /// <returns></returns>
     IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure)
-        where TArgument : struct, IComparable;
+        where TArgument : struct, IComparable<TArgument>;
 
     /// <summary>
     /// 

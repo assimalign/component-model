@@ -45,5 +45,5 @@ public interface IValidationCondition<T>
     /// 
     /// </summary>
     /// <param name="context"></param>
-    void Evaluate(IValidationContext context)
+    void Evaluate(IValidationContext context);
 }

@@ -49,19 +49,23 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
         if (context.Instance is T instance)
         {
             var value = this.GetValue(instance);
-
-            if (value is IEnumerable enumerable)
+            
+            if (value is null)
+            {
+                context.AddFailure(this.Error);
+            }
+            else if (value is IEnumerable enumerable)
             {
                 foreach (var item in enumerable)
                 {
-                    if (item is TBound a && isOutOfBounds(a))
+                    if (item is null || (item is TBound a && isOutOfBounds(a)))
                     {
                         context.AddFailure(this.Error);
-                        return;
+                        break;
                     }
                 }
             }
-            if (value is TBound b && isOutOfBounds(b))
+            else if (value is TBound b && isOutOfBounds(b))
             {
                 context.AddFailure(this.Error);
             }
