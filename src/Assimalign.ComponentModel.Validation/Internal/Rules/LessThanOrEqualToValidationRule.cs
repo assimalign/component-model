@@ -10,10 +10,11 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
-internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IValidationRule, IComparer<TArgument>
+internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IValidationRule
     where TArgument : IComparable
 {
-    private readonly Func<TArgument, bool> isLessThan;
+    private readonly TArgument argument;
+    private readonly Func<TArgument, object, bool> isLessThanOrEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
     public LessThanOrEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
@@ -25,18 +26,16 @@ internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IV
 
         if (argument is null)
         {
-            throw new ArgumentNullException(nameof(argument));
+            throw new ArgumentNullException(nameof(TArgument));
         }
-
+        this.argument = argument;
         this.expression = expression;
-        this.isLessThan = x => Compare(x, argument) < 0;
+        this.isLessThanOrEqualTo = (arg, val) => arg.CompareTo(val) >= 0;
     }
 
-    public string Name { get; }
+    public string Name => nameof(LessThanOrEqualToValidationRule<T, TValue, TArgument>);
 
     public IValidationError Error { get; set; }
-
-    public int Compare(TArgument left, TArgument right) => left.CompareTo(right);
 
     public void Evaluate(IValidationContext context)
     {
@@ -52,14 +51,14 @@ internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IV
             {
                 foreach (var item in enumerable)
                 {
-                    if (item is null || (item is TArgument a && !isLessThan(a)))
+                    if (item is null || !isLessThanOrEqualTo(argument, item))
                     {
                         context.AddFailure(this.Error);
                         break;
                     }
                 }
             }
-            else if (value is TArgument b && !isLessThan(b))
+            else if (!isLessThanOrEqualTo(argument, value))
             {
                 context.AddFailure(this.Error);
             }
@@ -77,15 +76,22 @@ internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IV
     /// </summary>
     /// <param name="instance"></param>
     /// <returns></returns>
-    private TValue GetValue(T instance)
+    private object GetValue(T instance)
     {
         try
         {
-            return expression.Compile().Invoke(instance);
+            var value = expression.Compile().Invoke(instance);
+
+            if (value is not TArgument && value is IConvertible convertible)
+            {
+                return convertible.ToType(typeof(TArgument), default);
+            }
+
+            return value;
         }
-        catch (Exception exception)
+        catch
         {
-            return default(TValue);
+            return null;
         }
     }
 }

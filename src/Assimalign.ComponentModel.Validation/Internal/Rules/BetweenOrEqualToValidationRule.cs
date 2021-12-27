@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
@@ -43,25 +42,11 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
         };
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string GetNameOfValue => string.Join('.', expression.Body.ToString().Split('.').Skip(1));
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Name { get; } = "BetweenOrEqualToValidationRule";
+    public string Name => nameof(BetweenOrEqualToValidationRule<T, TValue, TBound>);
 
-    /// <summary>
-    /// 
-    /// </summary>
     public IValidationError Error { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

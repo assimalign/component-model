@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
+
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class NotNullValidationRule<T, TValue> : IValidationRule
 {
@@ -17,14 +14,37 @@ internal sealed class NotNullValidationRule<T, TValue> : IValidationRule
         this.expression = expression;
     }
 
-
-    public string Name => throw new NotImplementedException();
+    public string Name => nameof(NotNullValidationRule<T, TValue>);
 
     public IValidationError Error { get; set; }
 
     public void Evaluate(IValidationContext context)
     {
-        throw new NotImplementedException();
+        if (context.Instance is T instance)
+        {
+            var value = this.GetValue(instance);
+
+            if (value is null)
+            {
+                context.AddFailure(this.Error);
+            }
+        }
+        else
+        {
+            throw new ValidationInternalException("");
+        }
+    }
+
+    private object GetValue(T instance)
+    {
+        try
+        {
+            return expression.Compile().Invoke(instance);
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
 

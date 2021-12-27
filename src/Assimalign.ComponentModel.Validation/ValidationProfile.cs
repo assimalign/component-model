@@ -52,7 +52,8 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     {
         this.Configure(new ValidationRuleDescriptor<T>()
         {
-            ValidationRules = this.ValidationRules
+            ValidationRules = this.ValidationRules,
+            ValidationMode = this.ValidationMode
         });
     }
 

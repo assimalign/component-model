@@ -107,7 +107,8 @@ namespace Assimalign.ComponentModel.ValidationTests
             //    });
 
             descriptor.RuleFor(p => p.Age)
-                .Between(10,15);
+                .Empty()
+                .EqualTo(10);
 
            // descriptor.RuleForEach(p => p.Addresses);
         }

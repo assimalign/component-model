@@ -21,7 +21,6 @@ internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidat
         {
             throw new ArgumentNullException(nameof(expression));
         }
-
         if (argument is null)
         {
             throw new ArgumentNullException(nameof(argument));
@@ -32,12 +31,9 @@ internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidat
         this.isGreaterThan = (arg, val) => arg.CompareTo(val) < 0; // Is the argument less than the value
     }
 
-    public string Name { get; }
+    public string Name => nameof(GreaterThanValidationRule<T, TValue, TArgument>);
 
     public IValidationError Error { get; set; }
-
-    public int Compare(TArgument left, TArgument right) => left.CompareTo(right);
-
 
     public void Evaluate(IValidationContext context)
     {

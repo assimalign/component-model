@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
 
@@ -13,7 +9,6 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationRule<T, TValue> : IValidationRule<T, TValue>
 {
-
     private Expression<Func<T, TValue>> expression;
 
     public ValidationRule()
@@ -21,10 +16,6 @@ internal sealed class ValidationRule<T, TValue> : IValidationRule<T, TValue>
         this.ValidationRules ??= new ValidationRuleStack();
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
     public Expression<Func<T, TValue>> ValidationExpression
     {
         get => expression;
@@ -37,36 +28,23 @@ internal sealed class ValidationRule<T, TValue> : IValidationRule<T, TValue>
             }
             else
             {
-                throw new ValidationMemberException();
+                throw new ValidationInvalidMemberException(value);
             }
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Name { get; }
+    public string Name => "ValidationRuleDefault";
 
-    /// <summary>
-    /// 
-    /// </summary>
+    public ValidationMode ValidationMode { get; set; }
+
     public IValidationRuleStack ValidationRules { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="rule"></param>
     public IValidationRule<T, TValue> AddRule(IValidationRule rule)
     {
         ValidationRules.Push(rule);
         return this;
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
@@ -14,10 +10,10 @@ internal sealed class GreaterThanOrEqualToValidationRule<T, TValue, TArgument> :
     where TArgument : IComparable
 {
     private readonly TArgument argument;
-    private readonly Func<TArgument, object, bool> isGreaterThan;
+    private readonly Func<TArgument, object, bool> isGreaterThanOrEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public GreaterThanOrEqualToValidationRulee(Expression<Func<T, TValue>> expression, TArgument argument)
+    public GreaterThanOrEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
         if (expression is null)
         {
@@ -31,15 +27,12 @@ internal sealed class GreaterThanOrEqualToValidationRule<T, TValue, TArgument> :
 
         this.argument = argument;
         this.expression = expression;
-        this.isGreaterThan = (arg, val) => arg.CompareTo(val) < 0; // Is the argument less than the value
+        this.isGreaterThanOrEqualTo = (arg, val) => arg.CompareTo(val) <= 0; // Is the argument less than the value
     }
 
-    public string Name { get; }
+    public string Name => nameof(GreaterThanOrEqualToValidationRule<T, TValue, TArgument>);
 
     public IValidationError Error { get; set; }
-
-    public int Compare(TArgument left, TArgument right) => left.CompareTo(right);
-
 
     public void Evaluate(IValidationContext context)
     {
@@ -55,14 +48,14 @@ internal sealed class GreaterThanOrEqualToValidationRule<T, TValue, TArgument> :
             {
                 foreach (var item in enumerable)
                 {
-                    if (item is null || !isGreaterThan.Invoke(argument, item))
+                    if (item is null || !isGreaterThanOrEqualTo.Invoke(this.argument, item))
                     {
                         context.AddFailure(this.Error);
                         break;
                     }
                 }
             }
-            else if (!isGreaterThan.Invoke(argument, value))
+            else if (!isGreaterThanOrEqualTo.Invoke(this.argument, value))
             {
                 context.AddFailure(this.Error);
             }

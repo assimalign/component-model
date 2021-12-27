@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
 internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
 {
-    private readonly string name;
     private readonly Expression<Func<T, TValue>> expression;
 
     public EmptyValidationRule(Expression<Func<T, TValue>> expression)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
         this.expression = expression;
     }
 
 
-    public string Name => this.name;
+    public string Name => nameof(EmptyValidationRule<T, TValue>);
 
     public IValidationError Error { get; set; }
 
@@ -30,18 +30,9 @@ internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
         {
             var value = this.GetValue(instance);
 
-            if (value is null)
+            if (!IsEmpty(value))
             {
-                return;
-            }
-
-            if (typeof(TValue) == typeof(string))
-            {
-
-            }
-            else if (typeof(TValue) == typeof(IEnumerable))
-            {
-
+                context.AddFailure(this.Error);
             }
         }
         else
@@ -50,14 +41,27 @@ internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
         }
     }
 
+    private bool IsEmpty(object member)
+    {
+        return member switch
+        {
+            null => true,
+            string      stringValue when string.IsNullOrWhiteSpace(stringValue) => true, // May not need this since string is IEnumerable
+            ICollection collection  when collection.Count == 0 => true,
+            Array       array       when array.Length == 0 => true,
+            IEnumerable enumerable  when !enumerable.Cast<object>().Any() => true,
+            _ => false
+        };
+    }
 
-    private TValue GetValue(T instance)
+
+    private object GetValue(T instance)
     {
         try
         {
             return expression.Compile().Invoke(instance);
         }
-        catch(Exception exception)
+        catch
         {
             return default(TValue);
         }

@@ -213,7 +213,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> Equal<TArgument>(TArgument value);
+    IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value);
 
     /// <summary>
     /// 
@@ -222,7 +222,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IValidationRuleBuilder<T, TValue> Equal<TArgument>(TArgument value, Action<IValidationError> configure);
+    IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure);
 
     /// <summary>
     /// 
@@ -230,7 +230,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value);
+    IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value);
 
     /// <summary>
     /// 
@@ -239,7 +239,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value, Action<IValidationError> configure);
+    IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure);
 
     /// <summary>
     /// 

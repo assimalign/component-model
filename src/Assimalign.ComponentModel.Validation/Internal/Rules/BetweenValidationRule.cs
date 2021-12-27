@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
-
 
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
@@ -43,27 +41,10 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
         };
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string GetNameOfValue => string.Join('.', expression.Body.ToString().Split('.').Skip(1));
+    public string Name => nameof(BetweenValidationRule<T, TValue, TBound>);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Name { get; } = "BetweenValidationRule";
-
-    /// <summary>
-    /// 
-    /// </summary>
     public IValidationError Error { get; set; }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <exception cref="Exception"></exception>
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

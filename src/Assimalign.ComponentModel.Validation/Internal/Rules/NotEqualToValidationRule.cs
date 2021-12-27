@@ -8,22 +8,23 @@ internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidati
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public NotEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument value)
+    public NotEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
+        if (argument is null)
+        {
+            throw new ArgumentNullException(nameof(TArgument));
+        }
+
         this.expression = expression;
-        this.isEqualTo = x => x.Equals(value);
-
-
+        this.isEqualTo = x => x.Equals(argument);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Name { get; }
+    public string Name => nameof(NotEqualToValidationRule<T, TValue, TArgument>);
 
-    /// <summary>
-    /// 
-    /// </summary>
     public IValidationError Error { get; set; }
 
     public void Evaluate(IValidationContext context)

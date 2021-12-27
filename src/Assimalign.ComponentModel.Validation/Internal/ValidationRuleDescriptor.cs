@@ -11,14 +11,9 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 
 internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 {
-
-    /// <summary>
-    /// 
-    /// </summary>
     public IValidationRuleStack ValidationRules { get; set; }
 
-
-    public IValidationRule Current { get; set; }
+    public ValidationMode ValidationMode { get; set; }
 
     /// <summary>
     /// 
@@ -39,15 +34,14 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 
         var rule = new ValidationRule<T, TValue>()
         {
-            ValidationExpression = expression
+            ValidationExpression = expression,
+            ValidationMode = this.ValidationMode
         };
 
         this.ValidationRules.Push(rule);
 
         return new ValidationRuleBuilder<T, TValue>(rule);
     }
-
-
 
     /// <summary>
     /// 
@@ -69,16 +63,14 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 
         var rule = new ValidationRule<T, TValue>()
         {
-            ValidationExpression = expression
+            ValidationExpression = expression,
+            ValidationMode = this.ValidationMode
         };
 
         this.ValidationRules.Push(rule);
 
         return new ValidationRuleBuilder<T, TValue>(rule);
     }
-
-
-
 
 
     /// <summary>

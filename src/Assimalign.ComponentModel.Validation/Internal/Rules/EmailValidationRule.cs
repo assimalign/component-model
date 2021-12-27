@@ -14,7 +14,7 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
-internal class EmailValidationRule<T, TValue> : IValidationRule, IValidationError
+internal class EmailValidationRule<T, TValue> : IValidationRule
 {
     private readonly string pattern = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$";
     private readonly Expression<Func<T, TValue>> expression;
@@ -22,31 +22,11 @@ internal class EmailValidationRule<T, TValue> : IValidationRule, IValidationErro
     public EmailValidationRule(Expression<Func<T, TValue>> expression)
     {
         this.expression = expression;
-        this.Name = "EmailValidationRule";
-        this.Code = "400";
-        this.Message = $"The following property, field, or collection '{expression.Body}' had an invalid email string.";
-        this.Source = $"{expression}";
     }
 
-    /// <summary>
-    /// The name of the Validation Rule.
-    /// </summary>
-    public string Name { get; }
+    public string Name => nameof(EmailValidationRule<T,TValue>);
 
-    /// <summary>
-    /// A unique error code to use when the validation rule fails.
-    /// </summary>
-    public string Code { get; set; }
-
-    /// <summary>
-    /// A unique error message to use when the validation rule fails.
-    /// </summary>
-    public string Message { get; set; }
-
-    /// <summary>
-    /// The source of the validation failure.
-    /// </summary>
-    public string Source { get; set; }
+    public IValidationError Error { get; set; }
 
     /// <summary>
     /// 
@@ -64,7 +44,7 @@ internal class EmailValidationRule<T, TValue> : IValidationRule, IValidationErro
                 {
                     if (!Regex.IsMatch(email, pattern))
                     {
-                        context.AddFailure(this);
+                        context.AddFailure(this.Error);
                         break;
                     }
                 }
@@ -73,7 +53,7 @@ internal class EmailValidationRule<T, TValue> : IValidationRule, IValidationErro
             {
                 if (!Regex.IsMatch(email, pattern))
                 {
-                    context.AddFailure(this);
+                    context.AddFailure(this.Error);
                 }
             }
             else

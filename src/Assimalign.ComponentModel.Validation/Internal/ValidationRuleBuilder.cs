@@ -218,7 +218,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Equal<TArgument>(TArgument value) 
+    public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value) 
     {
         if (value is null)
         {
@@ -226,7 +226,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
-            return this.Equal<TArgument>(value, configure =>
+            return this.EqualTo<TArgument>(value, configure =>
             {
                 var validationExpression = validationRule.ValidationExpression.ToString();
 
@@ -241,7 +241,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Equal<TArgument>(TArgument value, Action<IValidationError> configure)
+    public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
     {
         if (value is null)
         {
@@ -417,7 +417,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new LengthBetweenValidationRule<T, TValue, int>(validationRule.ValidationExpression, min, max)
+            validationRule.AddRule(new LengthBetweenValidationRule<T, TValue>(validationRule.ValidationExpression, min, max)
             {
                 Error = error
             });
@@ -461,7 +461,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new LengthValidationRule<T, TValue, int>(validationRule.ValidationExpression, exact)
+            validationRule.AddRule(new LengthValidationRule<T, TValue>(validationRule.ValidationExpression, exact)
             {
                 Error = error
             });
@@ -613,7 +613,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new MaxLengthValidationRule<T, TValue, int>(validationRule.ValidationExpression, max)
+            validationRule.AddRule(new MaxLengthValidationRule<T, TValue>(validationRule.ValidationExpression, max)
             {
                 Error = error
             });
@@ -657,7 +657,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new MinLengthValidationRule<T, TValue, int>(validationRule.ValidationExpression, min)
+            validationRule.AddRule(new MinLengthValidationRule<T, TValue>(validationRule.ValidationExpression, min)
             {
                 Error = error
             });
@@ -714,7 +714,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value)
+    public IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value)
     {
         if (value is null)
         {
@@ -722,7 +722,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
-            return this.NotEqual<TArgument>(value, configure =>
+            return this.NotEqualTo<TArgument>(value, configure =>
             {
                 var validationExpression = validationRule.ValidationExpression.ToString();
 
@@ -737,7 +737,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value, Action<IValidationError> configure)
+    public IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
     {
         if (value is null)
         {

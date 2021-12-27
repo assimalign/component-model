@@ -44,9 +44,4 @@ public interface IValidationRuleStack :
     /// </summary>
     /// <param name="item"></param>
     void Push(IValidationRule item);
-
-    /// <summary>
-    /// Evaluates the collection of
-    /// </summary>
-    void Evaluate(IValidationContext context);
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
@@ -14,22 +10,23 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public EqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument value)
+    public EqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
-        this.expression = expression;
-        this.isEqualTo = x => x.Equals(value);
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
+        if (argument is null)
+        {
+            throw new ArgumentNullException(nameof(argument));
+        }
 
-        
+        this.expression = expression;
+        this.isEqualTo = x => x.Equals(argument);        
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Name { get; }
+    public string Name => nameof(EqualToValidationRule<T, TValue, TArgument>);
 
-    /// <summary>
-    /// 
-    /// </summary>
     public IValidationError Error { get; set; }
 
     public void Evaluate(IValidationContext context)

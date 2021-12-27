@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
-internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidationRule, IComparer<TArgument>
+internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidationRule
     where TArgument : IComparable
 {
-    private readonly Func<TArgument, bool> isLessThan;
+    private readonly TArgument argument;
+    private readonly Func<TArgument, object, bool> isLessThan;
     private readonly Expression<Func<T, TValue>> expression;
 
     public LessThanValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
@@ -29,15 +26,14 @@ internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidation
             throw new ArgumentNullException(nameof(argument));
         }
 
+        this.argument = argument;
         this.expression = expression;
-        this.isLessThan = x => Compare(x, argument) < 0;
+        this.isLessThan = (arg, val) => arg.CompareTo(val) >= 0;
     }
 
     public string Name { get; }
 
     public IValidationError Error { get; set; }
-
-    public int Compare(TArgument left, TArgument right) => left.CompareTo(right);
 
     public void Evaluate(IValidationContext context)
     {
@@ -53,14 +49,14 @@ internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidation
             {
                 foreach (var item in enumerable)
                 {
-                    if (item is null || (item is TArgument a && !isLessThan(a)))
+                    if (item is null || !isLessThan(this.argument, item))
                     {
                         context.AddFailure(this.Error);
                         break;
                     }
                 }
             }
-            else if (value is TArgument b && !isLessThan(b))
+            else if (!isLessThan(this.argument, value))
             {
                 context.AddFailure(this.Error);
             }
