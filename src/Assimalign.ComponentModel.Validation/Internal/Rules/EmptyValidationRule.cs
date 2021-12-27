@@ -22,6 +22,8 @@ internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
 
     public string Name => this.name;
 
+    public IValidationError Error { get; set; }
+
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

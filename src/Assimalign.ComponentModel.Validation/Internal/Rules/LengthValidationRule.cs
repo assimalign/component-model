@@ -6,18 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
-
-using Assimalign.ComponentModel.Validation;
-
-internal sealed class NullValidationRule<T, TValue> : IValidationRule
+internal sealed class LengthValidationRule<T, TValue, TArgument> : IValidationRule
 {
+    private readonly TArgument argument;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public NullValidationRule(Expression<Func<T, TValue>> expression)
+
+    public LengthValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
+        this.argument = argument;
         this.expression = expression;
     }
-
 
     public string Name => throw new NotImplementedException();
 

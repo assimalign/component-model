@@ -7,19 +7,32 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-using Assimalign.ComponentModel.Validation;
 
-internal sealed class NullValidationRule<T, TValue> : IValidationRule
+internal sealed class MinLengthValidationRule<T, TValue, TArgument> : IValidationRule
 {
+
+
+    private readonly Func<TArgument, bool> isLessThan;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public NullValidationRule(Expression<Func<T, TValue>> expression)
+    public MinLengthValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(nameof(expression));
+        }
+
+        if (argument is null)
+        {
+            throw new ArgumentNullException(nameof(argument));
+        }
+
         this.expression = expression;
+        this.isLessThan = x => Compare(x, argument) < 0;
     }
 
-
     public string Name => throw new NotImplementedException();
+
 
     public IValidationError Error { get; set; }
 

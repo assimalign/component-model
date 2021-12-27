@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal class NotEmptyValidationRule<T, TValue> : IValidationRule, IValidationError
+internal class NotEmptyValidationRule<T, TValue> : IValidationRule
 {
 
     private readonly Expression<Func<T, TValue>> expression;
@@ -43,6 +43,9 @@ internal class NotEmptyValidationRule<T, TValue> : IValidationRule, IValidationE
     /// The source of the validation failure.
     /// </summary>
     public string Source { get; set; }
+
+
+    public IValidationError Error { get; set; }
 
     /// <summary>
     /// 

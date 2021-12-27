@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal sealed class EqaulToValidationRule<T, TValue, TArgument> : IValidationRule
+internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationRule
 {
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public EqaulToValidationRule(Expression<Func<T, TValue>> expression, TArgument value)
+    public EqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument value)
     {
         this.expression = expression;
         this.isEqualTo = x => x.Equals(value);

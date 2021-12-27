@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -19,9 +16,13 @@ public sealed class ValidationContext<T> : IValidationContext
     private readonly ConcurrentStack<IValidationError> errors;
     private readonly ConcurrentStack<IValidationRule> successes;
 
+    private ValidationContext() { }
+
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="instance"></param>
+    /// <exception cref="ArgumentNullException">An exception is thrown if the <paramref name="instance"/> is null.</exception>
     public ValidationContext(T instance)
     {
         if (instance is null)

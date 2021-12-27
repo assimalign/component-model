@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-using Assimalign.ComponentModel.Validation;
-
-internal sealed class NullValidationRule<T, TValue> : IValidationRule
+internal sealed class LengthBetweenValidationRule<T, TValue, TArgument> : IValidationRule
 {
+    private readonly TArgument lowerBound;
+    private readonly TArgument upperBound;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public NullValidationRule(Expression<Func<T, TValue>> expression)
+
+    public LengthBetweenValidationRule(Expression<Func<T, TValue>> expression, TArgument lowerBound, TArgument upperBound)
     {
+        this.upperBound = upperBound;
+        this.lowerBound = lowerBound;
         this.expression = expression;
     }
-
 
     public string Name => throw new NotImplementedException();
 
@@ -28,4 +30,3 @@ internal sealed class NullValidationRule<T, TValue> : IValidationRule
         throw new NotImplementedException();
     }
 }
-

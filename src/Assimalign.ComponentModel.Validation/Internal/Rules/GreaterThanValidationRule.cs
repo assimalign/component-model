@@ -8,7 +8,7 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
-internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidationRule, IComparer<TArgument>
+internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidationRule
     where TArgument : IComparable
 {
     private readonly TArgument argument;

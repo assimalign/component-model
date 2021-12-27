@@ -230,8 +230,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value) 
-        where TArgument : IComparable;
+    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value);
 
     /// <summary>
     /// 
@@ -240,8 +239,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value, Action<IValidationError> configure)
-        where TArgument : IComparable;
+    IValidationRuleBuilder<T, TValue> NotEqual<TArgument>(TArgument value, Action<IValidationError> configure);
 
     /// <summary>
     /// 
@@ -288,7 +286,7 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="child"></param>
+    /// <param name="configure"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> child);
+    IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> configure);
 }

@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using Xunit.Extensions;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -17,6 +18,7 @@ namespace Assimalign.ComponentModel.ValidationTests
             var user = new User() { FirstName = "Chase", Age = 11};
 
           
+            //Assert.That()
             var validator = Validator.Create(configure =>
             {
                 configure.AddProfile(new UserValidationProfile());
