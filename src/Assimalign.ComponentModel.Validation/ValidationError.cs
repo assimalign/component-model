@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -11,7 +7,9 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public sealed class ValidationError : IValidationError
 {
-
+    /// <summary>
+    /// The default constructor.
+    /// </summary>
     public ValidationError() { }
 
     /// <summary>
@@ -32,7 +30,7 @@ public sealed class ValidationError : IValidationError
     public string Code { get; set; } = "400";
 
     /// <summary>
-    /// 
+    /// A unique error message for the validation error.
     /// </summary>
     public string Message { get; set; }
 
@@ -41,10 +39,6 @@ public sealed class ValidationError : IValidationError
     /// </summary>
     public string Source { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
     public override string ToString()
     {
         return $"Error {Code}: {Message} {Environment.NewLine} └─> Source: {Source}";

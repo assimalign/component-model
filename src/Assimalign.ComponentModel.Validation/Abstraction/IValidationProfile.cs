@@ -6,7 +6,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// <summary>
 /// Defines the validation rules for the <see cref="IValidationProfile.ValidationType"/>.
 /// </summary>
-public interface IValidationProfile 
+public interface IValidationProfile
 {
     /// <summary>
     /// 

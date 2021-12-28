@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
@@ -8,28 +9,26 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValidationRule
-    where TBound : IComparable
+    where TBound : notnull, IComparable
 {
     private readonly TBound lower;
     private readonly TBound upper;
     private readonly Func<TBound, TBound, object, bool> isOutOfBounds;
     private readonly Expression<Func<T, TValue>> expression;
+    private readonly string expressionBody;
 
     public BetweenOrEqualToValidationRule(Expression<Func<T, TValue>> expression, TBound lower, TBound upper)
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression), $"The following expression where the 'BetweenOrEqualTo()' rule is defined cannot be null.");
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'BetweenOrEqualTo()' rule is defined cannot be null.");
         }
-        if (lower is null)
+        if (expression.Body is MemberExpression member)
         {
-            throw new ArgumentNullException(nameof(lower));
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
-        if (upper is null)
-        {
-            throw new ArgumentNullException(nameof(upper));
-        }
-
         this.lower = lower;
         this.upper = upper;
         this.expression = expression;
@@ -43,7 +42,7 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
     }
 
 
-    public string Name => nameof(BetweenOrEqualToValidationRule<T, TValue, TBound>);
+    public string Name => $"BetweenOrEqualToValidationRule<{typeof(T).Name},{expressionBody ?? typeof(TValue).Name},{typeof(TBound).Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -83,11 +82,6 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-            // TODO: Something has happened if the code has gotten this far
-            throw new ValidationInternalException("The type being evaluated does not match the evaluation type.");
         }
     }
 

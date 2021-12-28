@@ -11,19 +11,25 @@ internal sealed class LengthMaxValidationRule<T, TValue> : IValidationRule
 {
     private readonly int length;
     private readonly Expression<Func<T, TValue>> expression;
-
+    private readonly string expressionBody;
     public LengthMaxValidationRule(Expression<Func<T, TValue>> expression, int length)
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'MaxLength()' rule is defined cannot be null.");
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
 
         this.length = length;
         this.expression = expression;
     }
 
-    public string Name => nameof(LengthMaxValidationRule<T, TValue>);
+    public string Name => $"LengthMaxValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
     
@@ -41,10 +47,6 @@ internal sealed class LengthMaxValidationRule<T, TValue> : IValidationRule
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-
         }
     }
 

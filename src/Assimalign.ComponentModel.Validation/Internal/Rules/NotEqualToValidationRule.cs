@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
@@ -7,23 +8,30 @@ internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidati
 {
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
+    private readonly string expressionBody;
 
     public NotEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'NotEqual()' rule is defined cannot be null.");
         }
         if (argument is null)
         {
             throw new ArgumentNullException(nameof(TArgument));
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
 
         this.expression = expression;
         this.isEqualTo = x => x.Equals(argument);
     }
 
-    public string Name => nameof(NotEqualToValidationRule<T, TValue, TArgument>);
+    public string Name => $"NotEqualValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
 

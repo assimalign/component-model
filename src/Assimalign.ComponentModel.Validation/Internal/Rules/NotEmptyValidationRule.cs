@@ -9,15 +9,25 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 internal class NotEmptyValidationRule<T, TValue> : IValidationRule 
     where TValue : IEnumerable
 {
-
     private readonly Expression<Func<T, TValue>> expression;
+    private readonly string expressionBody;
 
     public NotEmptyValidationRule(Expression<Func<T, TValue>> expression)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'NotEmpty()' rule is defined cannot be null.");
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
+        }
         this.expression = expression;
     }
 
-    public string Name => nameof(NotEmptyValidationRule<T, TValue>);
+    public string Name => $"NotEmptyValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -35,10 +45,6 @@ internal class NotEmptyValidationRule<T, TValue> : IValidationRule
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-            // TODO: 
         }
     }
 

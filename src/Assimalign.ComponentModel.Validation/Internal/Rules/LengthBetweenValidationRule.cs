@@ -11,13 +11,20 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
     private readonly int lowerBound;
     private readonly int upperBound;
     private readonly Expression<Func<T, TValue>> expression;
+    private readonly string expressionBody;
 
 
     public LengthBetweenValidationRule(Expression<Func<T, TValue>> expression, int lowerBound, int upperBound)
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'Length()' rule is defined cannot be null.");
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
 
         this.upperBound = upperBound;
@@ -25,7 +32,7 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
         this.expression = expression;
     }
 
-    public string Name => nameof(LengthBetweenValidationRule<T, TValue>);
+    public string Name => $"LengthValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -43,10 +50,6 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-
         }
     }
 

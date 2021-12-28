@@ -9,19 +9,26 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
     where TValue : IEnumerable
 {
+    private readonly string expressionBody;
     private readonly Expression<Func<T, TValue>> expression;
 
     public EmptyValidationRule(Expression<Func<T, TValue>> expression)
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'Empty()' rule is defined cannot be null.");
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
         this.expression = expression;
     }
 
 
-    public string Name => nameof(EmptyValidationRule<T, TValue>);
+    public string Name => $"EmptyValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -39,10 +46,6 @@ internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-
         }
     }
 

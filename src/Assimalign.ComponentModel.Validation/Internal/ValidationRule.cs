@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
@@ -33,7 +35,7 @@ internal sealed class ValidationRule<T, TValue> : IValidationRule<T, TValue>
         }
     }
 
-    public string Name => "ValidationRuleDefault";
+    public string Name => nameof(ValidationRule<T, TValue>);
 
     public ValidationMode ValidationMode { get; set; }
 
@@ -49,8 +51,19 @@ internal sealed class ValidationRule<T, TValue> : IValidationRule<T, TValue>
     {
         if (context.Instance is T instance)
         {
-            Parallel.ForEach(this.ValidationRules, (rule, state, index) =>
+            var tokenSource = new CancellationTokenSource();
+            var parallelOptions = new ParallelOptions()
             {
+                CancellationToken = tokenSource.Token
+            };
+
+            var results = Parallel.ForEach(this.ValidationRules, parallelOptions, (rule, state, index) =>
+            {
+                if (this.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                {
+                    tokenSource.Cancel();
+                }
+
                 rule.Evaluate(context);
             });
         }

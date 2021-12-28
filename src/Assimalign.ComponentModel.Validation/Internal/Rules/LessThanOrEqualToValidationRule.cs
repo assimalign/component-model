@@ -1,39 +1,37 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-using Assimalign.ComponentModel.Validation.Internal.Exceptions;
-
 internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IValidationRule
-    where TArgument : IComparable
+    where TArgument : notnull, IComparable
 {
     private readonly TArgument argument;
     private readonly Func<TArgument, object, bool> isLessThanOrEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
+    private readonly string expressionBody;
 
     public LessThanOrEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'LessThanOrEqualTo()' rule is defined cannot be null.");
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
 
-        if (argument is null)
-        {
-            throw new ArgumentNullException(nameof(TArgument));
-        }
         this.argument = argument;
         this.expression = expression;
         this.isLessThanOrEqualTo = (arg, val) => arg.CompareTo(val) >= 0;
     }
 
-    public string Name => nameof(LessThanOrEqualToValidationRule<T, TValue, TArgument>);
+    public string Name => $"LessThanOrEqualToValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}, {typeof(TArgument).Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -66,11 +64,6 @@ internal sealed class LessThanOrEqualToValidationRule<T, TValue, TArgument> : IV
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-            // TODO: Something has happened if the code has gotten this far
-            throw new ValidationInternalException("The type being evaluated does not match the evaluation type.");
         }
     }
 

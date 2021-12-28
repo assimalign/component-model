@@ -32,7 +32,7 @@ public sealed class ValidationResult
 
 
     /// <summary>
-    /// A collection of validation rules invoked
+    /// A collection of validation rules successfully invoked.
     /// </summary>
     public IEnumerable<string> Invocations { get; }
 

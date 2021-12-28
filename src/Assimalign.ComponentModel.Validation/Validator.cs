@@ -53,14 +53,7 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate<T>(T instance)
     {
-        var context = new ValidationContext<T>(instance) as IValidationContext;
-        return Validate(context);
-    }
-
-
-    public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        return Validate(new ValidationContext<T>(instance) as IValidationContext);
     }
 
     /// <summary>
@@ -68,14 +61,38 @@ public sealed class Validator : IValidator
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="instance"></param>
-    /// <param name="profile"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public ValidationResult Validate<T>(T instance, string profile)
+    public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken = default)
     {
-        return Validate(new ValidationContext<T>(instance), profile);
+        return ValidateAsync(new ValidationContext<T>(instance) as IValidationContext, cancellationToken);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="instance"></param>
+    /// <param name="profileName"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public ValidationResult Validate<T>(T instance, string profileName)
+    {
+        return Validate(new ValidationContext<T>(instance), profileName);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="instance"></param>
+    /// <param name="profileName"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task<ValidationResult> ValidateAsync<T>(T instance, string profileName, CancellationToken cancellationToken = default)
+    {
+        return ValidateAsync(new ValidationContext<T>(instance) as IValidationContext, profileName, cancellationToken);
+    }
 
     /// <summary>
     /// 
@@ -84,11 +101,98 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate(IValidationContext context)
     {
-        var profiles = this.options.Profiles
-            .Where(x => x.Value.ValidationType == context.InstanceType)
-            .Select(x=>x.Value);
+        foreach(var profile in this.options.Profiles)
+        {
+            if (profile.ValidationType == context.InstanceType)
+            {
+                var tokenSource = new CancellationTokenSource();
+                var parallelOptions = new ParallelOptions()
+                {
+                    CancellationToken = tokenSource.Token
+                };
 
-        foreach(var profile in profiles)
+                var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
+                {
+                    if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                    {
+                        tokenSource.Cancel();
+                    }
+
+                    rule.Evaluate(context);
+                });
+
+                if (!results.IsCompleted)
+                {
+                    throw new ValidationInternalException("Unable to complete validation");
+                }
+            }
+        }
+
+        // Let's throw exception for any validation failure if requested.
+        if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
+        {
+            throw new ValidationFailureException(context);
+        }
+
+        return ValidationResult.Create(context);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ValidationFailureException"></exception>
+    public Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellationToken = default)
+    {
+        return Task.Run<ValidationResult>(() =>
+        {
+            foreach (var profile in this.options.Profiles)
+            {
+                if (profile.ValidationType == context.InstanceType)
+                {
+                    var tokenSource = cancellationToken == default ?
+                        new CancellationTokenSource() :
+                        CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+                    var parallelOptions = new ParallelOptions()
+                    {
+                        CancellationToken = tokenSource.Token
+                    };
+
+                    var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
+                    {
+                        if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                        {
+                            tokenSource.Cancel();
+                        }
+
+                        rule.Evaluate(context);
+                    });
+                }
+            }
+
+            if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
+            {
+                throw new ValidationFailureException(context);
+            }
+
+            return ValidationResult.Create(context);
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="profileName"></param>
+    /// <returns></returns>
+    public ValidationResult Validate(IValidationContext context, string profileName)
+    {
+        var index = HashCode.Combine(profileName.ToLower(), context.InstanceType);
+        
+        if (this.options.TryGetProfile(index, out var profile))
         {
             var tokenSource = new CancellationTokenSource();
             var parallelOptions = new ParallelOptions()
@@ -105,47 +209,61 @@ public sealed class Validator : IValidator
 
                 rule.Evaluate(context);
             });
-
-            if (!results.IsCompleted)
-            {
-                throw new ValidationInternalException("");
-            }
         }
 
         // Let's throw exception for any validation failure if requested.
         if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
         {
-            throw new ValidationFailureException(context.Errors);
+            throw new ValidationFailureException(context);
         }
 
         return ValidationResult.Create(context);
     }
-
+    
     /// <summary>
     /// 
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="profile"></param>
+    /// <param name="profileName"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public ValidationResult Validate(IValidationContext context, string profile)
+    /// <exception cref="ValidationFailureException"></exception>
+    public Task<ValidationResult> ValidateAsync(IValidationContext context, string profileName, CancellationToken cancellationToken = default)
     {
-        var index = HashCode.Combine(profile, context.InstanceType);
-        
-        if (this.options.Profiles.TryGetValue(index, out var profile1))
+        return Task.Run<ValidationResult>(() =>
         {
-            foreach(var rule in profile1.ValidationRules)
+            foreach (var profile in this.options.Profiles)
             {
-                rule.Evaluate(context);
+                if (profile.ValidationType == context.InstanceType)
+                {
+                    var tokenSource = cancellationToken == default ?
+                        new CancellationTokenSource() :
+                        CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+                    var parallelOptions = new ParallelOptions()
+                    {
+                        CancellationToken = tokenSource.Token
+                    };
+
+                    var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
+                    {
+                        if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                        {
+                            tokenSource.Cancel();
+                        }
+
+                        rule.Evaluate(context);
+                    });
+                }
             }
-        }
 
-        // Let's throw exception for any validation failure if requested.
-        if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
-        {
-            throw new ValidationFailureException(context.Errors);
-        }
+            if (this.options.ThrowExceptionOnFailure && context.Errors.Any())
+            {
+                throw new ValidationFailureException(context);
+            }
 
-        return ValidationResult.Create(context);
+            return ValidationResult.Create(context);
+        });
     }
 
 
@@ -161,33 +279,5 @@ public sealed class Validator : IValidator
         configure.Invoke(options);
 
         return new Validator(options);
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="json"></param>
-    /// <param name="options"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public static IValidator CreateFromConfiguration<T>(string json, JsonSerializerOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ValidationResult> ValidateAsync<T>(T instance, string profileName, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ValidationResult> ValidateAsync(IValidationContext context, string profileName, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 }

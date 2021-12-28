@@ -1,21 +1,31 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-using Assimalign.ComponentModel.Validation.Internal.Exceptions;
-
 internal sealed class NullValidationRule<T, TValue> : IValidationRule
 {
     private readonly Expression<Func<T, TValue>> expression;
+    private readonly string expressionBody;
 
     public NullValidationRule(Expression<Func<T, TValue>> expression)
     {
+        if (expression is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"The following expression where the 'Null()' rule is defined cannot be null.");
+        }
+        if (expression.Body is MemberExpression member)
+        {
+            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
+        }
         this.expression = expression;
     }
 
 
-    public string Name => nameof(NullValidationRule<T, TValue>);
+    public string Name => $"NullValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -33,10 +43,6 @@ internal sealed class NullValidationRule<T, TValue> : IValidationRule
             {
                 context.AddSuccess(this);
             }
-        }
-        else
-        {
-            throw new ValidationInternalException("");
         }
     }
 

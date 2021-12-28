@@ -85,12 +85,13 @@ internal sealed class ValidationRuleCondition<T> : IValidationRuleCondition<T>
     {
         var descriptor = new ValidationRuleDescriptor<T>()
         {
-            ValidationRules = new ValidationRuleStack()
+            ValidationMode = this.ValidationMode
         };
 
         var rule = new ValidationRuleCondition<T>()
         {
-            Condition = condition
+            Condition = condition,
+            ValidationMode = this.ValidationMode
         };
 
         ConditionRuleSet.Push(rule);

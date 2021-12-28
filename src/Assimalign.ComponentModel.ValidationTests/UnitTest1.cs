@@ -15,7 +15,7 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { FirstName = "Chase", Age = 11, Record = new TestRecord() { FirstName = "Chases" } };
+            var user = new User() { FirstName = "Chase", Age = 11, Record = new TestRecord() { FirstName = "Chase" } };
 
 
             //Assert.That()
@@ -40,25 +40,16 @@ namespace Assimalign.ComponentModel.ValidationTests
         {
 
             descriptor.RuleForEach(p => p.NickNames)
-                .EmailAddress()
-                .Length(1,2, configure => { })
-                .EqualTo(new User())
-                .Custom((user, context) =>
-                {
-                    
-                });
+                .NotEmpty();
            
             descriptor.RuleFor(p => p.Record)
                 .EqualTo(new TestRecord() { FirstName = "Chase" });
 
             descriptor.RuleFor(p => p.FirstName)
-                .EmailAddress()
                 .Length(0, 9);
-               // .MaxLength(10);
 
             descriptor.RuleFor(p => p.Age)
-                .GreaterThanOrEqualTo(0)
-                .EqualTo(11);
+                .Between(10, 25);
 
            // descriptor.RuleForEach(p => p.Addresses);
         }

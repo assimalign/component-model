@@ -45,7 +45,7 @@ public sealed class ValidationContext<T> : IValidationContext
     object IValidationContext.Instance => this.Instance;
 
     /// <summary>
-    /// 
+    /// The <see cref="Type"/> of the instance being validated.
     /// </summary>
     public Type InstanceType => this.type;
 

@@ -11,58 +11,26 @@ namespace Assimalign.ComponentModel.Validation
     /// </summary>
     public sealed class ValidationOptions
     {
-        private readonly IList<IValidationRule> rules;
-        
-            
-        internal IDictionary<int, IValidationProfile> Profiles { get; } = new Dictionary<int, IValidationProfile>();
+        private readonly SortedList<int, IValidationRule> rules;
+        private readonly IDictionary<int, IValidationProfile> profiles; 
 
 
         public ValidationOptions()
         {
-            this.rules = new List<IValidationRule>();
-            //this.profiles = new Dictionary<int, IValidationProfile>();
+            this.rules = new SortedList<int, IValidationRule>();
+            this.profiles = new Dictionary<int, IValidationProfile>();
         }
 
-        
-
-
-        /// <summary>
-        /// The registered profiles for the 
-        /// </summary>
-        //public IEnumerable<IValidationProfile> Profiles => this.profiles.Values;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IEnumerable<IValidationRule> ValidationRules => rules;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool ProfileNameCaseSensitive { get; set; }
 
         /// <summary>
         /// Will throw a <see cref="ValidationFailureException"/> rather than return <see cref="ValidationResult"/>.
         /// </summary>
         public bool ThrowExceptionOnFailure { get; set; }
 
-
-
-
-
-
-
-
         /// <summary>
-        /// Register an additional Validator not supported within the library.
+        /// The collection of profiles.
         /// </summary>
-        /// <typeparam name="TValidatorRule"></typeparam>
-        public void AddRule<TValidatorRule>()
-            where TValidatorRule : IValidationRule, new()
-        {
-            rules.Add(new TValidatorRule());
-        }
-
+        public IEnumerable<IValidationProfile> Profiles => this.profiles.Values;
 
         /// <summary>
         /// 
@@ -78,9 +46,14 @@ namespace Assimalign.ComponentModel.Validation
 
             profile.Configure();
 
-            var index = HashCode.Combine(profile.Name, profile.ValidationType);
+            var index = HashCode.Combine(profile.Name.ToLower(), profile.ValidationType);
 
-            Profiles[index] = profile;
+            this.profiles[index] = profile;
+        }
+
+        internal bool TryGetProfile(int index, out IValidationProfile profile)
+        {
+            return this.profiles.TryGetValue(index, out profile);
         }
     }
 }
