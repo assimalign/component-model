@@ -28,6 +28,10 @@ internal sealed class NotNullValidationRule<T, TValue> : IValidationRule
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
         else
         {

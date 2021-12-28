@@ -31,7 +31,8 @@ public interface IValidationRule
 public interface IValidationRule<T, TValue> : IValidationRule
 {
     /// <summary>
-    /// 
+    /// The fluent expression representing the member of <typeparamref name="T"/> to 
+    /// be evaluated against the rule stack.
     /// </summary>
     Expression<Func<T, TValue>> ValidationExpression { get; }
 
@@ -41,7 +42,7 @@ public interface IValidationRule<T, TValue> : IValidationRule
     IValidationRuleStack ValidationRules { get; }
 
     /// <summary>
-    /// 
+    /// Adds a validation rule to the rule stack.
     /// </summary>
     /// <param name="rule"></param>
     IValidationRule<T, TValue> AddRule(IValidationRule rule);

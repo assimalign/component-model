@@ -59,6 +59,10 @@ internal sealed class GreaterThanOrEqualToValidationRule<T, TValue, TArgument> :
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
         else
         {

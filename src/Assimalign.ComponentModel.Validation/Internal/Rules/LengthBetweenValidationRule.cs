@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
+    where TValue : IEnumerable
 {
     private readonly int lowerBound;
     private readonly int upperBound;
@@ -40,6 +38,10 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
             if (!IsBetweenLength(value))
             {
                 context.AddFailure(this.Error);
+            }
+            else
+            {
+                context.AddSuccess(this);
             }
         }
         else

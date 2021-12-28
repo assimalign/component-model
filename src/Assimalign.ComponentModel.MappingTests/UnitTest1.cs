@@ -65,7 +65,15 @@ namespace Assimalign.ComponentModel.MappingTests
                     });
 
                 descriptor
-                    .ForMember(source => source.Details.FirstName, target => target.FirstName)
+                    .ForTarget(target => target.FirstName)
+                    .MapSource(source => source.Details.FirstName.ToLower());
+
+                descriptor
+                    .ForSource(source => source.Details.FirstName)
+                    .MapTarget(target => target.FirstName.ToUpper());
+
+                descriptor
+                    .ForMember(source => source.Details.FirstName, target => target.FirstName.ToLower())
                     .ForMember(source => source.Details.LastName, target => target.LastName);
             }
         }

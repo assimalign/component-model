@@ -6,12 +6,13 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal sealed class MinLengthValidationRule<T, TValue> : IValidationRule
+internal sealed class LengthMinValidationRule<T, TValue> : IValidationRule
+    where TValue : IEnumerable
 {
     private readonly int length;
     private readonly Expression<Func<T, TValue>> expression;
 
-    public MinLengthValidationRule(Expression<Func<T, TValue>> expression, int length)
+    public LengthMinValidationRule(Expression<Func<T, TValue>> expression, int length)
     {
         if (expression is null)
         {
@@ -22,7 +23,7 @@ internal sealed class MinLengthValidationRule<T, TValue> : IValidationRule
         this.expression = expression;
     }
 
-    public string Name => nameof(MinLengthValidationRule<T, TValue>);
+    public string Name => nameof(LengthMinValidationRule<T, TValue>);
 
     public IValidationError Error { get; set; }
 
@@ -35,6 +36,10 @@ internal sealed class MinLengthValidationRule<T, TValue> : IValidationRule
             if (this.IsUnderMinLength(value))
             {
                 context.AddFailure(this.Error);
+            }
+            else
+            {
+                context.AddSuccess(this);
             }
         }
         else

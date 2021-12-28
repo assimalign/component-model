@@ -29,6 +29,10 @@ internal sealed class NullValidationRule<T, TValue> : IValidationRule
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
         else
         {

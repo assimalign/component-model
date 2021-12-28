@@ -35,7 +35,7 @@ public interface IValidationProfile
     IValidationRuleStack ValidationRules { get; }
 
     /// <summary>
-    /// 
+    /// Specifies whether the validator should continue or stop after the first validation failure.
     /// </summary>
     [MemberNotNull]
     ValidationMode ValidationMode { get; }

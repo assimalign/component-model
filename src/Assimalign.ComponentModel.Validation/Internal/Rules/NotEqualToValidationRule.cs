@@ -37,6 +37,10 @@ internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidati
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
     }
 

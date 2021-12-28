@@ -18,7 +18,7 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(nameof(expression), $"The following expression where the 'Between()' rule is defined cannot be null.");
         }
         if (lower is null)
         {
@@ -76,6 +76,10 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
             else if (isOutOfBounds(this.lower, this.upper, value))
             {
                 context.AddFailure(this.Error);
+            }
+            else
+            {
+                context.AddSuccess(this);
             }
         }
         else

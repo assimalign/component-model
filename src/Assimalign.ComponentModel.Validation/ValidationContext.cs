@@ -90,4 +90,13 @@ public sealed class ValidationContext<T> : IValidationContext
             Source = failureSource
         });
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rule"></param>
+    public void AddSuccess(IValidationRule rule)
+    {
+        this.successes.Push(rule);
+    }
 }

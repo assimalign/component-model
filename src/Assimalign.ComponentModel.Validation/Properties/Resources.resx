@@ -126,6 +126,9 @@
   <data name="DefaultValidationMessageBetweenRule" xml:space="preserve">
     <value>The following expression: {0} is outside the bounds of '{1}' and '{2}'.</value>
   </data>
+  <data name="DefaultValidationMessageEmailAddressRule" xml:space="preserve">
+    <value>The following expression: {0} must be in the format of an email address.</value>
+  </data>
   <data name="DefaultValidationMessageEmptyRule" xml:space="preserve">
     <value>The following expression: {0} was not empty.</value>
   </data>

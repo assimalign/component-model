@@ -34,92 +34,27 @@ namespace Assimalign.ComponentModel.ValidationTests
         public UserValidationProfile()
         {
 
-
-            //RuleForEach(p => p.Ages)
-            //    .Between(0, 34);
-
-            //RuleFor(p => p.Details)
-            //    .ChildRules(child =>
-            //    {
-            //        child.RuleFor(p => p.Ssn)
-            //            .NotEmpty();
-
-            //    });
-
-            //RuleForEach(p => p.NickNames)
-            //    .NotEmpty()
-            //    .EmailAddress()
-            //    .Custom((value, context) =>
-            //    {
-            //        foreach(var email in value)
-            //        {
-
-            //        }
-            //    });
-
-            
-
-
-
-            //RuleFor(p => p.Age)
-            //    //.Length(20)
-                
-            //    .LessThan(23);
-
-            //RuleForEach(p => p.EmailAddress)
-                
-            //    .NotEmpty();
-
-
-            //var v = new Nullable<int>();
-
-
-
-            //RuleFor(p => p.FirstName)
-            //    .EmailAddress()
-                
-            //    .Custom((value, context) =>
-            //    {
-            //        if (value == "Test")
-            //        {
-            //            context.AddValidationError()
-            //        
-            //    });
         }
 
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
-            //descriptor
-            //    .When(x => x.EmailAddress != null, configure =>
-            //      {
 
-            //      })
-            //    .Otherwise(configure =>
-            //    {
-
-            //    });
-
-            //descriptor.RuleFor(x => x.Age)
-            //    .GreaterThan(10, error =>
-            //    {
-            //        error.Message = "The Age property must be greater the 10.";
-            //        error.Code = "400-235";
-            //    });
-
-
-            descriptor.RuleForEach(p => p.Addresses)
+            descriptor.RuleForEach(p => p.NickNames)
+                .EmailAddress()
+                .Length(1,2, configure => { })
                 .EqualTo(new User())
                 .Custom((user, context) =>
                 {
                     
                 });
-                
+           
             descriptor.RuleFor(p => p.Record)
                 .EqualTo(new TestRecord() { FirstName = "Chase" });
 
             descriptor.RuleFor(p => p.FirstName)
-                .Length(0,9)
-                .MaxLength(10);
+                .EmailAddress()
+                .Length(0, 9);
+               // .MaxLength(10);
 
             descriptor.RuleFor(p => p.Age)
                 .GreaterThanOrEqualTo(0)
@@ -143,9 +78,9 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public UserDetails Details { get; set; }
 
-        public IEnumerable<string> NickNames { get; set; }
+        public IList<string> NickNames { get; set; }
 
-        public IEnumerable<UserAddress> Addresses { get; set; }
+        public IEnumerable<UserAddress>? Addresses { get; set; }
 
         public int CompareTo(object obj)
         {

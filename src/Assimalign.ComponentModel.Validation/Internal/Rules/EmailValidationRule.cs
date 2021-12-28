@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
@@ -28,21 +23,17 @@ internal class EmailValidationRule<T, TValue> : IValidationRule
 
     public IValidationError Error { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
             var value = this.expression.Compile().Invoke(instance);
 
-            if (value is IEnumerable<string> emails)
+            if (value is IEnumerable emails)
             {
                 foreach (var email in emails)
                 {
-                    if (!Regex.IsMatch(email, pattern))
+                    if (email is string emailValue && !Regex.IsMatch(emailValue, pattern))
                     {
                         context.AddFailure(this.Error);
                         break;
@@ -58,9 +49,7 @@ internal class EmailValidationRule<T, TValue> : IValidationRule
             }
             else
             {
-                throw new ValidationInvalidEvaluationException(
-                    message: "The property, field, or collection type is not valid for Email Validation.",
-                    source: $"{this.expression}");
+                context.AddSuccess(this);
             }
         }
         else

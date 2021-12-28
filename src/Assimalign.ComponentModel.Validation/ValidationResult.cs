@@ -4,50 +4,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation
+namespace Assimalign.ComponentModel.Validation;
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class ValidationResult
 {
+    private ValidationResult() { }
+
+    internal ValidationResult(IValidationContext context)
+    {
+        this.Errors = context.Errors;
+        this.Invocations = context.Successes.Select(x => x.Name);
+    }
+
+    /// <summary>
+    /// An indicator of whether the type validated was successful.
+    /// </summary>
+    public bool IsValid => Errors.Count() == 0;
+
+
+    /// <summary>
+    /// A collection of validation failures.
+    /// </summary>
+    public IEnumerable<IValidationError> Errors { get; internal set; }
+
+
+    /// <summary>
+    /// A collection of validation rules invoked
+    /// </summary>
+    public IEnumerable<string> Invocations { get; }
+
 
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ValidationResult
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        internal ValidationResult() { }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool IsValid => Errors.Count() == 0;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IEnumerable<IValidationError> Errors { get; internal set; }
-
-
-        /// <summary>
-        /// A collection of rules failed evaluation 
-        /// </summary>
-        public IEnumerable<string> RulesInvoked { get; internal set; }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public static ValidationResult Create(IValidationContext context)
-        {
-            return new ValidationResult()
-            {
-                Errors = context.Errors,
-                //RulesInvoked = context.Successes.Select(x=>x.Name),
-            };
-        }
-    }
+    /// <typeparam name="T"></typeparam>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public static ValidationResult Create(IValidationContext context) => new ValidationResult(context);
 }

@@ -11,7 +11,7 @@ internal sealed class ValidationInvalidMemberException : ValidationException
 
     public ValidationInvalidMemberException(Expression invalidExpression) : base(string.Format(message, invalidExpression))
     {
-        base.ErrorCode = ValidationErrors.InvalidValidationExpression;
+        base.ErrorCode = ValidationExceptionCode.InvalidValidationExpression;
         base.Source = invalidExpression.ToString();
     }
 }

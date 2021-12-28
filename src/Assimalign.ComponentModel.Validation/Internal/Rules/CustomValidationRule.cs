@@ -16,7 +16,7 @@ internal sealed class CustomValidationRule<T, TValue> : IValidationRule
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(nameof(expression), $"The following expression where the 'Custom()' rule is defined cannot be null.");
         }
         if (validation is null)
         {

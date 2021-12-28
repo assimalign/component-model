@@ -11,88 +11,19 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 /// <typeparam name="T">The type the validation </typeparam>
 /// <typeparam name="TValue"></typeparam>
-public interface IValidationRuleBuilder<T, TValue>
+public interface IValidationRuleBuilder<T, TValue> 
 {
+    /// <summary>
+    /// The validation rule being configured within the rule builder.
+    /// </summary>
+    IValidationRule ValidationRule { get; }
+
     /// <summary>
     /// Adds a custom validation rule that encapsulates custom logic.
     /// </summary>
     /// <param name="validation"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     IValidationRuleBuilder<T, TValue> Custom(Action<TValue, IValidationContext> validation);
-
-    /// <summary>
-    /// Creates a rule specifying the required minimum and maximum length of an <see cref="IEnumerable"/>.
-    /// </summary>
-    /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> Length(int min, int max);
-
-    /// <summary>
-    /// Creates a rule specifying the required minimum and maximum length of an <see cref="IEnumerable"/> with 
-    /// a configurable custom error.
-    /// </summary>
-    /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> Length(int min, int max, Action<IValidationError> configure);
-
-    /// <summary>
-    /// Creates a rule specifying the exact length of an <see cref="IEnumerable"/>.
-    /// </summary>
-    /// <param name="exact">The required length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    ///  <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> Length(int exact);
-
-    /// <summary>
-    /// Creates a rule specifying the exact length of an <see cref="IEnumerable"/> with 
-    /// a configurable custom error.
-    /// </summary>
-    /// <param name="exact">The required length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <param name="configure">A delegate to configure a custom validation error.></param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> Length(int exact, Action<IValidationError> configure);
-
-    /// <summary>
-    /// Creates a rule specifying the maximum length of an <see cref="IEnumerable"/>.
-    /// </summary>
-    /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> MaxLength(int max);
-
-    /// <summary>
-    /// Creates a rule specifying the maximum length of an <see cref="IEnumerable"/> with 
-    /// a configurable custom error.
-    /// </summary>
-    /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> MaxLength(int max, Action<IValidationError> configure);
-
-    /// <summary>
-    /// Creates a rule specifying the minimum length of an <see cref="IEnumerable"/>.
-    /// </summary>
-    /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> MinLength(int min);
-
-    /// <summary>
-    /// Creates a rule specifying the minimum length of an <see cref="IEnumerable"/> with 
-    /// a configurable custom error.
-    /// </summary>
-    /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
-    /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="InvalidOperationException">The Length rule should only be applied to <see cref="IEnumerable"/> types.</exception>
-    IValidationRuleBuilder<T, TValue> MinLength(int min, Action<IValidationError> configure);
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must be null.
@@ -123,35 +54,7 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> NotNull(Action<IValidationError> configure);
 
     /// <summary>
-    /// Creates a rule specifying that <typeparamref name="TValue"/> must not be empty.
-    /// </summary>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEmpty();
-
-    /// <summary>
-    /// Creates a rule specifying that <typeparamref name="TValue"/> must not be empty with 
-    /// a configurable custom error.
-    /// </summary>
-    /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEmpty(Action<IValidationError> configure);
-
-    /// <summary>
-    /// Creates a rule specifying that <typeparamref name="TValue"/> must not be empty.
-    /// </summary>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> Empty();
-
-    /// <summary>
-    /// Creates a rule specifying that <typeparamref name="TValue"/> must be empty with 
-    /// a configurable custom error.
-    /// </summary>
-    /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> Empty(Action<IValidationError> configure);
-
-    /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument">is of </typeparam>
     /// <param name="value"></param>
@@ -160,7 +63,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -170,7 +73,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than or equal to <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -179,7 +82,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than or equal to  <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -189,7 +92,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -198,7 +101,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -208,7 +111,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than or equal to <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -217,7 +120,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than or equal to <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -227,7 +130,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TArgument : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be equal to <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -235,7 +138,7 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value);
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be equal to <paramref name="value"/>>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -244,7 +147,7 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure);
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must not be equal to <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -252,7 +155,7 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value);
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must not be equal to <paramref name="value"/>.
     /// </summary>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
@@ -261,7 +164,7 @@ public interface IValidationRuleBuilder<T, TValue>
     IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure);
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
     /// </summary>
     /// <typeparam name="TBound"></typeparam>
     /// <param name="lowerBound"></param>
@@ -271,7 +174,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TBound : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
     /// </summary>
     /// <typeparam name="TBound"></typeparam>
     /// <param name="lowerBound"></param>
@@ -282,7 +185,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TBound : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between or equal to <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
     /// </summary>
     /// <typeparam name="TBound"></typeparam>
     /// <param name="lowerBound"></param>
@@ -292,7 +195,7 @@ public interface IValidationRuleBuilder<T, TValue>
         where TBound : notnull, IComparable;
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between or equal to <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
     /// </summary>
     /// <typeparam name="TBound"></typeparam>
     /// <param name="lowerBound"></param>

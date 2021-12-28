@@ -19,7 +19,7 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(nameof(expression), $"The following expression where the 'BetweenOrEqualTo()' rule is defined cannot be null.");
         }
         if (lower is null)
         {
@@ -78,6 +78,10 @@ internal sealed class BetweenOrEqualToValidationRule<T, TValue, TBound> : IValid
             else if (isOutOfBounds(this.lower, this.upper, value))
             {
                 context.AddFailure(this.Error);
+            }
+            else
+            {
+                context.AddSuccess(this);
             }
         }
         else

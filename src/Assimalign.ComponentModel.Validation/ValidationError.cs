@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation;
 
 /// <summary>
-/// 
+/// an implementation of a validation failure.
 /// </summary>
 public sealed class ValidationError : IValidationError
 {
 
-    public ValidationError()
-    {
-
-    }
+    public ValidationError() { }
 
     /// <summary>
     /// 

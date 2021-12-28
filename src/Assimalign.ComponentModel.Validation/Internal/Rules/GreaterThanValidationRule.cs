@@ -60,6 +60,10 @@ internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidat
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
         else
         {

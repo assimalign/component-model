@@ -8,6 +8,7 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
 internal sealed class LengthValidationRule<T, TValue> : IValidationRule
+    where TValue : IEnumerable
 {
     private readonly int length;
     private readonly Expression<Func<T, TValue>> expression;
@@ -37,6 +38,10 @@ internal sealed class LengthValidationRule<T, TValue> : IValidationRule
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
         else
         {
@@ -50,10 +55,10 @@ internal sealed class LengthValidationRule<T, TValue> : IValidationRule
         return member switch
         {
             null => true,
-            string stringValue when stringValue is not null && stringValue.Length == this.length => true, // May not need this since string is IEnumerable
-            ICollection collection when collection.Count == this.length => true,
-            Array array when array.Length == this.length => true,
-            IEnumerable enumerable when enumerable.Cast<object>().Count() == this.length => true,
+            string stringValue      when stringValue is not null && stringValue.Length == this.length => true, // May not need this since string is IEnumerable
+            ICollection collection  when collection.Count == this.length => true,
+            Array array             when array.Length == this.length => true,
+            IEnumerable enumerable  when enumerable.Cast<object>().Count() == this.length => true,
             _ => false
         };
     }

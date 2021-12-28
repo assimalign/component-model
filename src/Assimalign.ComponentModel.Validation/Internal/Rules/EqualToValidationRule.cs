@@ -54,6 +54,10 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
     }
 

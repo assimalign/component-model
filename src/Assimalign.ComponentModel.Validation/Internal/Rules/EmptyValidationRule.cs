@@ -7,6 +7,7 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
 internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
+    where TValue : IEnumerable
 {
     private readonly Expression<Func<T, TValue>> expression;
 
@@ -33,6 +34,10 @@ internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
             if (!IsEmpty(value))
             {
                 context.AddFailure(this.Error);
+            }
+            else
+            {
+                context.AddSuccess(this);
             }
         }
         else

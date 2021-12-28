@@ -8,7 +8,7 @@ internal sealed class ValidationInternalException : ValidationException
     public ValidationInternalException(string message) : base(message)
     {
         base.HResult = HashCode.Combine(nameof(ValidationInvalidEvaluationException));
-        base.ErrorCode = ValidationErrors.UnknownError;
+        base.ErrorCode = ValidationExceptionCode.UnknownError;
     }
 }
 

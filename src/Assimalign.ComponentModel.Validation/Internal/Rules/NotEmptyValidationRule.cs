@@ -6,7 +6,8 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal class NotEmptyValidationRule<T, TValue> : IValidationRule
+internal class NotEmptyValidationRule<T, TValue> : IValidationRule 
+    where TValue : IEnumerable
 {
 
     private readonly Expression<Func<T, TValue>> expression;
@@ -29,6 +30,10 @@ internal class NotEmptyValidationRule<T, TValue> : IValidationRule
             if (IsEmpty(value))
             {
                 context.AddFailure(this.Error);
+            }
+            else
+            {
+                context.AddSuccess(this);
             }
         }
         else

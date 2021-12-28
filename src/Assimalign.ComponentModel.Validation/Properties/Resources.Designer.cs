@@ -88,6 +88,15 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following expression: {0} must be in the format of an email address..
+        /// </summary>
+        internal static string DefaultValidationMessageEmailAddressRule {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageEmailAddressRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following expression: {0} was not empty..
         /// </summary>
         internal static string DefaultValidationMessageEmptyRule {

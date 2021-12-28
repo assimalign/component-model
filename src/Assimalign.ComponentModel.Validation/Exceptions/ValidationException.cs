@@ -29,7 +29,7 @@ public abstract class ValidationException : Exception
     /// <summary>
     /// 
     /// </summary>
-    public int ErrorCode { get; set; } = ValidationErrors.UnknownError;
+    public ValidationExceptionCode ErrorCode { get; set; } = ValidationExceptionCode.UnknownError;
 
     /// <summary>
     /// 

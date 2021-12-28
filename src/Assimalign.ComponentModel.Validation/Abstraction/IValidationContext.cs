@@ -46,4 +46,10 @@ public interface IValidationContext
     /// <param name="failureSource"></param>
     /// <param name="failureMessage"></param>
     void AddFailure(string failureSource, string failureMessage);
+
+    /// <summary>
+    /// Adds a rule of a successful validation.
+    /// </summary>
+    /// <param name="rule"></param>
+    void AddSuccess(IValidationRule rule);
 }

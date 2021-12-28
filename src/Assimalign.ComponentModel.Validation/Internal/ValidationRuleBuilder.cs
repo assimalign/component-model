@@ -27,6 +27,15 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                 paramName: nameof(configure), 
                 message: "The 'configure' parameter cannot be null in: ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)");
         }
+        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        {
+          
+
+        }
+        else
+        {
+            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+        }
 
 
         throw new NotImplementedException();
@@ -148,55 +157,6 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
             configure.Invoke(error);
 
             validationRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(validationRule.ValidationExpression, lowerBound, upperBound)
-            {
-                Error = error
-            });
-
-            return this;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> Empty()
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            return Empty(configure =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                configure.Code = Resources.DefaultValidationErrorCode;
-                configure.Message = string.Format(Resources.DefaultValidationMessageEmptyRule, validationExpression);
-                configure.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> Empty(Action<IValidationError> configure)
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            if (configure is null)
-            {
-                throw new ArgumentNullException(
-                    paramName: nameof(configure),
-                    message: "The 'configure' parameter cannot be null in: Empty(Action<IValidationError> configure)")
-                {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).Empty({configure}) or RuleForEach({validationRule.ValidationExpression}).Empty({configure})"
-                };
-            }
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new EmptyValidationRule<T, TValue>(validationRule.ValidationExpression)
             {
                 Error = error
             });
@@ -365,124 +325,6 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Length(int min, int max)
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            if (min > max)
-            {
-                throw new InvalidOperationException($"The minimum length cannot be larger than the maximum length.")
-                {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).Length({min},{max})"
-                };
-            }
-            if (typeof(TValue) != typeof(IEnumerable))
-            {
-                throw new InvalidOperationException($"The Length rule can only be applied to IEnumerable types.")
-                {
-                    Source = validationRule.ValidationExpression.ToString()
-                };
-            }
-            return Length(min, max, error =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                error.Code = Resources.DefaultValidationErrorCode;
-                error.Message = String.Format(Resources.DefaultValidationMessageLengthBetweenRule, validationExpression, min, max);
-                error.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> Length(int min, int max, Action<IValidationError> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            if (min > max)
-            {
-                throw new InvalidOperationException($"The minimum length cannot be larger than the maximum length.")
-                {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).Length({min},{max}, Action<IValidationError> configure)"
-                };
-            }
-            if (typeof(TValue) != typeof(IEnumerable))
-            {
-                throw new InvalidOperationException($"The Length rule can only be applied to IEnumerable types.")
-                {
-                    Source = validationRule.ValidationExpression.ToString()
-                };
-            }
-
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new LengthBetweenValidationRule<T, TValue>(validationRule.ValidationExpression, min, max)
-            {
-                Error = error
-            });
-
-            return this;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> Length(int exact)
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-
-            return Length(exact, error =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                error.Code = Resources.DefaultValidationErrorCode;
-                error.Message = String.Format(Resources.DefaultValidationMessageLengthRule, validationExpression, exact);
-                error.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> Length(int exact, Action<IValidationError> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new LengthValidationRule<T, TValue>(validationRule.ValidationExpression, exact)
-            {
-                Error = error
-            });
-
-            return this;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
     public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
@@ -563,138 +405,6 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
             configure.Invoke(error);
 
             validationRule.AddRule(new LessThanOrEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
-            {
-                Error = error
-            });
-
-            return this;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> MaxLength(int max)
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            return MaxLength(max, error =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                error.Code = Resources.DefaultValidationErrorCode;
-                error.Message = String.Format(Resources.DefaultValidationMessageMaxLengthRule, validationExpression, max);
-                error.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> MaxLength(int max, Action<IValidationError> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new MaxLengthValidationRule<T, TValue>(validationRule.ValidationExpression, max)
-            {
-                Error = error
-            });
-
-            return this;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> MinLength(int min)
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            return MinLength(min, error =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                error.Code = Resources.DefaultValidationErrorCode;
-                error.Message = String.Format(Resources.DefaultValidationMessageMinLengthRule, validationExpression, min);
-                error.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> MinLength(int min, Action<IValidationError> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new MinLengthValidationRule<T, TValue>(validationRule.ValidationExpression, min)
-            {
-                Error = error
-            });
-
-            return this;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> NotEmpty()
-    {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            return NotEmpty(configure =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                configure.Code = Resources.DefaultValidationErrorCode;
-                configure.Message = string.Format(Resources.DefaultValidationMessageNotEmptyRule, validationExpression);
-                configure.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
-        }
-    }
-
-    public IValidationRuleBuilder<T, TValue> NotEmpty(Action<IValidationError> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
-        {
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new NotEmptyValidationRule<T, TValue>(validationRule.ValidationExpression)
             {
                 Error = error
             });

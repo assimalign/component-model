@@ -60,6 +60,10 @@ internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidation
             {
                 context.AddFailure(this.Error);
             }
+            else
+            {
+                context.AddSuccess(this);
+            }
         }
         else
         {
