@@ -1,7 +1,7 @@
 ﻿namespace Assimalign.ComponentModel.Validation;
 
 /// <summary>
-/// 
+/// An abstraction of a validation error.
 /// </summary>
 public interface IValidationError
 {

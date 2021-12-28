@@ -15,9 +15,9 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { FirstName = "Chase", Age = 11};
+            var user = new User() { FirstName = "Chase", Age = 11, Record = new TestRecord() { FirstName = "Chases" } };
 
-          
+
             //Assert.That()
             var validator = Validator.Create(configure =>
             {
@@ -106,10 +106,23 @@ namespace Assimalign.ComponentModel.ValidationTests
             //        error.Code = "400-235";
             //    });
 
+
+            descriptor.RuleForEach(p => p.Addresses)
+                .EqualTo(new User())
+                .Custom((user, context) =>
+                {
+                    
+                });
+                
+            descriptor.RuleFor(p => p.Record)
+                .EqualTo(new TestRecord() { FirstName = "Chase" });
+
             descriptor.RuleFor(p => p.FirstName)
-                .MaxLength(255);
+                .Length(0,9)
+                .MaxLength(10);
 
             descriptor.RuleFor(p => p.Age)
+                .GreaterThanOrEqualTo(0)
                 .EqualTo(11);
 
            // descriptor.RuleForEach(p => p.Addresses);
@@ -117,11 +130,11 @@ namespace Assimalign.ComponentModel.ValidationTests
     }
 
 
-
     public class User : IComparable
     {
         public long? Age { get; set; }
 
+        public TestRecord Record { get; set; }
 
         public int[] Ages { get; set; }
         public string FirstName { get; set; }
@@ -140,6 +153,10 @@ namespace Assimalign.ComponentModel.ValidationTests
         }
     }
 
+    public record TestRecord
+    {
+        public string FirstName { get; set; }
+    }
     public class UserDetails
     {
         public string Ssn { get; set; }

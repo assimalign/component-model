@@ -37,6 +37,7 @@ public interface IValidationProfile
     /// <summary>
     /// 
     /// </summary>
+    [MemberNotNull]
     ValidationMode ValidationMode { get; }
 
     /// <summary>
