@@ -44,9 +44,13 @@ namespace Assimalign.ComponentModel.Validation
                 throw new ArgumentNullException(nameof(profile));
             }
 
-            profile.Configure();
+            var index = HashCode.Combine(profile.ValidationType);
 
-            var index = HashCode.Combine(profile.Name.ToLower(), profile.ValidationType);
+            if (this.profiles.ContainsKey(index))
+            {
+                throw new InvalidOperationException($"A Validation Profile for type: {profile.GetType().Name} has already been registered. " +
+                    $"If needing to implement two different validation profiles for the type {profile.GetType().Name} then use the ValidationFacotry.");
+            }
 
             this.profiles[index] = profile;
         }

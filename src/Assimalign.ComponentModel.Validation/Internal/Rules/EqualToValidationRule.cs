@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -50,9 +51,69 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
             {
                 context.AddFailure(this.Error);
             }
-            else if (argument is IEquatable<TArgument> equatable && value is TArgument equatableArgument && !equatable.Equals(equatableArgument))
+            else if (this.argument is not IEnumerable && value is IEnumerable enumerable)
             {
-                context.AddFailure(this.Error);
+                foreach(var item in enumerable)
+                {
+                    if (argument is IEquatable<TArgument> equatable)
+                    {
+                        if (item is TArgument equatableValue && !equatable.Equals(equatableValue))
+                        {
+                            context.AddFailure(this.Error);
+                            break;
+                        }
+                        else if (!equatable.Equals(item))
+                        {
+                            context.AddFailure(this.Error);
+                            break;
+                        }
+                    }
+                    else if (argument is IEqualityComparer<TArgument> typedComaprer)
+                    {
+                        if (item is TArgument equatableValue && !typedComaprer.Equals(equatableValue))
+                        {
+                            context.AddFailure(this.Error);
+                            break;
+                        }
+                        else if (!typedComaprer.Equals(item))
+                        {
+                            context.AddFailure(this.Error);
+                            break;
+                        }
+                    }
+                    else if (argument is IEqualityComparer comparer && !comparer.Equals(item))
+                    {
+                        context.AddFailure(this.Error);
+                        break;
+                    }
+                    else if (!this.isEqualTo(item))
+                    {
+                        context.AddFailure(this.Error);
+                        break;
+                    }
+                }
+            }
+            else if (argument is IEquatable<TArgument> equatable)
+            {
+                if (value is TArgument equatableValue && !equatable.Equals(equatableValue))
+                {
+                    context.AddFailure(this.Error);
+                }
+                else if (!equatable.Equals(value)) 
+                {
+                    context.AddFailure(this.Error);
+                }
+            }
+            else if (argument is IEqualityComparer<TArgument> typedComaprer)
+            {
+                if (value is TArgument equatableValue && !typedComaprer.Equals(equatableValue))
+                {
+                    context.AddFailure(this.Error);
+                }
+                else if (!typedComaprer.Equals(value))
+                {
+                    context.AddFailure(this.Error);
+                }
             }
             else if (argument is IEqualityComparer comparer && !comparer.Equals(value))
             {
@@ -76,7 +137,26 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
         {
             var value = this.expression.Compile().Invoke(instance);
 
-            if (value is not TArgument && value is IConvertible convertable) // Need to convert when trying to compare
+            // Let's check that the we are not comparing 2 enumerables
+            if (this.argument is not IEnumerable && value is IEnumerable enumerable)
+            {
+                var items = new List<object>();
+
+                foreach (var item in enumerable)
+                {
+                    if (item is not TArgument && item is IConvertible convertable) 
+                    {
+                        items.Add(convertable.ToType(typeof(TArgument), default));
+                    }
+                    else
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+            else if (value is not TArgument && value is IConvertible convertable) // Need to convert when trying to compare
             {
                 return convertable.ToType(typeof(TArgument), default);
             }

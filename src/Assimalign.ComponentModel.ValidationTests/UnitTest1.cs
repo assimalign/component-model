@@ -15,14 +15,31 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { FirstName = "Chase", Age = 11, Record = new TestRecord() { FirstName = "Chase" } };
+            var user = new User() { FirstName = "Chase", Ages = new List<long?>() { 11, null }, Record = new TestRecord() { FirstName = "Chase" } };
 
 
             //Assert.That()
             var validator = Validator.Create(configure =>
             {
                 configure.AddProfile(new UserValidationProfile());
+                configure.AddProfile(new UserValidationProfile());
             });
+
+            var validatorFactory = ValidatorFactory.Configure(configure =>
+            {
+                configure.AddValidator("scenario 1", configure =>
+                {
+                    configure.AddProfile(new UserValidationProfile());
+                });
+
+                configure.AddValidator("scenario 2", configure =>
+                {
+                    configure.AddProfile(new UserValidationProfile());
+                });
+            });
+
+
+            var validator1 = validatorFactory.Create("scenario 2");
 
             var validation = validator.Validate(user);
         }
@@ -33,23 +50,22 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public UserValidationProfile()
         {
-
+            //base.Name = "test"
         }
 
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
-
             descriptor.RuleForEach(p => p.NickNames)
                 .NotEmpty();
-           
+
             descriptor.RuleFor(p => p.Record)
                 .EqualTo(new TestRecord() { FirstName = "Chase" });
 
             descriptor.RuleFor(p => p.FirstName)
                 .Length(0, 9);
 
-            descriptor.RuleFor(p => p.Age)
-                .Between(10, 25);
+            descriptor.RuleForEach(p => p.Ages)
+                .EqualTo(11);
 
            // descriptor.RuleForEach(p => p.Addresses);
         }
@@ -58,11 +74,11 @@ namespace Assimalign.ComponentModel.ValidationTests
 
     public class User : IComparable
     {
-        public long? Age { get; set; }
+        public int Age { get; set; }
 
         public TestRecord Record { get; set; }
 
-        public int[] Ages { get; set; }
+        public IEnumerable<long?> Ages { get; set; }
         public string FirstName { get; set; }
 
         public string EmailAddress { get; set; }
