@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -11,7 +13,7 @@ using Assimalign.ComponentModel.Validation.Internal;
 public abstract class ValidationProfile<T> : IValidationProfile<T>
 {
     private readonly Type validationType;
-    private readonly IValidationRuleStack validationRules;
+    private readonly IList<IValidationItem> validationItems;
 
     /// <summary>
     /// 
@@ -19,14 +21,14 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     public ValidationProfile()
     {
         this.validationType = typeof(T);
-        this.validationRules = new ValidationRuleStack();
+        this.validationItems = new List<IValidationItem>();
     }
 
     /// <summary>
     /// A collection validation rules to apply to the instance of <typeparamref name="T"/>
     /// for a given context.
     /// </summary>
-    public IValidationRuleStack ValidationRules => this.validationRules;
+    public IEnumerable<IValidationItem> ValidationItems => this.validationItems;
 
     /// <summary>
     /// The type of <typeparamref name="T"/> being validated.
@@ -64,7 +66,6 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
 public abstract class ValidationProfile : IValidationProfile
 {
     private readonly Type type;
-
     private readonly IValidationRuleStack rules;
 
     /// <summary>
@@ -97,4 +98,3 @@ public abstract class ValidationProfile : IValidationProfile
     /// </summary>
     public abstract void Configure();
 }
-

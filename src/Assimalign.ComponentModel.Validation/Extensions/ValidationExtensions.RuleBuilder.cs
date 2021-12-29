@@ -23,7 +23,7 @@ public static partial class ValidationExtensions
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<T, string> EmailAddress<T>(this IValidationRuleBuilder<T, string> builder)
+    public static IValidationRuleBuilder<string> EmailAddress<T>(this IValidationRuleBuilder<string> builder)
     {
         if (builder.ValidationRule is IValidationRule<T, string> validationRule)
         {
@@ -51,7 +51,7 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<T, string> EmailAddress<T>(this IValidationRuleBuilder<T, string> builder, Action<IValidationError> configure)
+    public static IValidationRuleBuilder<string> EmailAddress<T>(this IValidationRuleBuilder<string> builder, Action<IValidationError> configure)
     {
         if (builder.ValidationRule is IValidationRule<T, string> validationRule)
         {
@@ -90,7 +90,7 @@ public static partial class ValidationExtensions
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<T, TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<T, TValue> builder)
+    public static IValidationRuleBuilder<TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<TValue> builder)
         where TValue : IEnumerable<string>
     {
         if (builder.ValidationRule is IValidationRule<T, string> validationRule)
@@ -120,7 +120,7 @@ public static partial class ValidationExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<T, TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<T, TValue> builder, Action<IValidationError> configure)
+    public static IValidationRuleBuilder<T, TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationError> configure)
         where TValue : IEnumerable<string>
     {
         if (builder.ValidationRule is IValidationRule<T, string> validationRule)
@@ -155,6 +155,15 @@ public static partial class ValidationExtensions
     /// <summary>
     /// Creates a rule specifying the required minimum and maximum length of an <see cref="IEnumerable"/>.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/></item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
     /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
@@ -192,6 +201,15 @@ public static partial class ValidationExtensions
     /// Creates a rule specifying the required minimum and maximum length of an <see cref="IEnumerable"/> with 
     /// a configurable custom error.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/></item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
     /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
@@ -242,6 +260,15 @@ public static partial class ValidationExtensions
     /// <summary>
     /// Creates a rule specifying the exact length of an <see cref="IEnumerable"/>.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/></item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="exact">The required length of the <see cref="IEnumerable"/> being validated.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
@@ -270,10 +297,20 @@ public static partial class ValidationExtensions
     /// Creates a rule specifying the exact length of an <see cref="IEnumerable"/> with 
     /// a configurable custom error.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/></item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="exact">The required length of the <see cref="IEnumerable"/> being validated.</param>
     /// <param name="configure">A delegate to configure a custom validation error.></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    /// </exception>
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
     public static IValidationRuleBuilder<T, TValue> Length<T, TValue>(this IValidationRuleBuilder<T, TValue> builder, int exact, Action<IValidationError> configure)
@@ -311,6 +348,15 @@ public static partial class ValidationExtensions
     /// <summary>
     /// Creates a rule specifying the maximum length of an <see cref="IEnumerable"/>.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/></item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
@@ -339,6 +385,15 @@ public static partial class ValidationExtensions
     /// Creates a rule specifying the maximum length of an <see cref="IEnumerable"/> with 
     /// a configurable custom error.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/></item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="max">The maximum length of the <see cref="IEnumerable"/> being validated.</param>
     /// <param name="configure">A delegate to configure a custom validation error.</param>
@@ -380,6 +435,15 @@ public static partial class ValidationExtensions
     /// <summary>
     /// Creates a rule specifying the minimum length of an <see cref="IEnumerable"/>.
     /// </summary>
+    /// <remarks>
+    /// <listheader>Examples of <see cref="IEnumerable"/> Types:</listheader>
+    /// <list type="bullet">
+    ///     <item><see cref="IEnumerable{T}"/></item>
+    ///     <item><see cref="IDictionary{TKey, TValue}"/></item>
+    ///     <item><see cref="Array"/> Any type of array such as: int[], long[] </item>
+    ///     <item><see cref="String"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="min">The minimum length of the <see cref="IEnumerable"/> being validated.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
@@ -545,10 +609,10 @@ public static partial class ValidationExtensions
     /// </summary>
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
-    /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<T, TValue> Empty<T, TValue>(this IValidationRuleBuilder<T, TValue> builder, Action<IValidationError> configure)
+    /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
+    public static IValidationRuleBuilder<TValue> Empty<TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationError> configure)
         where TValue : IEnumerable
     {
         if (builder.ValidationRule is IValidationRule<T, TValue> validationRule)

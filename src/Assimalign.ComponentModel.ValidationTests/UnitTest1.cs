@@ -56,14 +56,17 @@ namespace Assimalign.ComponentModel.ValidationTests
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
             Half half = (Half)23.0;
-            descriptor.RuleFor(p => p.NickNames)
-                .EqualTo(10)
-                .NotEmpty();
-
-            descriptor.RuleFor(p => p.Record)
-                .EqualTo(new TestRecord() { FirstName = "Chase" });
+            descriptor.RuleForEach(p => p.Addresses);
 
             descriptor.RuleFor(p => p.FirstName)
+                .NotEqualTo("Chase");
+               
+            descriptor.RuleFor(p => p.Record)
+                .Null()
+                .EqualTo(new TestRecord() { FirstName = "Chase" });
+
+            descriptor.RuleFor(p => p.FirstName).NotEmpty()
+                .MinLength(2)
                 .Length(0, 9);
 
             descriptor.RuleForEach(p => p.Ages)

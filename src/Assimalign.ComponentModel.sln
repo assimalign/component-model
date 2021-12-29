@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.V
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libraries", "libraries", "{C314584B-F572-4824-91CE-611E1E28D8BE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{950851C3-C537-4C59-900E-93FFF2326B12}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{950851C3-C537-4C59-900E-93FFF2326B12}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
@@ -25,13 +25,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{C827C7C7-4
 		..\docs\overview.md = ..\docs\overview.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Core", "Assimalign.ComponentModel.Core\Assimalign.ComponentModel.Core.csproj", "{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Core", "Assimalign.ComponentModel.Core\Assimalign.ComponentModel.Core.csproj", "{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Cloning", "Assimalign.ComponentModel.Cloning\Assimalign.ComponentModel.Cloning.csproj", "{5B57CF69-C935-44B9-919B-10F918A1AB8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Cloning", "Assimalign.ComponentModel.Cloning\Assimalign.ComponentModel.Cloning.csproj", "{5B57CF69-C935-44B9-919B-10F918A1AB8A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{39F38BBB-9415-4010-A706-7BCAB8BEBFAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable", "Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj", "{39B76E44-14BA-47DC-87F3-47B84B515BF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.Configurable", "Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj", "{39B76E44-14BA-47DC-87F3-47B84B515BF3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "validation", "validation", "{C2D5A786-D653-40F8-AEA5-366930220CE6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mapping", "mapping", "{87967BC9-852D-4E5B-8EDF-6D5381777A23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cloning", "cloning", "{6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Mapping.Configurable", "Assimalign.ComponentModel.Mapping.Configurable\Assimalign.ComponentModel.Mapping.Configurable.csproj", "{2CBF5391-A9EB-4DB7-A67B-B5824201950A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,18 +75,26 @@ Global
 		{39B76E44-14BA-47DC-87F3-47B84B515BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B76E44-14BA-47DC-87F3-47B84B515BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B76E44-14BA-47DC-87F3-47B84B515BF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CB0890EE-AECE-42B6-A829-D62C2BDCA53A} = {C314584B-F572-4824-91CE-611E1E28D8BE}
-		{169A7314-0CDA-46FA-BF41-21D24F630DCE} = {C314584B-F572-4824-91CE-611E1E28D8BE}
+		{CB0890EE-AECE-42B6-A829-D62C2BDCA53A} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
+		{169A7314-0CDA-46FA-BF41-21D24F630DCE} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 		{E84AD542-1A54-425F-9532-07FB8E5B0F08} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
 		{5798CDDF-F09F-4BF9-9F65-DC97CF2C51A0} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
 		{388DF1F5-9817-4D7E-9031-D1D5DB9A3D53} = {39F38BBB-9415-4010-A706-7BCAB8BEBFAB}
-		{5B57CF69-C935-44B9-919B-10F918A1AB8A} = {C314584B-F572-4824-91CE-611E1E28D8BE}
-		{39B76E44-14BA-47DC-87F3-47B84B515BF3} = {C314584B-F572-4824-91CE-611E1E28D8BE}
+		{5B57CF69-C935-44B9-919B-10F918A1AB8A} = {6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF}
+		{39B76E44-14BA-47DC-87F3-47B84B515BF3} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
+		{C2D5A786-D653-40F8-AEA5-366930220CE6} = {C314584B-F572-4824-91CE-611E1E28D8BE}
+		{87967BC9-852D-4E5B-8EDF-6D5381777A23} = {C314584B-F572-4824-91CE-611E1E28D8BE}
+		{6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF} = {C314584B-F572-4824-91CE-611E1E28D8BE}
+		{2CBF5391-A9EB-4DB7-A67B-B5824201950A} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB64B35-D4BC-43E2-B8F1-A3DDAA061175}

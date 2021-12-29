@@ -1,4 +1,7 @@
-﻿namespace Assimalign.ComponentModel.Validation.Internal.Exceptions;
+﻿using System;
+
+
+namespace Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationInternalException : ValidationException
 {
@@ -9,6 +12,11 @@ internal sealed class ValidationInternalException : ValidationException
     }
 
     public ValidationInternalException(string message, string source) : this(message)
+    {
+        base.Source = source;
+    }
+
+    public ValidationInternalException(string message, Exception inner, string source = default) : base(message, inner)
     {
         base.Source = source;
     }

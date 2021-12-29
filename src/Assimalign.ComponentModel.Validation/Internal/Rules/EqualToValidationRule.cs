@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -10,7 +11,8 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 using Assimalign.ComponentModel.Validation.Internal.Extensions;
 
-internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationRule
+internal sealed class EqualToValidationRule<T, TValue, TArgument> : ValidationRuleBase<T,TValue, TArgument>
+    where TArgument : notnull, IEquatable<TArgument>
 {
     private readonly Type paramType;
     private readonly Type valueType;
@@ -20,7 +22,7 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
     private readonly Expression<Func<T, TValue>> expression;
     private readonly string expressionBody;
 
-    public EqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
+    public EqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument) : base(expression, argument)
     {
         if (expression is null)
         {
@@ -44,11 +46,12 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
         this.isEqualTo = x => x.Equals(argument);        
     }
 
-    public string Name => $"EqualToValidationRule<{paramType.Name}, {expressionBody ?? valueType.Name}, {argumentType.Name}>";
+    public override string Name => $"EqualToValidationRule<{paramType.Name}, {expressionBody ?? valueType.Name}, {argumentType.Name}>";
 
     public IValidationError Error { get; set; }
 
-    public void Evaluate(IValidationContext context)
+
+    public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
@@ -58,11 +61,11 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
             {
                 context.AddFailure(this.Error);
             }
-            else if (this.argument is not IEnumerable && value is IEnumerable enumerable)
+            else if (this.Argument is not IEnumerable && value is IEnumerable enumerable)
             {
                 foreach(var item in enumerable)
                 {
-                    if (argument is IEquatable<TArgument> equatable)
+                    if (this.Argument is IEquatable<TArgument> equatable)
                     {
                         if (item is TArgument equatableValue && !equatable.Equals(equatableValue))
                         {
@@ -75,7 +78,7 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
                             break;
                         }
                     }
-                    else if (argument is IEqualityComparer<TArgument> typedComaprer)
+                    else if (this.Argument is IEqualityComparer<TArgument> typedComaprer)
                     {
                         if (item is TArgument equatableValue && !typedComaprer.Equals(equatableValue))
                         {
@@ -88,7 +91,7 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
                             break;
                         }
                     }
-                    else if (argument is IEqualityComparer comparer && !comparer.Equals(item))
+                    else if (this.Argument is IEqualityComparer comparer && !comparer.Equals(item))
                     {
                         context.AddFailure(this.Error);
                         break;
@@ -100,7 +103,7 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
                     }
                 }
             }
-            else if (argument is IEquatable<TArgument> equatable)
+            else if (this.Argument is IEquatable<TArgument> equatable)
             {
                 if (value is TArgument equatableValue && !equatable.Equals(equatableValue))
                 {
@@ -134,87 +137,6 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
             {
                 context.AddSuccess(this);
             }
-        }
-    }
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            var value = this.expression.Compile().Invoke(instance);
-
-            if (this.valueType is null || this.valueType == this.argumentType)
-            {
-                return null; // Let's exit if value is null or if the argument type is the same as the value type
-            }
-            if (this.valueType.IsEnumerableType(out var enumerableType))
-            {
-                if (enumerableType.IsNullable(out var enumNullableType))
-                {
-                    
-                }
-                else
-                {
-                    
-
-                }
-            }
-            else if (this.valueType.IsNullable(out var nullableType))
-            {
-                if (nullableType == this.argumentType)
-                {
-                    return value;
-                }
-                else
-                {
-
-                }
-            }
-            else if (nullableType != argumentType)
-            {
-
-            }
-            else
-            {
-
-            }
-
-            // Let's check that the we are not comparing 2 enumerables
-            if (this.argument is not IEnumerable && value is IEnumerable enumerable)
-            {
-                var items = new List<object>();
-
-                foreach (var item in enumerable)
-                {
-                    if (item is not TArgument && item is IConvertible convertable) 
-                    {
-                        items.Add(convertable.ToType(typeof(TArgument), default));
-                    }
-                    else
-                    {
-                        items.Add(item);
-                    }
-                }
-
-                return items;
-            }
-            else if (value is not TArgument && value is IConvertible convertable) // Need to convert when trying to compare
-            {
-                return convertable.ToType(typeof(TArgument), default);
-            }
-
-            return value;
-        }
-        catch (InvalidCastException exception)
-        {
-            throw new ValidationInvalidCastException(
-                message: $"Unable to equate type '{valueType.Name}' against type '{argumentType.Name}'. '{this.expressionBody}' must be able to convert to {this.argumentType}",
-                inner: exception,
-                source: $"RuleFor(p => p.{this.expressionBody}).EqualTo({this.argument})");
-        }
-        catch (Exception exception) when (exception is not ValidationInvalidCastException)
-        {
-            return null;
         }
     }
 }

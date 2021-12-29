@@ -12,7 +12,7 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 {
-    public IValidationRuleStack ValidationRules { get; set; }
+    public IList<IValidationItem> ValidationItems { get; set; }
 
     public ValidationMode ValidationMode { get; set; }
 
@@ -22,7 +22,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <typeparam name="TValue"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public IValidationRuleBuilder<T, TValue> RuleFor<TValue>(Expression<Func<T, TValue>> expression)
+    public IValidationRuleBuilder<TValue> RuleFor<TValue>(Expression<Func<T, TValue>> expression)
     {
         if (expression is null)
         {
@@ -33,15 +33,15 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
             throw new ValidationInvalidMemberException(expression);
         }
 
-        var rule = new ValidationRule<T, TValue>()
+        var item = new ValidationItem<T, TValue>()
         {
-            ValidationExpression = expression,
-            ValidationMode = this.ValidationMode
+            ItemExpression = expression,
+            ItemValidationMode = this.ValidationMode
         };
 
-        this.ValidationRules.Push(rule);
+        this.ValidationItems.Add(item);
 
-        return new ValidationRuleBuilder<T, TValue>(rule);
+        return new ValidationRuleBuilder<T, TValue>(item);
     }
 
     /// <summary>
@@ -50,8 +50,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <typeparam name="TValue"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public IValidationRuleBuilder<T, TValue> RuleForEach<TValue>(Expression<Func<T, TValue>> expression)
-        where TValue : IEnumerable
+    public IValidationRuleBuilder<TValue> RuleForEach<TValue>(Expression<Func<T, IEnumerable<TValue>>> expression)
     {
         if (expression is null)
         {
@@ -62,15 +61,15 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
             throw new ValidationInvalidMemberException(expression);
         }
 
-        var rule = new ValidationRule<T, TValue>()
+        var item = new ValidationItemCollection<T, TValue>()
         {
-            ValidationExpression = expression,
-            ValidationMode = this.ValidationMode
+            ItemExpression = expression,
+            ItemValidationMode = this.ValidationMode
         };
 
-        this.ValidationRules.Push(rule);
+        this.ValidationItems.Add(item);
 
-        return new ValidationRuleBuilder<T, TValue>(rule);
+        return new ValidationRuleBuilder<T, TValue>(item);
     }
 
 
@@ -80,9 +79,9 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    public IValidationRuleCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationItemCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
-        var rule = new ValidationRuleCondition<T>()
+        var rule = new ValidationItemCondition<T>()
         {
             Condition = condition,
             ConditionRuleSet = new ValidationRuleStack(),

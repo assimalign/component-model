@@ -39,6 +39,8 @@ internal sealed class ValidationRule<T, TValue> : IValidationRule<T, TValue>
 
     public ValidationMode ValidationMode { get; set; }
 
+    public ValidationRuleType ValidationRuleType { get; set; }
+
     public IValidationRuleStack ValidationRules { get; set; }
 
     public IValidationRule<T, TValue> AddRule(IValidationRule rule)

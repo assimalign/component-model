@@ -9,17 +9,17 @@ using Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
-internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<T, TValue>
+internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<TValue>
 {
 
-    public ValidationRuleBuilder(IValidationRule validationRule)
+    public ValidationRuleBuilder(IValidationItem validationItem)
     {
-        this.ValidationRule = validationRule;
+        this.ValidationItem = validationItem;
     }
 
-    public IValidationRule ValidationRule { get; }
+    public IValidationItem ValidationItem { get; }
 
-    public IValidationRuleBuilder<T, TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)
+    public IValidationRuleBuilder<TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)
     {
         if (configure is null)
         {
@@ -41,7 +41,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         throw new NotImplementedException();
     }
 
-    public IValidationRuleBuilder<T, TValue> Custom(Action<TValue, IValidationContext> validation)
+    public IValidationRuleBuilder<TValue> Custom(Action<TValue, IValidationContext> validation)
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -65,14 +65,14 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
+    public IValidationRuleBuilder<TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : notnull, IComparable
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationRule)
         {
             return Between<TBound>(lowerBound, upperBound, configure =>
             {
-                var validationExpression = validationRule.ValidationExpression.Body.ToString();
+                var validationExpression = validationRule.ItemExpression.Body.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageBetweenRule, validationExpression, lowerBound, upperBound);
@@ -85,10 +85,10 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure) 
+    public IValidationRuleBuilder<TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure) 
         where TBound : notnull, IComparable
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationRule)
         {
             if (configure is null)
             {
@@ -96,7 +96,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                     paramName: nameof(configure),
                     message: "The 'configure' parameter cannot be null in: Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
                 {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).Between<{typeof(TBound).Name}>({lowerBound}, {upperBound}, {configure})"
+                    Source = $"RuleFor({validationRule.ItemExpression}).Between<{typeof(TBound).Name}>({lowerBound}, {upperBound}, {configure})"
                 };
             }
 
@@ -104,9 +104,10 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(validationRule.ValidationExpression, lowerBound, upperBound)
+            validationRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(validationRule.ItemExpression, lowerBound, upperBound)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -117,7 +118,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
+    public IValidationRuleBuilder<TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : notnull, IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
@@ -137,7 +138,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
+    public IValidationRuleBuilder<TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : notnull, IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
@@ -158,7 +159,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(validationRule.ValidationExpression, lowerBound, upperBound)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -169,7 +171,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value)
+    public IValidationRuleBuilder<TValue> EqualTo<TArgument>(TArgument value)
         where TArgument : notnull, IEquatable<TArgument>
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
@@ -189,7 +191,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+    public IValidationRuleBuilder<TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
         where TArgument : notnull, IEquatable<TArgument>
     {
         if (value is null)
@@ -208,7 +210,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new EqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -219,7 +222,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value) 
+    public IValidationRuleBuilder<TValue> GreaterThan<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
         if (value is null)
@@ -243,7 +246,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> configure) 
+    public IValidationRuleBuilder<TValue> GreaterThan<TArgument>(TArgument value, Action<IValidationError> configure) 
         where TArgument : notnull, IComparable
     {
         if (value is null)
@@ -262,7 +265,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new GreaterThanValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -273,7 +277,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value) 
+    public IValidationRuleBuilder<TValue> GreaterThanOrEqualTo<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
         if (value is null)
@@ -297,7 +301,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) 
+    public IValidationRuleBuilder<TValue> GreaterThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) 
         where TArgument : notnull, IComparable
     {
         if (value is null)
@@ -316,7 +320,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new GreaterThanOrEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -327,7 +332,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value) 
+    public IValidationRuleBuilder<TValue> LessThan<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
@@ -347,7 +352,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure) 
+    public IValidationRuleBuilder<TValue> LessThan<TArgument>(TArgument value, Action<IValidationError> configure) 
         where TArgument : notnull, IComparable
     {
         if (configure is null)
@@ -362,7 +367,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new LessThanValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -373,7 +379,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value) 
+    public IValidationRuleBuilder<TValue> LessThanOrEqualTo<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
@@ -393,7 +399,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) 
+    public IValidationRuleBuilder<TValue> LessThanOrEqualTo<TArgument>(TArgument value, Action<IValidationError> configure) 
         where TArgument : notnull, IComparable
     {
         if (configure is null)
@@ -408,7 +414,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new LessThanOrEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -419,7 +426,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value)
+    public IValidationRuleBuilder<TValue> NotEqualTo<TArgument>(TArgument value)
         where TArgument : notnull, IEquatable<TArgument>
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
@@ -439,7 +446,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+    public IValidationRuleBuilder<TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
         where TArgument : notnull, IEquatable<TArgument>
     {
         if (configure is null)
@@ -454,7 +461,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new NotEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -465,7 +473,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> NotNull()
+    public IValidationRuleBuilder<TValue> NotNull()
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -484,7 +492,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> NotNull(Action<IValidationError> configure)
+    public IValidationRuleBuilder<TValue> NotNull(Action<IValidationError> configure)
     {
         if (configure is null)
         {
@@ -498,7 +506,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new NotNullValidationRule<T, TValue>(validationRule.ValidationExpression)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -509,7 +518,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Null()
+    public IValidationRuleBuilder<TValue> Null()
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -528,7 +537,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> Null(Action<IValidationError> configure)
+    public IValidationRuleBuilder<TValue> Null(Action<IValidationError> configure)
     {
         if (configure is null)
         {
@@ -542,7 +551,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             validationRule.AddRule(new NullValidationRule<T, TValue>(validationRule.ValidationExpression)
             {
-                Error = error
+                Error = error,
+                RuleType = this.ValidationRuleType
             });
 
             return this;
@@ -553,4 +563,3 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 }
-

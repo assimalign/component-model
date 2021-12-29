@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "properties": {
+        "$rules": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "$member": {
+                        "type": "string"
+                    },
+                    "$evaluates": {
+                        "type": "object",
+                        "properties": {
+                            "$equalTo": {
+                                "$ref": "#definitions/equalTo"
+                            }
+                        },
+                        "required": [
+                            "$equalTo"
+                        ]
+                    }
+                },
+                "required": [
+                    "$member",
+                    "$evaluates"
+                ]
+            }
+        }
+    },
+    "required": [
+        "$rules",
+        "$conditions"
+    ],
+    "definitions": {
+        "equalTo": {
+            "type": "object",
+            "properties": {
+                "$value": {
+                    "type": "string"
+                },
+                "$valueType": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "$value",
+                "$valueType"
+            ]
+        }
+    }
+}

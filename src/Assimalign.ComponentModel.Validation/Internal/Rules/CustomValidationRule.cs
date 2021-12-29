@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Collections;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class CustomValidationRule<T, TValue> : IValidationRule
+internal sealed class CustomValidationRule<T, TValue> : ValidationRuleBase<T, TValue>
 {
-    private readonly Expression<Func<T, TValue>> expression;
     private readonly Action<TValue, IValidationContext> validation;
-    private readonly string expressionBody;
 
-    public CustomValidationRule(
-        Expression<Func<T, TValue>> expression,
-        Action<TValue, IValidationContext> validation)
+    public CustomValidationRule(Expression<Func<T, TValue>> expression,Action<TValue, IValidationContext> validation) : base(expression)
     {
         if (expression is null)
         {
@@ -24,25 +21,33 @@ internal sealed class CustomValidationRule<T, TValue> : IValidationRule
         {
             throw new ArgumentNullException(nameof(validation));
         }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
 
-        this.expression = expression;
         this.validation = validation;
     }
 
-    public string Name => $"CustomValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
+    public override string Name => $"CustomValidationRule<{this.ParamType.Name}, {this.ExpressionBody ?? this.ValueType.Name}>";
 
-
-    public void Evaluate(IValidationContext context)
+    public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
-            var member = this.GetValue(instance);
+            var value = this.GetValue(instance);
 
-            validation.Invoke(member, context);
+            if (this.RuleType == ValidationRuleType.SingularRule)
+            {
+                validation.Invoke(value, context);
+            }
+            else if (this.RuleType == ValidationRuleType.RecursiveRule)
+            {
+                if (value is IEnumerable enumerable)
+                {
+                    foreach(var enumValue in enumerable)
+                    {
+
+                    }
+
+                }
+            }
         }
     }
 
@@ -51,7 +56,7 @@ internal sealed class CustomValidationRule<T, TValue> : IValidationRule
     {
         try
         {
-            return this.expression.Compile().Invoke(instance);
+            return this.Expression.Compile().Invoke(instance);
         }
         catch
         {

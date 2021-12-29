@@ -12,17 +12,17 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 
-internal sealed class ValidationRuleCondition<T> : IValidationRuleCondition<T>
+internal sealed class ValidationItemCondition<T> : IValidationItemCondition<T>
 {
 
-    public ValidationRuleCondition()
+    public ValidationItemCondition()
     {
         this.ConditionDefaultRuleSet ??= new ValidationRuleStack();
     }
 
     public ValidationMode ValidationMode { get; set; }
 
-    public string Name => nameof(ValidationRuleCondition<T>);
+    public string Name => nameof(ValidationItemCondition<T>);
 
     public IValidationRuleStack ConditionRuleSet { get; set; }
 
@@ -77,14 +77,14 @@ internal sealed class ValidationRuleCondition<T> : IValidationRuleCondition<T>
         configure.Invoke(descriptor);
     }
 
-    public IValidationRuleCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationItemCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
         var descriptor = new ValidationRuleDescriptor<T>()
         {
             ValidationMode = this.ValidationMode
         };
 
-        var rule = new ValidationRuleCondition<T>()
+        var rule = new ValidationItemCondition<T>()
         {
             Condition = condition,
             ValidationMode = this.ValidationMode

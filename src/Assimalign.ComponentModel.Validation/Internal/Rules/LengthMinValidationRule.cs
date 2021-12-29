@@ -34,6 +34,8 @@ internal sealed class LengthMinValidationRule<T, TValue> : IValidationRule
 
     public IValidationError Error { get; set; }
 
+    public ValidationRuleType RuleType { get; set; }
+
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

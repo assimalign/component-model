@@ -10,7 +10,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// The logical flow is best described as if (Condition is true/false) then { Run Validation Rules }
 /// </remarks>
 /// <typeparam name="T"></typeparam>
-public interface IValidationRuleCondition<T> : IValidationRule
+public interface IValidationItemCondition<T> : IValidationRule
 {
     /// <summary>
     /// The Condition in which the child validation rule collection should be applied.
@@ -18,12 +18,12 @@ public interface IValidationRuleCondition<T> : IValidationRule
     Expression<Func<T, bool>> Condition { get; }
 
     /// <summary>
-    /// The rule set to run if condition predicate is 'true'. <see cref="IValidationRuleCondition{T}.When(Expression{Func{T, bool}}, Action{IValidationRuleDescriptor{T}})"/>
+    /// The rule set to run if condition predicate is 'true'. <see cref="IValidationItemCondition{T}.When(Expression{Func{T, bool}}, Action{IValidationRuleDescriptor{T}})"/>
     /// </summary>
     IValidationRuleStack ConditionRuleSet { get; }
 
     /// <summary>
-    /// The rule set to run if condition predicate is 'false'. <see cref="IValidationRuleCondition{T}.Otherwise(Action{IValidationRuleDescriptor{T}})"/>
+    /// The rule set to run if condition predicate is 'false'. <see cref="IValidationItemCondition{T}.Otherwise(Action{IValidationRuleDescriptor{T}})"/>
     /// </summary>
     IValidationRuleStack ConditionDefaultRuleSet { get; }
 
@@ -33,7 +33,7 @@ public interface IValidationRuleCondition<T> : IValidationRule
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    IValidationRuleCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
+    IValidationItemCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
 
     /// <summary>
     /// 

@@ -19,12 +19,17 @@
             "$operator": "",
             "$value": "" // $root or true/false or string or numeric
         },
-        "$then": {
-            "$ruleFor": {
-                "$member": ""
-            }
-        },
-        "$else": {}
+      "$then": {
+        "$ruleFor": {
+          "$member": ""
+        }
+      },
+      "$when": {
+
+      },
+      "$otherwise": {
+
+      }
     },
     "$ruleFor": [
        {

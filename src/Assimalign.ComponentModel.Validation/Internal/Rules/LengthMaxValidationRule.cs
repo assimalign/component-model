@@ -32,7 +32,9 @@ internal sealed class LengthMaxValidationRule<T, TValue> : IValidationRule
     public string Name => $"LengthMaxValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
     public IValidationError Error { get; set; }
-    
+
+    public ValidationRuleType RuleType { get; set; }
+
     public void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

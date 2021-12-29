@@ -6,13 +6,11 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
+internal sealed class EmptyValidationRule<T, TValue> : ValidationRuleBase<T, TValue>
     where TValue : IEnumerable
 {
-    private readonly string expressionBody;
-    private readonly Expression<Func<T, TValue>> expression;
 
-    public EmptyValidationRule(Expression<Func<T, TValue>> expression)
+    public EmptyValidationRule(Expression<Func<T, TValue>> expression) : base (expression)
     {
         if (expression is null)
         {
@@ -20,28 +18,47 @@ internal sealed class EmptyValidationRule<T, TValue> : IValidationRule
                 paramName: nameof(expression),
                 message: $"The following expression where the 'Empty()' rule is defined cannot be null.");
         }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
-        this.expression = expression;
     }
 
+    public override string Name => $"EmptyValidationRule<{this.ParamType.Name}, {this.ExpressionBody ?? this.ValueType.Name}>";
 
-    public string Name => $"EmptyValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
-
-    public IValidationError Error { get; set; }
-
-    public void Evaluate(IValidationContext context)
+    public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
             var value = this.GetValue(instance);
 
-            if (!IsEmpty(value))
+            if (value is null)
+            {
+                context.AddSuccess(this);
+                return;
+            }
+            if (this.RuleType == ValidationRuleType.RecursiveRule)
+            {
+                if (value is IEnumerable enumerable)
+                {
+                    foreach(var enumValue in enumerable)
+                    {
+                        if (enumValue is not null && enumValue is IEnumerable enumChildValue)
+                        {
+                            if (!IsEmpty(enumChildValue))
+                            {
+                                context.AddFailure(this.Error);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("");
+                        }
+                    }
+                }
+            }
+            else if (this.RuleType == ValidationRuleType.SingularRule && !IsEmpty(value))
             {
                 context.AddFailure(this.Error);
             }
+               
             else
             {
                 context.AddSuccess(this);

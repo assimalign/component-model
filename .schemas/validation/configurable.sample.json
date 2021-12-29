@@ -1,0 +1,16 @@
+{
+    "$schema": "./configurable.schema.json",
+    "$rules": [
+        {
+            "$member": "",
+            "$evaluates": {
+                "$equalTo":{
+                    
+                }
+            }
+        }
+    ],
+    "$conditions": [
+
+    ]
+}

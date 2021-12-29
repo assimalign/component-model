@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
+internal sealed class BetweenValidationRule<T, TValue, TBound> : ValidationRuleBase<T, TValue, TBound>
     where TBound : notnull, IComparable
 {
     private readonly TBound lower;
     private readonly TBound upper;
     private readonly Func<TBound, TBound, object, bool> isOutOfBounds;
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
 
-    public BetweenValidationRule(Expression<Func<T, TValue>> expression, TBound lower, TBound upper)
+    public BetweenValidationRule(Expression<Func<T, TValue>> expression, TBound lower, TBound upper) : base(expression)
     {
         if (expression is null)
         {
@@ -22,14 +19,8 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
                 paramName: nameof(expression), 
                 message: $"The following expression where the 'Between()' rule is defined cannot be null.");
         }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
-
         this.lower = lower;
         this.upper = upper;
-        this.expression = expression;
         this.isOutOfBounds = (lower, upper, value) =>
         {
             var lowerResults = lower.CompareTo(value);
@@ -37,13 +28,13 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
 
             return lowerResults >= 0 || upperResults <= 0;
         };
+
+        this.ValidationRuleSource = $"RuleFor(p => p.{this.ExpressionBody}).Between({this.lower}, {this.upper})";
     }
 
-    public string Name => $"BetweenValidationRule<{typeof(T).Name},{expressionBody ?? typeof(TValue).Name},{typeof(TBound).Name}>";
+    public override string Name => $"BetweenValidationRule<{this.ParamType.Name},{this.ExpressionBody ?? this.ValueType.Name},{this.ArgumentType.Name}>";
 
-    public IValidationError Error { get; set; }
-
-    public void Evaluate(IValidationContext context)
+    public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
@@ -53,25 +44,21 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
             {
                 context.AddFailure(this.Error);
             }
-            else if (value is IEnumerable enumerable)
+            else if (this.RuleType == ValidationRuleType.RecursiveRule)
             {
-                foreach (var item in enumerable)
+                if (value is IEnumerable enumerable)
                 {
-                    object obj = item;
-
-                    if (item is not TBound && item is IConvertible convertible)
+                    foreach (var item in enumerable)
                     {
-                        obj = convertible.ToType(typeof(TBound), default);
-                    }
-
-                    if (obj is null || isOutOfBounds(this.lower, this.upper, obj))
-                    {
-                        context.AddFailure(this.Error);
-                        break;
+                        if (item is null || isOutOfBounds(this.lower, this.upper, item))
+                        {
+                            context.AddFailure(this.Error);
+                            break;
+                        }
                     }
                 }
             }
-            else if (isOutOfBounds(this.lower, this.upper, value))
+            else if (this.RuleType == ValidationRuleType.SingularRule && isOutOfBounds(this.lower, this.upper, value))
             {
                 context.AddFailure(this.Error);
             }
@@ -79,26 +66,6 @@ internal sealed class BetweenValidationRule<T, TValue, TBound> : IValidationRule
             {
                 context.AddSuccess(this);
             }
-        }
-    }
-
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            var value = expression.Compile().Invoke(instance);
-
-            if (value is not TBound && value is IConvertible convertible)
-            {
-                return convertible.ToType(typeof(TBound), default);
-            }
-
-            return value;
-        }
-        catch
-        {
-            return null;
         }
     }
 }
