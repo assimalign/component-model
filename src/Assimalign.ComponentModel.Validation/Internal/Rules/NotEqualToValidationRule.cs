@@ -4,8 +4,15 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
+using Assimalign.ComponentModel.Validation.Internal.Extensions;
+
 internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidationRule
 {
+    private readonly Type paramType;
+    private readonly Type valueType;
+    private readonly Type argumentType;
+    private readonly TArgument argument;
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
     private readonly string expressionBody;
@@ -26,7 +33,10 @@ internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidati
         {
             this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
-
+        this.paramType = typeof(T);
+        this.valueType = typeof(TValue);
+        this.argumentType = typeof(TArgument);
+        this.argument = argument;
         this.expression = expression;
         this.isEqualTo = x => x.Equals(argument);
     }
@@ -59,9 +69,16 @@ internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidati
         {
             return this.expression.Compile().Invoke(instance);
         }
-        catch
+        catch (InvalidCastException exception)
         {
-            return default(TValue);
+            throw new ValidationInvalidCastException(
+                message: $"Unable to equate type '{valueType.Name}' against type '{argumentType.Name}'",
+                inner: exception,
+                source: $"RuleFor(p => p.{this.expressionBody}).NotEqualTo({this.argument})");
+        }
+        catch (Exception exception) when (exception is not ValidationInvalidCastException)
+        {
+            return null;
         }
     }
 }

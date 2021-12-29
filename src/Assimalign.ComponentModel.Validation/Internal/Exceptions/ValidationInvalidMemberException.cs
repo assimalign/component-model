@@ -13,6 +13,7 @@ internal sealed class ValidationInvalidMemberException : ValidationException
     {
         base.ErrorCode = ValidationExceptionCode.InvalidValidationExpression;
         base.Source = invalidExpression.ToString();
+        base.HResult = typeof(ValidationInvalidMemberException).GetHashCode();
     }
 }
 

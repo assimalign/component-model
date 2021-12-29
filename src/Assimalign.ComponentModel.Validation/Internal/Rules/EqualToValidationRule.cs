@@ -7,9 +7,14 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
+using Assimalign.ComponentModel.Validation.Internal.Exceptions;
+using Assimalign.ComponentModel.Validation.Internal.Extensions;
 
 internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationRule
 {
+    private readonly Type paramType;
+    private readonly Type valueType;
+    private readonly Type argumentType;
     private readonly TArgument argument;
     private readonly Func<object, bool> isEqualTo;
     private readonly Expression<Func<T, TValue>> expression;
@@ -31,13 +36,15 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
         {
             this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
         }
-
+        this.paramType = typeof(T);
+        this.valueType = typeof(TValue);
+        this.argumentType = typeof(TArgument);
         this.argument = argument;
         this.expression = expression;
         this.isEqualTo = x => x.Equals(argument);        
     }
 
-    public string Name => $"EqualToValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}, {typeof(TArgument).Name}>";
+    public string Name => $"EqualToValidationRule<{paramType.Name}, {expressionBody ?? valueType.Name}, {argumentType.Name}>";
 
     public IValidationError Error { get; set; }
 
@@ -130,12 +137,47 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
         }
     }
 
-
     private object GetValue(T instance)
     {
         try
         {
             var value = this.expression.Compile().Invoke(instance);
+
+            if (this.valueType is null || this.valueType == this.argumentType)
+            {
+                return null; // Let's exit if value is null or if the argument type is the same as the value type
+            }
+            if (this.valueType.IsEnumerableType(out var enumerableType))
+            {
+                if (enumerableType.IsNullable(out var enumNullableType))
+                {
+                    
+                }
+                else
+                {
+                    
+
+                }
+            }
+            else if (this.valueType.IsNullable(out var nullableType))
+            {
+                if (nullableType == this.argumentType)
+                {
+                    return value;
+                }
+                else
+                {
+
+                }
+            }
+            else if (nullableType != argumentType)
+            {
+
+            }
+            else
+            {
+
+            }
 
             // Let's check that the we are not comparing 2 enumerables
             if (this.argument is not IEnumerable && value is IEnumerable enumerable)
@@ -163,9 +205,16 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : IValidationR
 
             return value;
         }
-        catch
+        catch (InvalidCastException exception)
         {
-            return default(TValue);
+            throw new ValidationInvalidCastException(
+                message: $"Unable to equate type '{valueType.Name}' against type '{argumentType.Name}'. '{this.expressionBody}' must be able to convert to {this.argumentType}",
+                inner: exception,
+                source: $"RuleFor(p => p.{this.expressionBody}).EqualTo({this.argument})");
+        }
+        catch (Exception exception) when (exception is not ValidationInvalidCastException)
+        {
+            return null;
         }
     }
 }

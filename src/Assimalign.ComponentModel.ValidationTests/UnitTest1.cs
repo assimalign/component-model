@@ -55,7 +55,9 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
-            descriptor.RuleForEach(p => p.NickNames)
+            Half half = (Half)23.0;
+            descriptor.RuleFor(p => p.NickNames)
+                .EqualTo(10)
                 .NotEmpty();
 
             descriptor.RuleFor(p => p.Record)
@@ -65,8 +67,9 @@ namespace Assimalign.ComponentModel.ValidationTests
                 .Length(0, 9);
 
             descriptor.RuleForEach(p => p.Ages)
-                .EqualTo(11);
+                .EqualTo(half);
 
+            
            // descriptor.RuleForEach(p => p.Addresses);
         }
     }
@@ -76,7 +79,7 @@ namespace Assimalign.ComponentModel.ValidationTests
     {
         public int Age { get; set; }
 
-        public TestRecord Record { get; set; }
+        public TestRecord? Record { get; set; }
 
         public IEnumerable<long?> Ages { get; set; }
         public string FirstName { get; set; }

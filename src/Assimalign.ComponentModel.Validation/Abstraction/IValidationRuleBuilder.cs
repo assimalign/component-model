@@ -135,7 +135,8 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value);
+    IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value)
+        where TArgument : notnull, IEquatable<TArgument>;
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must be equal to <paramref name="value"/>>.
@@ -144,7 +145,8 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure);
+    IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : notnull, IEqualityComparer, IEquatable<TArgument>;
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must not be equal to <paramref name="value"/>.
@@ -152,7 +154,8 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <typeparam name="TArgument"></typeparam>
     /// <param name="value"></param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value);
+    IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value)
+        where TArgument : notnull, IEquatable<TArgument>;
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must not be equal to <paramref name="value"/>.
@@ -161,7 +164,8 @@ public interface IValidationRuleBuilder<T, TValue>
     /// <param name="value"></param>
     /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure);
+    IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : notnull, IEquatable<TArgument>;
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.

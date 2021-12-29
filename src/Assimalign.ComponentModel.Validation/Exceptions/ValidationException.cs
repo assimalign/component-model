@@ -12,27 +12,28 @@ public abstract class ValidationException : Exception
     /// <summary>
     /// 
     /// </summary>
-    public ValidationException() : this(messageDefault)
-    {
-
-    }
+    private ValidationException() : this(messageDefault) { }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="message"></param>
-    public ValidationException(string message) : base(message)
-    {
-
-    }
+    public ValidationException(string message) : base(message) { }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="message"></param>
+    /// <param name="inner"></param>
+    internal ValidationException(string message, Exception inner) : base(message, inner) { }
+
+    /// <summary>
+    /// A internal validation exception code.
+    /// </summary>
     public ValidationExceptionCode ErrorCode { get; set; } = ValidationExceptionCode.UnknownError;
 
     /// <summary>
-    /// 
+    /// The source of the exception.
     /// </summary>
     public override string Source { get; set; }
 }

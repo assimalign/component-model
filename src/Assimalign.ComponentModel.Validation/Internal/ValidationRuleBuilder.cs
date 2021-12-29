@@ -169,7 +169,8 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
     }
 
-    public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value) 
+    public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value)
+        where TArgument : notnull, IEquatable<TArgument>
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -189,6 +190,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : notnull, IEquatable<TArgument>
     {
         if (value is null)
         {
@@ -418,6 +420,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value)
+        where TArgument : notnull, IEquatable<TArgument>
     {
         if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
         {
@@ -437,6 +440,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     }
 
     public IValidationRuleBuilder<T, TValue> NotEqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
+        where TArgument : notnull, IEquatable<TArgument>
     {
         if (configure is null)
         {

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -10,13 +7,11 @@ namespace Assimalign.ComponentModel.Validation;
 /// <summary>
 /// 
 /// </summary>
-internal sealed class ValidatorFactory : IValidatorFactory
+public sealed class ValidatorFactory : IValidatorFactory
 {
-
     private readonly IDictionary<string, IValidator> validators;
 
     private ValidatorFactory() { }
-
     internal ValidatorFactory(IDictionary<string, IValidator> validators)
     {
         this.validators = validators;
@@ -53,7 +48,4 @@ internal sealed class ValidatorFactory : IValidatorFactory
 
         return new ValidatorFactory(builder.Validators);
     }
-
-
-
 }

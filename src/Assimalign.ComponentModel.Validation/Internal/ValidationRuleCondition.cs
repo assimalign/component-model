@@ -65,10 +65,6 @@ internal sealed class ValidationRuleCondition<T> : IValidationRuleCondition<T>
                 });
             }
         }
-        else
-        {
-            throw new ValidationPredicateException("");
-        }
     }
 
     public void Otherwise(Action<IValidationRuleDescriptor<T>> configure)

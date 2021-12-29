@@ -14,6 +14,7 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
     {
         public partial class TestClass
         {
+            
             public DateTime DateTime { get; set; }
             public DateTime? DateTimeNullable { get; set; }
             public IEnumerable<DateTime> DateTimes { get; set; }
@@ -21,43 +22,6 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo
             public IEnumerable<DateTime?>? DateTimesNullable1 { get; set; }
             public IEnumerable<DateTime>? DateTimesNullable2 { get; set; }
         }
-
-        [Fact]
-        public void EnumerableDateTimeValidationMemberSuccessTest()
-        {
-            var person = new TestClass() 
-            { 
-                DateTimes = new DateTime[] 
-                {
-                    new DateTime(1997, 01, 01)
-                }
-            };
-            var context = new ValidationContext<TestClass>(person);
-            var rule = new BetweenOrEqualToValidationRule<TestClass, IEnumerable<DateTime>, DateTime>(x => x.DateTimes, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
-
-            rule.Evaluate(context);
-            Assert.Empty(context.Errors);
-        }
-
-
-        [Fact]
-        public void NullableEnumerableDateTimeValidationMemberSuccessTest()
-        {
-            var person = new TestClass()
-            {
-                DateTimesNullable = new DateTime?[]
-                {
-                    new DateTime(1997, 01, 01)
-                }
-            };
-            var context = new ValidationContext<TestClass>(person);
-            var rule = new BetweenOrEqualToValidationRule<TestClass, IEnumerable<DateTime?>, DateTime>(x => x.DateTimesNullable, new DateTime(1996, 01, 01), new DateTime(2010, 01, 01));
-
-            rule.Evaluate(context);
-            Assert.Empty(context.Errors);
-        }
-
-
 
 
         #region DateTime Enumerable (Nullable DateTime and Non-Nullable IEnumerable)
