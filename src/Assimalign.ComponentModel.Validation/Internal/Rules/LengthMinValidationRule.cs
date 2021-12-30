@@ -6,51 +6,26 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal sealed class LengthMinValidationRule<T, TValue> : IValidationRule
+internal sealed class LengthMinValidationRule<TValue> : ValidationRuleBase<TValue>
     where TValue : IEnumerable
 {
     private readonly int length;
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
 
-    public LengthMinValidationRule(Expression<Func<T, TValue>> expression, int length)
+    public LengthMinValidationRule(int length)
     {
-        if (expression is null)
-        {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'MinLength()' rule is defined cannot be null.");
-        }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
-
         this.length = length;
-        this.expression = expression;
     }
 
-    public string Name => $"LengthMinValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
+    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-    public IValidationContext Error { get; set; }
-
-    public ValidationRuleType RuleType { get; set; }
-
-    public void Evaluate(IValidationContext context)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (context.Instance is T instance)
-        {
-            var value = this.GetValue(instance);
+        throw new NotImplementedException();
+    }
 
-            if (this.IsUnderMinLength(value))
-            {
-                context.AddFailure(this.Error);
-            }
-            else
-            {
-                context.AddSuccess(this);
-            }
-        }
+    public override bool TryValidate(TValue value, out IValidationContext context)
+    {
+        throw new NotImplementedException();
     }
 
     private bool IsUnderMinLength(object member)
@@ -64,18 +39,6 @@ internal sealed class LengthMinValidationRule<T, TValue> : IValidationRule
             IEnumerable enumerable  when enumerable.Cast<object>().Count() < this.length => true,
             _ => false
         };
-    }
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            return expression.Compile().Invoke(instance);
-        }
-        catch
-        {
-            return null;
-        }
     }
 }
 

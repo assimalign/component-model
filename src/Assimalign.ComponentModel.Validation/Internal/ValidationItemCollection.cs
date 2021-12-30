@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -85,70 +86,22 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
         {
             var value = this.ItemExpression.Compile().Invoke(instance);
 
-            if (value is null || value is IEnumerable<TValue>)
+            if (value is null || value is IEnumerable)
             {
                 return value;
             }
-            else if (value is )
+            else
             {
-
+                throw new Exception("");
             }
-
-
-            //if (value is null || this.ValueType == this.ArgumentType)
-            //{
-            //    return value; // Let's exit if value is null or if the argument type is the same as the value type
-            //}
-            //if (this.RuleType == ValidationRuleType.RecursiveRule)
-            //{
-            //    var enumerableConversions = new List<object>();
-            //    var enumerable = value as IEnumerable;
-
-            //    if (enumerable is null)
-            //    {
-            //        throw new ValidationInternalException(
-            //            message: $"Unable to convert expression value: {this.ExpressionBody} to IEnumerable.",
-            //            inner: new InvalidCastException($"Type {this.ValueType.Name} is not valid as {this.ArgumentType.Name}"),
-            //            source: this.ExpressionBody); // This should never happen, but for safety let's add it for now.
-            //    }
-
-            //    foreach (var enumValue in enumerable)
-            //    {
-            //        if (enumValue is not TArgument && enumValue is IConvertible convertible)
-            //        {
-            //            enumerableConversions.Add(convertible.ToType(this.ArgumentType, default));
-            //        }
-            //        else
-            //        {
-            //            enumerableConversions.Add(enumValue);
-            //        }
-            //    }
-
-            //    return enumerableConversions;
-            //}
-            //if (this.RuleType == ValidationRuleType.SingularRule)
-            //{
-            //    if (value is not TArgument && value is IConvertible convertible)
-            //    {
-            //        return convertible.ToType(this.ArgumentType, default);
-            //    }
-            //    else
-            //    {
-            //        return value;
-            //    }
-            //}
-            //else
-            //{
-            //    return null; // TODO: Decide whether to throw an exception
-            //}
         }
-        catch (InvalidCastException exception)
-        {
-            throw new ValidationInvalidCastException(
-                message: $"Unable to equate type '{this.ValueType.Name}' against type '{this.ArgumentType.Name}'. '{this.ExpressionBody}' must be able to convert to {this.ArgumentType}",
-                inner: exception,
-                source: this.ValidationRuleSource);
-        }
+        //catch (InvalidCastException exception)
+        //{
+        //    throw new ValidationInvalidCastException(
+        //        message: $"Unable to equate type '{this.ValueType.Name}' against type '{this.ArgumentType.Name}'. '{this.ExpressionBody}' must be able to convert to {this.ArgumentType}",
+        //        inner: exception,
+        //        source: this.ValidationRuleSource);
+        //}
         catch (Exception exception) when (exception is not ValidationInvalidCastException)
         {
             return null;

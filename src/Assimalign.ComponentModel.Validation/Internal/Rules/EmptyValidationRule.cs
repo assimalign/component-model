@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal sealed class EmptyValidationRule<T, TValue> : ValidationRuleBase<TValue>
+internal sealed class EmptyValidationRule<TValue> : ValidationRuleBase<TValue>
     where TValue : IEnumerable
 {
     public override string Name { get; set; }

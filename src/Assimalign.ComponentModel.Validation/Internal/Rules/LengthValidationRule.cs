@@ -12,14 +12,25 @@ internal sealed class LengthValidationRule<TValue> : ValidationRuleBase<TValue>
 {
     private readonly int length;
 
-    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
     public LengthValidationRule(int length)
     {
         this.length = length;
     }
 
-  
+    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+
+    public override bool TryValidate(object value, out IValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool TryValidate(TValue value, out IValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+
 
     public void Evaluate(IValidationContext context)
     {
@@ -51,27 +62,4 @@ internal sealed class LengthValidationRule<TValue> : ValidationRuleBase<TValue>
             _ => false
         };
     }
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            return expression.Compile().Invoke(instance);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public override bool TryValidate(object value, out IValidationContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryValidate(TValue value, out IValidationContext context)
-    {
-        throw new NotImplementedException();
-    }
 }
-

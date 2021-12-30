@@ -19,27 +19,26 @@ internal sealed class CustomValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override string Name { get; set; }
 
-    public override bool TryValidate(object value, out IValidationError error)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        return TryValidate(value ?? default(TValue), out error);
+        return TryValidate(value ?? default(TValue), out context);
     }
 
-    public override bool IsValid(TValue value, out IValidationError error)
+    public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        error = null;
+        context = null;
 
-        var context = new ValidationContext<TValue>(value);
+        try
+        {
+            context = new ValidationContext<TValue>(value);
 
-        validation.Invoke(value, context);
-        
-        if (context.Errors.Any())
-        {
-            error = context.Errors.First();
-            return false;
-        }
-        else
-        {
+            validation.Invoke(value, context);
+
             return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 }
