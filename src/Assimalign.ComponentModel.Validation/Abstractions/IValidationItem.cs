@@ -9,16 +9,9 @@ namespace Assimalign.ComponentModel.Validation;
 public interface IValidationItem
 {
     /// <summary>
-    /// 
+    /// A stack of rules to be evaluated against the given context: <see cref="Evaluate(IValidationContext)"/>.
     /// </summary>
     IValidationRuleStack ItemRuleStack { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="rule"></param>
-    /// <returns></returns>
-    IValidationItem AddRule(IValidationRule rule);
 
     /// <summary>
     /// 
@@ -36,7 +29,7 @@ public interface IValidationItem
 public interface IValidationItem<T, TValue> : IValidationItem
 {
     /// <summary>
-    /// 
+    /// The item expression to be validated.
     /// </summary>
     Expression<Func<T, TValue>> ItemExpression { get; }
 }

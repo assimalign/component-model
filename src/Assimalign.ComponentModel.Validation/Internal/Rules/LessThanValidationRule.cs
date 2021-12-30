@@ -33,7 +33,7 @@ internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidation
 
     public string Name => $"LessThanValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}, {typeof(TArgument).Name}>";
 
-    public IValidationError Error { get; set; }
+    public IValidationContext Error { get; set; }
 
     public ValidationRuleType RuleType { get; set; }
 

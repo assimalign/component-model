@@ -23,13 +23,13 @@ public static partial class ValidationExtensions
     /// <param name="builder">The current instance of the validation builder.</param>
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<string> EmailAddress<T>(this IValidationRuleBuilder<string> builder)
+    public static IValidationRuleBuilder<string> EmailAddress(this IValidationRuleBuilder<string> builder)
     {
-        if (builder.ValidationRule is IValidationRule<T, string> validationRule)
+        if (builder.ValidationItem is IValidationItem validationItem)
         {
             return builder.EmailAddress(error =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 error.Code = Resources.DefaultValidationErrorCode;
                 error.Message = string.Format(Resources.DefaultValidationMessageEmailAddressRule, validationExpression);
@@ -38,7 +38,7 @@ public static partial class ValidationExtensions
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(builder.ValidationRule);
+            throw new ValidationItemUnsupportedException(builder.ValidationItem);
         }
     }
 
@@ -51,9 +51,9 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<string> EmailAddress<T>(this IValidationRuleBuilder<string> builder, Action<IValidationError> configure)
+    public static IValidationRuleBuilder<string> EmailAddress(this IValidationRuleBuilder<string> builder, Action<IValidationError> configure)
     {
-        if (builder.ValidationRule is IValidationRule<T, string> validationRule)
+        if (builder.ValidationItem is IValidationItem validationItem)
         {
             if (configure is null)
             {
@@ -61,7 +61,7 @@ public static partial class ValidationExtensions
                     paramName: nameof(configure),
                     message: "The 'configure' parameter cannot be null in: EmailAddress(Action<IValidationError> configure)")
                 {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).EmailAddress({configure})."
+                    Source = $"RuleFor().EmailAddress({configure})."
                 };
             }
 
@@ -69,7 +69,7 @@ public static partial class ValidationExtensions
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new EmailValidationRule<T, string>(validationRule.ValidationExpression)
+            validationItem.AddRule(new EmailValidationRule<string>()
             {
                 Error = error
             });
@@ -78,77 +78,7 @@ public static partial class ValidationExtensions
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(builder.ValidationRule);
-        }
-    }
-
-    /// <summary>
-    /// Creates a rule specifying that <typeparamref name="TValue"/> must be in the format of an email address.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    /// <param name="builder">The current instance of the validation builder.</param>
-    /// <returns><see cref="IValidationRuleBuilder{T, TValue}"/></returns>
-    /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<TValue> builder)
-        where TValue : IEnumerable<string>
-    {
-        if (builder.ValidationRule is IValidationRule<T, string> validationRule)
-        {
-            return builder.EmailAddress(error =>
-            {
-                var validationExpression = validationRule.ValidationExpression.ToString();
-
-                error.Code = Resources.DefaultValidationErrorCode;
-                error.Message = string.Format(Resources.DefaultValidationMessageEmailAddressRule, validationExpression);
-                error.Source = validationExpression;
-            });
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(builder.ValidationRule);
-        }
-    }
-
-    /// <summary>
-    /// Creates a rule specifying that <typeparamref name="TValue"/> must be in the format of an email address.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    /// <param name="builder"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
-    /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
-    public static IValidationRuleBuilder<T, TValue> EmailAddress<T, TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationError> configure)
-        where TValue : IEnumerable<string>
-    {
-        if (builder.ValidationRule is IValidationRule<T, string> validationRule)
-        {
-            if (configure is null)
-            {
-                throw new ArgumentNullException(
-                    paramName: nameof(configure),
-                    message: "The 'configure' parameter cannot be null in: EmailAddress(Action<IValidationError> configure)")
-                {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).EmailAddress({configure})."
-                };
-            }
-
-            var error = new ValidationError();
-
-            configure.Invoke(error);
-
-            validationRule.AddRule(new EmailValidationRule<T, string>(validationRule.ValidationExpression)
-            {
-                Error = error
-            });
-
-            return builder;
-        }
-        else
-        {
-            throw new ValidationUnsupportedRuleException(builder.ValidationRule);
+            throw new ValidationItemUnsupportedException(builder.ValidationItem);
         }
     }
 

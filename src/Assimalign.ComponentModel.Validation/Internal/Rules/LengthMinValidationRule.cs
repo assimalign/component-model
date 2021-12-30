@@ -32,7 +32,7 @@ internal sealed class LengthMinValidationRule<T, TValue> : IValidationRule
 
     public string Name => $"LengthMinValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
-    public IValidationError Error { get; set; }
+    public IValidationContext Error { get; set; }
 
     public ValidationRuleType RuleType { get; set; }
 

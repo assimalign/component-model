@@ -43,7 +43,7 @@ internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidati
 
     public string Name => $"NotEqualValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
-    public IValidationError Error { get; set; }
+    public IValidationContext Error { get; set; }
 
     public ValidationRuleType RuleType { get; set; }
 

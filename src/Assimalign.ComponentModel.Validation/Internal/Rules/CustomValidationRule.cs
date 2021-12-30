@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Collections;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class CustomValidationRule<T, TValue> : ValidationRuleBase<T, TValue>
+internal sealed class CustomValidationRule<TValue> : ValidationRuleBase<TValue>
 {
     private readonly Action<TValue, IValidationContext> validation;
 
-    public CustomValidationRule(Expression<Func<T, TValue>> expression,Action<TValue, IValidationContext> validation) : base(expression)
+    public CustomValidationRule(Action<TValue, IValidationContext> validation)
     {
-        if (expression is null)
-        {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'Custom()' rule is defined cannot be null.");
-        }
         if (validation is null)
         {
             throw new ArgumentNullException(nameof(validation));
@@ -25,42 +17,29 @@ internal sealed class CustomValidationRule<T, TValue> : ValidationRuleBase<T, TV
         this.validation = validation;
     }
 
-    public override string Name => $"CustomValidationRule<{this.ParamType.Name}, {this.ExpressionBody ?? this.ValueType.Name}>";
+    public override string Name { get; set; }
 
-    public override void Evaluate(IValidationContext context)
+    public override bool TryValidate(object value, out IValidationError error)
     {
-        if (context.Instance is T instance)
-        {
-            var value = this.GetValue(instance);
-
-            if (this.RuleType == ValidationRuleType.SingularRule)
-            {
-                validation.Invoke(value, context);
-            }
-            else if (this.RuleType == ValidationRuleType.RecursiveRule)
-            {
-                if (value is IEnumerable enumerable)
-                {
-                    foreach(var enumValue in enumerable)
-                    {
-
-                    }
-
-                }
-            }
-        }
+        return TryValidate(value ?? default(TValue), out error);
     }
 
-
-    private TValue GetValue(T instance)
+    public override bool IsValid(TValue value, out IValidationError error)
     {
-        try
+        error = null;
+
+        var context = new ValidationContext<TValue>(value);
+
+        validation.Invoke(value, context);
+        
+        if (context.Errors.Any())
         {
-            return this.Expression.Compile().Invoke(instance);
+            error = context.Errors.First();
+            return false;
         }
-        catch
+        else
         {
-            return default(TValue);
+            return true;
         }
     }
 }

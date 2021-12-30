@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Linq.Expressions;
+
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -18,16 +17,16 @@ public interface IValidationRule
     /// 
     /// </summary>
     /// <param name="value"></param>
-    /// <param name="error"></param>
+    /// <param name="context"></param>
     /// <returns></returns>
-    bool IsValid(object value, out IValidationError error);
+    bool TryValidate(object value, out IValidationContext context);
 }
 
 /// <summary>
 /// 
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
-public interface IValidationRule<in TValue>
+public interface IValidationRule<in TValue> : IValidationRule
 {
     /// <summary>
     /// 
@@ -38,7 +37,7 @@ public interface IValidationRule<in TValue>
     /// 
     /// </summary>
     /// <param name="value"></param>
-    /// <param name="error"></param>
+    /// <param name="context"></param>
     /// <returns></returns>
-    bool IsValid(TValue value, out IValidationError error);
+    bool TryValidate(TValue value, out IValidationContext context);
 }

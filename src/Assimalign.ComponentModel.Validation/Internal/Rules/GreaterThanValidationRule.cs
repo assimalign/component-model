@@ -34,7 +34,7 @@ internal sealed class GreaterThanValidationRule<T, TValue, TArgument> : IValidat
 
     public string Name => $"GreaterThanValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}, {typeof(TArgument).Name}>";
 
-    public IValidationError Error { get; set; }
+    public IValidationContext Error { get; set; }
 
     public ValidationRuleType RuleType { get; set; }
 

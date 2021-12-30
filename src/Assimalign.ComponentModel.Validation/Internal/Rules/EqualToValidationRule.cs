@@ -48,7 +48,7 @@ internal sealed class EqualToValidationRule<T, TValue, TArgument> : ValidationRu
 
     public override string Name => $"EqualToValidationRule<{paramType.Name}, {expressionBody ?? valueType.Name}, {argumentType.Name}>";
 
-    public IValidationError Error { get; set; }
+    public IValidationContext Error { get; set; }
 
 
     public override void Evaluate(IValidationContext context)

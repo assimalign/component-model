@@ -19,14 +19,27 @@ public interface IValidationContext
     Type InstanceType { get; }
 
     /// <summary>
-    /// A collection of successful validations.
+    /// A collection of invocation stats.
     /// </summary>
-    IEnumerable<IValidationRule> Successes { get; }
+    IEnumerable<ValidationInvocation> Invocations { get; }
 
     /// <summary>
     /// A collection of validation failures.
     /// </summary>
     IEnumerable<IValidationError> Errors { get; }
+
+    /// <summary>
+    /// Adds a generic validation failure to <see cref="IValidationContext.Errors"/>
+    /// </summary>
+    /// <param name="message"></param>
+    void AddFailure(string message);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="message"></param>
+    void AddFailure(string source, string message);
 
     /// <summary>
     /// Adds a validation failure to <see cref="IValidationContext.Errors"/>
@@ -35,21 +48,8 @@ public interface IValidationContext
     void AddFailure(IValidationError error);
 
     /// <summary>
-    /// Adds a generic validation failure to <see cref="IValidationContext.Errors"/>
-    /// </summary>
-    /// <param name="failureMessage"></param>
-    void AddFailure(string failureMessage);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="failureSource"></param>
-    /// <param name="failureMessage"></param>
-    void AddFailure(string failureSource, string failureMessage);
-
-    /// <summary>
     /// Adds a rule of a successful validation.
     /// </summary>
-    /// <param name="rule"></param>
-    void AddSuccess(IValidationRule rule);
+    /// <param name="invocation"></param>
+    void AddInvocation(ValidationInvocation invocation);
 }

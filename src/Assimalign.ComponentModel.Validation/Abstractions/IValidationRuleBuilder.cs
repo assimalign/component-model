@@ -16,11 +16,6 @@ public interface IValidationRuleBuilder<TValue>
     IValidationItem ValidationItem { get; }
 
     /// <summary>
-    /// 
-    /// </summary>
-    IValidationRuleStack ValidationRuleStack {get;}
-
-    /// <summary>
     /// Adds a custom validation rule that encapsulates custom logic.
     /// </summary>
     /// <param name="validation"></param>

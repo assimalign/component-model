@@ -4,13 +4,13 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation;
 
 /// <summary>
-/// Represents a validation rule for which other validation rules should be applied. 
+/// Represents a validation item for which other validation rules should be applied. 
 /// </summary>
 /// <remarks>
 /// The logical flow is best described as if (Condition is true/false) then { Run Validation Rules }
 /// </remarks>
 /// <typeparam name="T"></typeparam>
-public interface IValidationItemCondition<T> : IValidationRule
+public interface IValidationItemCondition<T> : IValidationItem
 {
     /// <summary>
     /// The Condition in which the child validation rule collection should be applied.
@@ -18,14 +18,9 @@ public interface IValidationItemCondition<T> : IValidationRule
     Expression<Func<T, bool>> Condition { get; }
 
     /// <summary>
-    /// The rule set to run if condition predicate is 'true'. <see cref="IValidationItemCondition{T}.When(Expression{Func{T, bool}}, Action{IValidationRuleDescriptor{T}})"/>
-    /// </summary>
-    IValidationRuleStack ConditionRuleSet { get; }
-
-    /// <summary>
     /// The rule set to run if condition predicate is 'false'. <see cref="IValidationItemCondition{T}.Otherwise(Action{IValidationRuleDescriptor{T}})"/>
     /// </summary>
-    IValidationRuleStack ConditionDefaultRuleSet { get; }
+    IValidationRuleStack ItemDefaultRuleStack { get; }
 
     /// <summary>
     /// 

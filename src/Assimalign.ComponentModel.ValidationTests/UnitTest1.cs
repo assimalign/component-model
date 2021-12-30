@@ -59,6 +59,7 @@ namespace Assimalign.ComponentModel.ValidationTests
             descriptor.RuleForEach(p => p.Addresses);
 
             descriptor.RuleFor(p => p.FirstName)
+                .EmailAddress()
                 .NotEqualTo("Chase");
                
             descriptor.RuleFor(p => p.Record)

@@ -17,7 +17,7 @@ public sealed class ValidationFailureException : ValidationException
 
     }
 
-    internal ValidationFailureException(IEnumerable<IValidationError> errors)
+    internal ValidationFailureException(IEnumerable<IValidationContext> errors)
     {
 
     }

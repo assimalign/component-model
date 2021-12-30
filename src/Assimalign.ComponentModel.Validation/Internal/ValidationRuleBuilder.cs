@@ -27,14 +27,14 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                 paramName: nameof(configure), 
                 message: "The 'configure' parameter cannot be null in: ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)");
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
           
 
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
 
 
@@ -43,7 +43,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
     public IValidationRuleBuilder<TValue> Custom(Action<TValue, IValidationContext> validation)
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             if (validation is null)
             {
@@ -51,28 +51,28 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                     paramName: nameof(validation),
                     message: "The 'validation' parameter cannot be null in: Custom(Action<TValue, IValidationContext> validation)")
                 {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).Custom({validation}) or RuleForEach({validationRule.ValidationExpression}).Custom({validation})"
+                    Source = $"RuleFor({validationItem.ItemExpression}).Custom({validation}) or RuleForEach({validationItem.ItemExpression}).Custom({validation})"
                 };
             }
 
-            validationRule.AddRule(new CustomValidationRule<T, TValue>(validationRule.ValidationExpression, validation));
+            validationItem.AddRule(new CustomValidationRule<TValue>(validation));
 
             return this;
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> Between<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : notnull, IComparable
     {
-        if (this.ValidationItem is IValidationItem<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return Between<TBound>(lowerBound, upperBound, configure =>
             {
-                var validationExpression = validationRule.ItemExpression.Body.ToString();
+                var validationExpression = validationItem.ItemExpression.Body.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageBetweenRule, validationExpression, lowerBound, upperBound);
@@ -81,14 +81,14 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure) 
         where TBound : notnull, IComparable
     {
-        if (this.ValidationItem is IValidationItem<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             if (configure is null)
             {
@@ -96,7 +96,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                     paramName: nameof(configure),
                     message: "The 'configure' parameter cannot be null in: Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
                 {
-                    Source = $"RuleFor({validationRule.ItemExpression}).Between<{typeof(TBound).Name}>({lowerBound}, {upperBound}, {configure})"
+                    Source = $"RuleFor({validationItem.ItemExpression}).Between<{typeof(TBound).Name}>({lowerBound}, {upperBound}, {configure})"
                 };
             }
 
@@ -104,28 +104,27 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new BetweenValidationRule<T, TValue, TBound>(validationRule.ItemExpression, lowerBound, upperBound)
+            validationItem.AddRule(new BetweenValidationRule<TValue, TBound>(lowerBound, upperBound)
             {
-                Error = error,
-                RuleType = this.ValidationRuleType
+                Error = error
             });
 
             return this;
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound)
         where TBound : notnull, IComparable
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return BetweenOrEqualTo<TBound>(lowerBound, upperBound, configure =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageBetweenOrEqualToRule, validationExpression, lowerBound, upperBound);
@@ -134,14 +133,14 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : notnull, IComparable
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             if (configure is null)
             {
@@ -149,7 +148,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                     paramName: nameof(configure),
                     message: "The 'configure' parameter cannot be null in: BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
                 {
-                    Source = $"RuleFor({validationRule.ValidationExpression}).BetweenOrEqualTo<{typeof(TBound).Name}>({lowerBound}, {upperBound}, {configure})"
+                    Source = $"RuleFor({validationItem.ItemExpression}).BetweenOrEqualTo<{typeof(TBound).Name}>({lowerBound}, {upperBound}, {configure})"
                 };
             }
 
@@ -157,28 +156,27 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new BetweenOrEqualToValidationRule<T, TValue, TBound>(validationRule.ValidationExpression, lowerBound, upperBound)
+            validationItem.AddRule(new BetweenOrEqualToValidationRule<TValue, TBound>( lowerBound, upperBound)
             {
-                Error = error,
-                RuleType = this.ValidationRuleType
+                Error = error
             });
 
             return this;
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> EqualTo<TArgument>(TArgument value)
         where TArgument : notnull, IEquatable<TArgument>
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return this.EqualTo<TArgument>(value, configure =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageEqualToRule, validationExpression, typeof(TArgument).IsValueType ? value : typeof(TArgument).Name);
@@ -187,7 +185,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
@@ -202,23 +200,22 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new EqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            validationItem.AddRule(new EqualToValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
-                Error = error,
-                RuleType = this.ValidationRuleType
+                Error = error
             });
 
             return this;
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
@@ -229,11 +226,11 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(value));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return GreaterThan<TArgument>(value, error =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 error.Code = Resources.DefaultValidationErrorCode;
                 error.Message = String.Format(Resources.DefaultValidationMessageGreaterThanRule, validationExpression, value);
@@ -257,13 +254,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new GreaterThanValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            validationRule.AddRule(new GreaterThanValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -273,7 +270,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
@@ -284,11 +281,11 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(value));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return GreaterThanOrEqualTo<TArgument>(value, error =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 error.Code = Resources.DefaultValidationErrorCode;
                 error.Message = String.Format(Resources.DefaultValidationMessageGreaterThanOrEqualToRule, validationExpression, value);
@@ -312,13 +309,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new GreaterThanOrEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            validationRule.AddRule(new GreaterThanOrEqualToValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -328,18 +325,18 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> LessThan<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return LessThan<TArgument>(value, error =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 error.Code = Resources.DefaultValidationErrorCode;
                 error.Message = String.Format(Resources.DefaultValidationMessageLessThanRule, validationExpression, value);
@@ -348,7 +345,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
@@ -359,13 +356,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new LessThanValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            validationRule.AddRule(new LessThanValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -375,18 +372,18 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> LessThanOrEqualTo<TArgument>(TArgument value) 
         where TArgument : notnull, IComparable
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return LessThan<TArgument>(value, error =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 error.Code = Resources.DefaultValidationErrorCode;
                 error.Message = String.Format(Resources.DefaultValidationMessageLessThanOrEqualToRule, validationExpression, value);
@@ -406,13 +403,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new LessThanOrEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            validationRule.AddRule(new LessThanOrEqualToValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -422,18 +419,18 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> NotEqualTo<TArgument>(TArgument value)
         where TArgument : notnull, IEquatable<TArgument>
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return this.NotEqualTo<TArgument>(value, configure =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageNotEqualToRule, validationExpression, typeof(TArgument).IsValueType ? value : nameof(value));
@@ -442,7 +439,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
@@ -453,13 +450,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new NotEqualToValidationRule<T, TValue, TArgument>(validationRule.ValidationExpression, value)
+            validationRule.AddRule(new NotEqualToValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -469,17 +466,17 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> NotNull()
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return this.NotNull(configure =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageNotNullRule, validationExpression);
@@ -498,13 +495,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new NotNullValidationRule<T, TValue>(validationRule.ValidationExpression)
+            validationRule.AddRule(new NotNullValidationRule<T, TValue>(validationItem.ItemExpression)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -514,17 +511,17 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
     public IValidationRuleBuilder<TValue> Null()
     {
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             return this.Null(configure =>
             {
-                var validationExpression = validationRule.ValidationExpression.ToString();
+                var validationExpression = validationItem.ItemExpression.ToString();
 
                 configure.Code = Resources.DefaultValidationErrorCode;
                 configure.Message = string.Format(Resources.DefaultValidationMessageNullRule, validationExpression);
@@ -533,7 +530,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 
@@ -543,13 +540,13 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        if (this.ValidationRule is IValidationRule<T, TValue> validationRule)
+        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
         {
             var error = new ValidationError();
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new NullValidationRule<T, TValue>(validationRule.ValidationExpression)
+            validationRule.AddRule(new NullValidationRule<T, TValue>(validationItem.ItemExpression)
             {
                 Error = error,
                 RuleType = this.ValidationRuleType
@@ -559,7 +556,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
         }
         else
         {
-            throw new ValidationUnsupportedRuleException(this.ValidationRule);
+            throw new ValidationItemUnsupportedException(this.ValidationItem);
         }
     }
 }

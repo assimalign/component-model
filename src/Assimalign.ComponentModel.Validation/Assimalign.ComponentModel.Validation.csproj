@@ -15,7 +15,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Abstraction\IValidationCollectionRule.cs" />
+	  <Compile Remove="Abstractions\IValidationCollectionRule.cs" />
 	  <Compile Remove="Internal\ValidationCollectionRule.cs" />
 	  <Compile Remove="Internal\ValidationCollectionRuleBuilder.cs" />
 	</ItemGroup>

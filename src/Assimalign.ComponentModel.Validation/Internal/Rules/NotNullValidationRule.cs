@@ -1,62 +1,34 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
+﻿namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-namespace Assimalign.ComponentModel.Validation.Internal.Rules;
-
-internal sealed class NotNullValidationRule<T, TValue> : IValidationRule
+internal sealed class NotNullValidationRule<T, TValue> : ValidationRuleBase<TValue>
 {
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
+    public NotNullValidationRule() { }
 
-    public NotNullValidationRule(Expression<Func<T, TValue>> expression)
+    public override string Name { get; set; }
+
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (expression is null)
+        context = null;
+
+        if (value is null)
         {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'NotNull()' rule is defined cannot be null.");
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
         }
-        if (expression.Body is MemberExpression member)
+        else if (value is not null && value is TValue tv)
         {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
+            context = new ValidationContext<TValue>(tv);
+            return true;
         }
-        this.expression = expression;
-    }
-
-    public string Name => $"NotNullValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
-
-    public IValidationError Error { get; set; }
-
-    public ValidationRuleType RuleType { get; set; }
-
-    public void Evaluate(IValidationContext context)
-    {
-        if (context.Instance is T instance)
+        else
         {
-            var value = this.GetValue(instance);
-
-            if (value is null)
-            {
-                context.AddFailure(this.Error);
-            }
-            else
-            {
-                context.AddSuccess(this);
-            }
+            return false;
         }
     }
 
-    private object GetValue(T instance)
+    public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        try
-        {
-            return expression.Compile().Invoke(instance);
-        }
-        catch
-        {
-            return null;
-        }
+        return TryValidate(value as object, out context);
     }
 }
-

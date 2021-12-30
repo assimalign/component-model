@@ -20,4 +20,3 @@ public interface IValidationError
     /// </summary>
     string Source { get; set; }
 }
-

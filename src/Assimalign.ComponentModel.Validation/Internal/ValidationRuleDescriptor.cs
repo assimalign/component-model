@@ -90,7 +90,7 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 
         var descriptor = new ValidationRuleDescriptor<T>()
         {
-            ValidationRules =  rule.ConditionRuleSet
+             ValidationItems =  rule.ConditionRuleSet
         };
         
         configure.Invoke(descriptor);

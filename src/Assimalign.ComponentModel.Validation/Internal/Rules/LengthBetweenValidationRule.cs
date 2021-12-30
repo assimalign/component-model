@@ -34,7 +34,7 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
 
     public string Name => $"LengthValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
 
-    public IValidationError Error { get; set; }
+    public IValidationContext Error { get; set; }
 
     public ValidationRuleType RuleType { get; set; }
 

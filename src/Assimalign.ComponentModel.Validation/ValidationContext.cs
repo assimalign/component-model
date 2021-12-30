@@ -14,7 +14,7 @@ public sealed class ValidationContext<T> : IValidationContext
 {
     private readonly Type type;
     private readonly ConcurrentStack<IValidationError> errors;
-    private readonly ConcurrentStack<IValidationRule> successes;
+    private readonly ConcurrentStack<ValidationInvocation> invocations;
 
     private ValidationContext() { }
 
@@ -25,14 +25,9 @@ public sealed class ValidationContext<T> : IValidationContext
     /// <exception cref="ArgumentNullException">An exception is thrown if the <paramref name="instance"/> is null.</exception>
     public ValidationContext(T instance)
     {
-        if (instance is null)
-        {
-            throw new ArgumentNullException(nameof(instance));
-        }
-
         this.type = typeof(T);
         this.errors = new ConcurrentStack<IValidationError>();
-        this.successes = new ConcurrentStack<IValidationRule>();
+        this.invocations = new ConcurrentStack<ValidationInvocation>();
 
         Instance = instance;
     }
@@ -57,7 +52,7 @@ public sealed class ValidationContext<T> : IValidationContext
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<IValidationRule> Successes => this.successes;
+    public IEnumerable<ValidationInvocation> Invocations => this.invocations;
 
     /// <summary>
     /// 
@@ -94,9 +89,9 @@ public sealed class ValidationContext<T> : IValidationContext
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="rule"></param>
-    public void AddSuccess(IValidationRule rule)
+    /// <param name="invocation"></param>
+    public void AddInvocation(ValidationInvocation invocation)
     {
-        this.successes.Push(rule);
+        this.invocations.Push(invocation);
     }
 }

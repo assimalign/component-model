@@ -17,17 +17,12 @@ internal sealed class ValidationItemCondition<T> : IValidationItemCondition<T>
 
     public ValidationItemCondition()
     {
-        this.ConditionDefaultRuleSet ??= new ValidationRuleStack();
+        this.ItemRuleStack ??= new ValidationRuleStack();
     }
 
     public ValidationMode ValidationMode { get; set; }
-
-    public string Name => nameof(ValidationItemCondition<T>);
-
-    public IValidationRuleStack ConditionRuleSet { get; set; }
-
-    public IValidationRuleStack ConditionDefaultRuleSet { get; set; }
-
+    public IValidationRuleStack ItemRuleStack { get; set; }
+    public IValidationRuleStack ItemDefaultRuleStack { get; set; }
     public Expression<Func<T, bool>> Condition { get; set; }
 
     public void Evaluate(IValidationContext context)
@@ -42,7 +37,7 @@ internal sealed class ValidationItemCondition<T> : IValidationItemCondition<T>
 
             if (this.Condition.Compile().Invoke(instance))
             {
-                Parallel.ForEach(this.ConditionRuleSet, rule =>
+                Parallel.ForEach(this.ItemRuleStack, rule =>
                 {
                     if (this.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                     {
@@ -52,9 +47,9 @@ internal sealed class ValidationItemCondition<T> : IValidationItemCondition<T>
                     rule.Evaluate(context);
                 });
             }
-            else if (this.ConditionDefaultRuleSet is not null && this.ConditionDefaultRuleSet.Any())
+            else if (this.ItemDefaultRuleStack is not null && this.ItemDefaultRuleStack.Any())
             {
-                Parallel.ForEach(this.ConditionDefaultRuleSet, rule =>
+                Parallel.ForEach(this.ItemDefaultRuleStack, rule =>
                 {
                     if (this.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                     {

@@ -35,20 +35,27 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
 
     public IValidationRuleStack ItemRuleStack { get; }
 
-    public IValidationItem AddRule(IValidationRule rule)
-    {
-        this.ItemRuleStack.Push(rule);
-        return this;
-    }
 
     public abstract void Evaluate(IValidationContext context);
 
-
-    public object GetValue(T instance)
+    public virtual object GetValue(T instance)
     {
         try
         {
-            return this.ItemExpression.Compile().Invoke(instance);
+            var value =  this.ItemExpression.Compile().Invoke(instance);
+
+            if (value is null || value is TValue)
+            {
+                return value;
+            }
+            else if (value is IConvertible convertable)
+            {
+                return convertable.ToType(typeof(TValue), default);
+            }
+            else
+            {
+                return value;
+            }
         }
         catch
         {
