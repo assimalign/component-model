@@ -13,10 +13,11 @@ public sealed class ValidationResult
 {
     private ValidationResult() { }
 
-    internal ValidationResult(IValidationContext context)
+    internal ValidationResult(IValidationContext context, double? elapsedTicks = null)
     {
         this.Errors = context.Errors;
         this.Invocations = context.Invocations;
+        this.ValidationElapsedTicks = elapsedTicks;
     }
 
     /// <summary>
@@ -34,31 +35,15 @@ public sealed class ValidationResult
     /// <summary>
     /// 
     /// </summary>
-    public long? ValidationElapsedTicks
-    {
-        get
-        {
-            long ticks = 0;
-
-            foreach(var invocation in Invocations)
-            {
-                if (invocation.ElapsedTicks is not null)
-                {
-                    ticks += invocation.ElapsedTicks ?? 0;
-                }
-            }
-
-            return ticks;
-        }
-    }
+    public double? ValidationElapsedTicks { get; }
     /// <summary>
     /// 
     /// </summary>
-    public long? ValidationElapsedMilliseconds => this.ValidationElapsedTicks is null ? null : this.ValidationElapsedTicks / TimeSpan.TicksPerMillisecond;
+    public double? ValidationElapsedMilliseconds => this.ValidationElapsedTicks is null ? null : this.ValidationElapsedTicks / (double)TimeSpan.TicksPerMillisecond;
     /// <summary>
     /// 
     /// </summary>
-    public long? ValidationElapsedSeconds => this.ValidationElapsedTicks is null ? null : this.ValidationElapsedTicks / TimeSpan.TicksPerSecond;
+    public double? ValidationElapsedSeconds => this.ValidationElapsedTicks is null ? null : this.ValidationElapsedTicks / (double)TimeSpan.TicksPerSecond;
     /// <summary>
     /// 
     /// </summary>

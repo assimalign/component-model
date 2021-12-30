@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Rules\**" />
+    <EmbeddedResource Remove="Rules\**" />
+    <None Remove="Rules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -20,21 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Assimalign.ComponentModel.Validation\Assimalign.ComponentModel.Validation.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Rules\EqualToTests\" />
-    <Folder Include="Rules\EmptyTests\" />
-    <Folder Include="Rules\EmailTests\" />
-    <Folder Include="Rules\GreaterThanTests\" />
-    <Folder Include="Rules\GreaterThanOrEqualToTests\" />
-    <Folder Include="Rules\LessThanTests\" />
-    <Folder Include="Rules\LessThanOrEqualToTests\" />
-    <Folder Include="Rules\NotEqualToTests.cs\" />
-    <Folder Include="Rules\NotNullTests\" />
-    <Folder Include="Rules\PhoneNumberTests\" />
-    <Folder Include="Rules\NullTests\" />
-    <Folder Include="Rules\NotEmptyTests\" />
   </ItemGroup>
 
 </Project>

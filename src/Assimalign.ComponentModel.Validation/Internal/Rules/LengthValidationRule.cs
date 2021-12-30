@@ -17,7 +17,7 @@ internal sealed class LengthValidationRule<TValue> : ValidationRuleBase<TValue>
         this.length = length;
     }
 
-    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override string Name { get; set; }
 
 
     public override bool TryValidate(object value, out IValidationContext context)
@@ -28,25 +28,6 @@ internal sealed class LengthValidationRule<TValue> : ValidationRuleBase<TValue>
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         throw new NotImplementedException();
-    }
-
-
-
-    public void Evaluate(IValidationContext context)
-    {
-        if (context is T instance)
-        {
-            var value = this.GetValue(instance);
-
-            if (!IsLength(value))
-            {
-                context.AddFailure(this.Error);
-            }
-            else
-            {
-                context.AddSuccess(this);
-            }
-        }
     }
 
 

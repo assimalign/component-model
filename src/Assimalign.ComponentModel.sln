@@ -39,7 +39,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mapping", "mapping", "{8796
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cloning", "cloning", "{6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Mapping.Configurable", "Assimalign.ComponentModel.Mapping.Configurable\Assimalign.ComponentModel.Mapping.Configurable.csproj", "{2CBF5391-A9EB-4DB7-A67B-B5824201950A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Mapping.Configurable", "Assimalign.ComponentModel.Mapping.Configurable\Assimalign.ComponentModel.Mapping.Configurable.csproj", "{2CBF5391-A9EB-4DB7-A67B-B5824201950A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.ValidationBenchmarks", "..\benchmarks\Assimalign.ComponentModel.ValidationBenchmarks\Assimalign.ComponentModel.ValidationBenchmarks.csproj", "{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +83,10 @@ Global
 		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +103,7 @@ Global
 		{87967BC9-852D-4E5B-8EDF-6D5381777A23} = {C314584B-F572-4824-91CE-611E1E28D8BE}
 		{6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF} = {C314584B-F572-4824-91CE-611E1E28D8BE}
 		{2CBF5391-A9EB-4DB7-A67B-B5824201950A} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
+		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E} = {E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB64B35-D4BC-43E2-B8F1-A3DDAA061175}

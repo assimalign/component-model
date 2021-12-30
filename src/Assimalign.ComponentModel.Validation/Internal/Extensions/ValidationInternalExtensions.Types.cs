@@ -764,6 +764,69 @@ internal static partial class ValidationInternalExtensions
 		return false;
 	}
 
+
+	/// <summary>
+	/// Certain types in the .NET such as strings aren't considered value types 
+	/// since they are mutable. Need to considered types such as these to be value types
+	/// as if will cut down on the type checking for the expression building.
+	/// </summary>
+	/// <param name="type"></param>
+	/// <param name="checkNullable"></param>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool IsSystemType(this Type type, bool checkNullable = true)
+	{
+		// Will use this array of types to check for nullable value and enum types
+		var valueTypes = new Type[]
+		{
+				typeof(short),
+				typeof(int),
+				typeof(long),
+				typeof(double),
+				typeof(decimal),
+				typeof(float),
+				typeof(ushort),
+				typeof(uint),
+				typeof(ulong),
+				typeof(char),
+				typeof(byte),
+				typeof(sbyte),
+				typeof(bool),
+				typeof(Guid),
+				typeof(DateTime),
+				typeof(TimeSpan),
+				typeof(nint),
+				typeof(nuint)
+		};
+
+		if (type == typeof(string))
+        {
+			return true;
+        }
+		// Let's ensure that the type is not wrapped in the Nullable<> type class
+		if (checkNullable)
+		{
+			foreach (var valueType in valueTypes)
+			{
+				if (type == typeof(Nullable<>).MakeGenericType(valueType))
+				{
+					return true;
+				}
+			}
+		}
+		else
+		{
+			foreach (var valueType in valueTypes)
+			{
+				if (type == valueType)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	/// <summary>
 	/// Certain types in the .NET such as strings aren't considered value types 
 	/// since they are mutable. Need to considered types such as these to be value types

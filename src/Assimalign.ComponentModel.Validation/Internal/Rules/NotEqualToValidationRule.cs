@@ -7,80 +7,75 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 using Assimalign.ComponentModel.Validation.Internal.Extensions;
 
-internal sealed class NotEqualToValidationRule<T, TValue, TArgument> : IValidationRule
+internal sealed class NotEqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
+    where TArgument : IEquatable<TArgument>
 {
-    private readonly Type paramType;
-    private readonly Type valueType;
-    private readonly Type argumentType;
     private readonly TArgument argument;
-    private readonly Func<object, bool> isEqualTo;
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
 
-    public NotEqualToValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
+    public NotEqualToValidationRule(TArgument argument)
     {
-        if (expression is null)
-        {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'NotEqual()' rule is defined cannot be null.");
-        }
-        if (argument is null)
-        {
-            throw new ArgumentNullException(nameof(TArgument));
-        }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
-        this.paramType = typeof(T);
-        this.valueType = typeof(TValue);
-        this.argumentType = typeof(TArgument);
         this.argument = argument;
-        this.expression = expression;
-        this.isEqualTo = x => x.Equals(argument);
     }
 
-    public string Name => $"NotEqualValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
+    public override string Name { get; set; }
 
-    public IValidationContext Error { get; set; }
-
-    public ValidationRuleType RuleType { get; set; }
-
-    public void Evaluate(IValidationContext context)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (context.Instance is T instance)
-        {
-            var value = this.GetValue(instance);
+        context = null;
 
-            if (this.isEqualTo(value))
+        if (value is null)
+        {
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public override bool TryValidate(TValue value, out IValidationContext context)
+    {
+        context = null;
+
+        try
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (this.argument.Equals(value))
             {
                 context.AddFailure(this.Error);
             }
-            else
-            {
-                context.AddSuccess(this);
-            }
-        }
-    }
 
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            return this.expression.Compile().Invoke(instance);
+            return true;
         }
         catch (InvalidCastException exception)
         {
-            throw new ValidationInvalidCastException(
-                message: $"Unable to equate type '{valueType.Name}' against type '{argumentType.Name}'",
-                inner: exception,
-                source: $"RuleFor(p => p.{this.expressionBody}).NotEqualTo({this.argument})");
+            if (value is IConvertible convertible)
+            {
+                var convertedValue = (TArgument)convertible.ToType(typeof(TArgument), default);
+
+                if (this.argument.Equals(convertedValue))
+                {
+                    context = new ValidationContext<TValue>(value);
+                    context.AddFailure(this.Error);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        catch (Exception exception) when (exception is not ValidationInvalidCastException)
+        catch
         {
-            return null;
+            return false;
         }
     }
 }

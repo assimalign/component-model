@@ -21,18 +21,66 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
         this.argument = argument;      
     }
 
-    public override string Name => $"EqualToValidationRule<>";
-
-    public override string Name { set => throw new NotImplementedException(); }
+    public override string Name { get; set; }
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        if (value is null)
+        {
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        try
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (!this.argument.Equals(value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch (InvalidCastException exception)
+        {
+            if (value is IConvertible convertible)
+            {
+                var convertedValue = (TArgument)convertible.ToType(typeof(TArgument), default);
+
+                if (!this.argument.Equals(convertedValue))
+                {
+                    context = new ValidationContext<TValue>(value);
+                    context.AddFailure(this.Error);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
 

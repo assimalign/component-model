@@ -40,28 +40,15 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
 
     public abstract void Evaluate(IValidationContext context);
 
-    public virtual object GetValue(T instance)
+    public virtual TValue GetValue(T instance)
     {
         try
         {
-            var value =  this.ItemExpression.Compile().Invoke(instance);
-
-            if (value is null || value is TValue)
-            {
-                return value;
-            }
-            else if (value is IConvertible convertable)
-            {
-                return convertable.ToType(typeof(TValue), default);
-            }
-            else
-            {
-                return value;
-            }
+            return this.ItemExpression.Compile().Invoke(instance);
         }
         catch
         {
-            return null;
+            return default(TValue);
         }
     }
 

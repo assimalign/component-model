@@ -15,31 +15,15 @@ namespace Assimalign.ComponentModel.ValidationTests
         [Fact]
         public void Test1()
         {
-            var user = new User() { FirstName = "Chase", Ages = new List<long?>() { 11, null }, Record = new TestRecord() { FirstName = "Chase" } };
+            var user = new User() { FirstName = "Chases", Ages = new List<long?>() { 11, null }, Age = 12, Record = new TestRecord() { FirstName = "Chase" } };
 
 
             //Assert.That()
             var validator = Validator.Create(configure =>
             {
                 configure.AddProfile(new UserValidationProfile());
-                configure.AddProfile(new UserValidationProfile());
             });
 
-            var validatorFactory = ValidatorFactory.Configure(configure =>
-            {
-                configure.AddValidator("scenario 1", configure =>
-                {
-                    configure.AddProfile(new UserValidationProfile());
-                });
-
-                configure.AddValidator("scenario 2", configure =>
-                {
-                    configure.AddProfile(new UserValidationProfile());
-                });
-            });
-
-
-            var validator1 = validatorFactory.Create("scenario 2");
 
             var validation = validator.Validate(user);
         }
@@ -55,23 +39,39 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public override void Configure(IValidationRuleDescriptor<User> descriptor)
         {
-            Half half = (Half)23.0;
-            descriptor.RuleForEach(p => p.Addresses);
+            //Half half = (Half)23.0;
+            //descriptor.RuleForEach(p => p.Addresses);
 
-            descriptor.RuleFor(p => p.FirstName)
-                .EmailAddress()
-                .NotEqualTo("Chase");
+            //descriptor.RuleFor(p => p.FirstName)
+            //    .EmailAddress()
+            //    .NotEqualTo("Chase");
                
-            descriptor.RuleFor(p => p.Record)
-                .Null()
+            //descriptor.RuleFor(p => p.Record)
+            //    .Null()
+            //    .EqualTo(new TestRecord() { FirstName = "Chase" });
+
+            //descriptor.RuleFor(p => p.FirstName).NotEmpty()
+            //    .MinLength(2)
+            //    .Length(0, 9);
+
+            //descriptor.RuleForEach(p => p.Ages)
+            //    .EqualTo(half);
+
+
+            descriptor.RuleFor(p=>p.Record)
                 .EqualTo(new TestRecord() { FirstName = "Chase" });
 
-            descriptor.RuleFor(p => p.FirstName).NotEmpty()
-                .MinLength(2)
-                .Length(0, 9);
-
-            descriptor.RuleForEach(p => p.Ages)
-                .EqualTo(half);
+            descriptor
+                .When(p => p.Age > 10, configure =>
+                  {
+                      configure.RuleFor(p => p.FirstName)
+                          .EqualTo("Chase");
+                  })
+                .When(p => p.Age < 10, configure =>
+                 {
+                     configure.RuleFor(p => p.FirstName)
+                           .EqualTo("NotChase");
+                 });
 
             
            // descriptor.RuleForEach(p => p.Addresses);

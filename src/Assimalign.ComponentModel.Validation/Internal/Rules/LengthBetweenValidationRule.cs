@@ -18,24 +18,8 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
         this.lowerBound = lowerBound;
     }
 
-    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override string Name { get; set; }
 
-    public void Evaluate(IValidationContext context)
-    {
-        if (context.Instance is T instance)
-        {
-            var value = this.GetValue(instance);
-
-            if (!IsBetweenLength(value))
-            {
-                context.AddFailure(this.Error);
-            }
-            else
-            {
-                context.AddSuccess(this);
-            }
-        }
-    }
 
     public override bool TryValidate(object value, out IValidationContext context)
     {

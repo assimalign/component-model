@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,42 +26,30 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
 
             var results = Parallel.ForEach(this.ItemRuleStack, parallelOptions, (rule, state, index) =>
             {
-                var start = DateTime.Now.Ticks;
-                var elapsed = (long)0;
-                var timer = new System.Timers.Timer();
-
-                timer.AutoReset = true;
-                timer.Enabled = true;
-
-                timer.Elapsed += (s,e) =>
-                {
-                    elapsed = e.SignalTime.Ticks - start;
-                };
+                var stopwatch = new Stopwatch();
 
                 if (this.ItemValidationMode == ValidationMode.Stop && context.Errors.Any())
                 {
                     tokenSource.Cancel();
                 }
 
-                timer.Start();
+                stopwatch.Start();
 
-                if (rule.TryValidate(instance, out var ruleContext))
+                if (rule.TryValidate(value, out var ruleContext))
                 {
                     foreach(var error in ruleContext.Errors)
                     {
                         context.AddFailure(error);
                     }
 
-                    timer.Stop();
-                    context.AddInvocation(new ValidationInvocation(rule.Name, true, elapsed));
+                    stopwatch.Stop();
+                    context.AddInvocation(new ValidationInvocation(rule.Name, true, stopwatch.ElapsedTicks));
                 }
                 else
                 {
-                    timer.Stop();
-                    context.AddInvocation(new ValidationInvocation(rule.Name, false));
+                    stopwatch.Stop();
+                    context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
                 }
-
-                timer.Dispose();
             });
         }
     }

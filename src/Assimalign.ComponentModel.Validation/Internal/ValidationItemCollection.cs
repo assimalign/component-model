@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
@@ -30,81 +31,41 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
 
             var results = Parallel.ForEach(this.ItemRuleStack, parallelOptions, (rule, state, index) =>
             {
-                var start = DateTime.Now.Ticks;
-                var elapsed = (long)0;
-                var timer = new System.Timers.Timer()
-                {
-                    AutoReset = true,
-                    Enabled = true,
-                };
-
-                timer.Elapsed += (s, e) =>
-                {
-                    elapsed = e.SignalTime.Ticks - start;
-                };
+                var stopwatch = new Stopwatch();
 
                 if (this.ItemValidationMode == ValidationMode.Stop && context.Errors.Any())
                 {
                     tokenSource.Cancel();
                 }
 
-                timer.Start();
+                stopwatch.Start();
                 if (value is not null && value is IEnumerable<TValue> enumerable)
                 {
                     foreach (var enumValue in enumerable)
                     {
-                        if (rule.TryValidate(instance, out var ruleContext))
+                        if (rule.TryValidate(enumValue, out var ruleContext))
                         {
                             foreach (var error in ruleContext.Errors)
                             {
                                 context.AddFailure(error);
                             }
 
-                            timer.Stop();
-                            context.AddInvocation(new ValidationInvocation(rule.Name, true));
+                            stopwatch.Stop();
+                            context.AddInvocation(new ValidationInvocation(rule.Name, true, stopwatch.ElapsedTicks));
                         }
                         else
                         {
-                            timer.Stop();
-                            context.AddInvocation(new ValidationInvocation(rule.Name, false));
+                            stopwatch.Stop();
+                            context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
                         }
                     }
                 }
                 else
                 {
-                    context.AddInvocation(new ValidationInvocation(rule.Name, false));
+                    stopwatch.Stop();
+                    context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
                 }
-
-                timer.Dispose();
             });
-        }
-    }
-
-    public override object GetValue(T instance)
-    {
-        try
-        {
-            var value = this.ItemExpression.Compile().Invoke(instance);
-
-            if (value is null || value is IEnumerable)
-            {
-                return value;
-            }
-            else
-            {
-                throw new Exception("");
-            }
-        }
-        //catch (InvalidCastException exception)
-        //{
-        //    throw new ValidationInvalidCastException(
-        //        message: $"Unable to equate type '{this.ValueType.Name}' against type '{this.ArgumentType.Name}'. '{this.ExpressionBody}' must be able to convert to {this.ArgumentType}",
-        //        inner: exception,
-        //        source: this.ValidationRuleSource);
-        //}
-        catch (Exception exception) when (exception is not ValidationInvalidCastException)
-        {
-            return null;
         }
     }
 }

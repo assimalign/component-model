@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Linq;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
@@ -63,6 +64,9 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate(IValidationContext context)
     {
+        var stopwatch = new Stopwatch();
+
+        stopwatch.Start();
         foreach (var profile in this.options.Profiles)
         {
             if (profile.ValidationType == context.InstanceType)
@@ -96,7 +100,7 @@ public sealed class Validator : IValidator
             throw new ValidationFailureException(context);
         }
 
-        return ValidationResult.Create(context);
+        return new ValidationResult(context, stopwatch.ElapsedTicks);
     }
 
     /// <summary>
@@ -122,6 +126,10 @@ public sealed class Validator : IValidator
     {
         return Task.Run<ValidationResult>(() =>
         {
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
             foreach (var profile in this.options.Profiles)
             {
                 if (profile.ValidationType == context.InstanceType)
@@ -152,7 +160,9 @@ public sealed class Validator : IValidator
                 throw new ValidationFailureException(context);
             }
 
-            return ValidationResult.Create(context);
+            stopwatch.Stop();
+
+            return new ValidationResult(context, stopwatch.ElapsedTicks);
         });
     }
     

@@ -34,10 +34,10 @@ public sealed class ValidationInvocation
     /// <summary>
     /// 
     /// </summary>
-    public long? ElapsedMiliseconds => this.ElapsedTicks is null ? null : this.ElapsedTicks / TimeSpan.TicksPerMillisecond;
+    public double? ElapsedMiliseconds => this.ElapsedTicks is null ? null : (double)this.ElapsedTicks / (double)TimeSpan.TicksPerMillisecond;
     /// <summary>
     /// 
     /// </summary>
-    public long? ElapsedSeconds => this.ElapsedTicks is null ? null : this.ElapsedTicks / TimeSpan.TicksPerSecond;
+    public double? ElapsedSeconds => this.ElapsedTicks is null ? null : (double)this.ElapsedTicks / (double)TimeSpan.TicksPerSecond;
 
 }

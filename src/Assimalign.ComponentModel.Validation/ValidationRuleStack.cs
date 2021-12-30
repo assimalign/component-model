@@ -320,14 +320,6 @@ public sealed class ValidationRuleStack : IValidationRuleStack
 		return Array.Empty<T>();
 	}
 
-    public void Evaluate(IValidationContext context)
-    {
-		foreach (var rule in this)
-        {
-			rule.Evaluate(context);
-        }
-    }
-
     public IEnumerator<IValidationRule> GetEnumerator()
     {
 		return new Enumerator(this);

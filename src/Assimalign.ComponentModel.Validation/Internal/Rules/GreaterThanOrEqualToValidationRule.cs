@@ -17,16 +17,45 @@ internal sealed class GreaterThanOrEqualToValidationRule<TValue, TArgument> : Va
         this.isGreaterThanOrEqualTo = (arg, val) => arg.CompareTo(val) <= 0; // Is the argument less than the value
     }
 
-    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override string Name { get; set; }
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        if (value is null)
+        {
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        try
+        {
+            if (!isGreaterThanOrEqualTo(this.argument, value))
+            {
+                context = new ValidationContext<TValue>(value);
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
-

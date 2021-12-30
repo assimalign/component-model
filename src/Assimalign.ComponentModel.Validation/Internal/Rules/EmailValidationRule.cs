@@ -12,33 +12,48 @@ internal sealed class EmailValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override string Name { get; set; }
 
-    public override bool TryValidate(object value, out IValidationContext error)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (value is string)
+        context = null;
+
+        if (value is null)
         {
-            return TryValidate(value ?? default(TValue), out error);
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
         }
         else
         {
-            error = this.Error;
             return false;
         }
     }
 
-    public override bool IsValid(TValue value, out IValidationContext error)
+    public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        error = null;
+        context = null;
 
-        var stringValue = value as string;
-
-        if (!Regex.IsMatch(stringValue, pattern))
+        try
         {
-            error = this.Error;
-            return false;
+            var stringValue = value as string;
+
+            if (!Regex.IsMatch(stringValue, pattern))
+            {
+                context = new ValidationContext<TValue>(value);
+                context.AddFailure(this.Error);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
-        else
+        catch
         {
-            return true;
+            return false;
         }
     }
 }

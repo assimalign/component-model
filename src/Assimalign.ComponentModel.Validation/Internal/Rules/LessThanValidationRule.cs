@@ -5,85 +5,57 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class LessThanValidationRule<T, TValue, TArgument> : IValidationRule
+internal sealed class LessThanValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
     where TArgument : notnull, IComparable
 {
     private readonly TArgument argument;
     private readonly Func<TArgument, object, bool> isLessThan;
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
 
-    public LessThanValidationRule(Expression<Func<T, TValue>> expression, TArgument argument)
-    {
-        if (expression is null)
-        {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'LessThan()' rule is defined cannot be null.");
-        }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
-
+    public LessThanValidationRule(TArgument argument)
+    { 
         this.argument = argument;
-        this.expression = expression;
         this.isLessThan = (arg, val) => arg.CompareTo(val) >= 0;
     }
 
-    public string Name => $"LessThanValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}, {typeof(TArgument).Name}>";
+    public override string Name { get; set; }
 
-    public IValidationContext Error { get; set; }
-
-    public ValidationRuleType RuleType { get; set; }
-
-    public void Evaluate(IValidationContext context)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (context.Instance is T instance)
-        {
-            var value = this.GetValue(instance);
+        context = null;
 
-            if (value is null)
-            {
-                context.AddFailure(this.Error);
-            }
-            else if (value is IEnumerable enumerable)
-            {
-                foreach (var item in enumerable)
-                {
-                    if (item is null || !isLessThan(this.argument, item))
-                    {
-                        context.AddFailure(this.Error);
-                        break;
-                    }
-                }
-            }
-            else if (!isLessThan(this.argument, value))
-            {
-                context.AddFailure(this.Error);
-            }
-            else
-            {
-                context.AddSuccess(this);
-            }
+        if (value is null)
+        {
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
+        }
+        else
+        {
+            return false;
         }
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="instance"></param>
-    /// <returns></returns>
-    private TValue GetValue(T instance)
+    public override bool TryValidate(TValue value, out IValidationContext context)
     {
+        context = null;
+
         try
         {
-            return expression.Compile().Invoke(instance);
+            if (!isLessThan(this.argument, value))
+            {
+                context = new ValidationContext<TValue>(value);
+                context.AddFailure(this.Error);
+            }
+
+            return true;
         }
-        catch (Exception exception)
+        catch
         {
-            return default(TValue);
+            return false;
         }
     }
 }

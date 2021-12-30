@@ -28,7 +28,8 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
 
         var descriptor = new ValidationRuleDescriptor<T>()
         {
-            ValidationCondition = this.Condition.Compile(),
+            ValidationItems = new List<IValidationItem>(),
+            ValidationCondition = condition.Compile(),
             ValidationMode = this.ValidationMode
         };
 

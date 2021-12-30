@@ -12,12 +12,12 @@ namespace Assimalign.ComponentModel.Validation;
 public sealed class ValidationFailureException : ValidationException
 {
 
-    internal ValidationFailureException(IValidationContext context)
+    internal ValidationFailureException(IValidationContext context) : base("")
     {
 
     }
 
-    internal ValidationFailureException(IEnumerable<IValidationContext> errors)
+    internal ValidationFailureException(IEnumerable<IValidationError> errors) : base("")
     {
 
     }

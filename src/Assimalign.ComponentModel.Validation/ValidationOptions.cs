@@ -54,6 +54,8 @@ public sealed class ValidationOptions
 
         var index = HashCode.Combine(profile.ValidationType);
 
+        profile.Configure();
+
         if (this.profiles.ContainsKey(index))
         {
             throw new InvalidOperationException($"A Validation Profile for type: {profile.GetType().Name} has already been registered. " +
