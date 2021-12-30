@@ -36,7 +36,7 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     public Type ValidationType => this.validationType;
 
     /// <summary>
-    /// 
+    /// A flag indicating whether to cascade through all validation rules after first failure.
     /// </summary>
     public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
 
@@ -47,7 +47,7 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     {
         this.Configure(new ValidationRuleDescriptor<T>()
         {
-            ValidationRules = this.ValidationRules,
+            ValidationItems = this.ValidationItems as IList<IValidationItem>,
             ValidationMode = this.ValidationMode
         });
     }
@@ -65,33 +65,32 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
 /// </summary>
 public abstract class ValidationProfile : IValidationProfile
 {
-    private readonly Type type;
-    private readonly IValidationRuleStack rules;
+    private readonly Type validationType;
+    private readonly IList<IValidationItem> validationItems;
 
     /// <summary>
     /// 
     /// </summary>
     public ValidationProfile(Type type)
     {
-        this.type = type;
-        this.rules = new ValidationRuleStack();
+        this.validationType = type;
+        this.validationItems = new List<IValidationItem>();
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public Type ValidationType => this.type;
+    public Type ValidationType => this.validationType;
 
     /// <summary>
-    /// 
-    /// </summary>
-    public IValidationRuleStack ValidationRules => this.rules;
-
-    /// <summary>
-    /// 
+    /// A flag indicating whether to cascade through all validation rules after first failure.
     /// </summary>
     public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public IEnumerable<IValidationItem> ValidationItems => this.validationItems;
 
     /// <summary>
     /// 

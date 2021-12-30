@@ -6,50 +6,43 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal class NotEmptyValidationRule<T, TValue> : IValidationRule 
+internal class NotEmptyValidationRule<TValue> : ValidationRuleBase<TValue> 
     where TValue : IEnumerable
 {
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
+    public override string Name { get; set; }
 
-    public NotEmptyValidationRule(Expression<Func<T, TValue>> expression)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (expression is null)
+        context = null;
+
+        if (value is null)
         {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'NotEmpty()' rule is defined cannot be null.");
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
         }
-        if (expression.Body is MemberExpression member)
+        else if (value is TValue tv)
         {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
+            return TryValidate(tv, out context);
         }
-        this.expression = expression;
-    }
-
-    public string Name => $"NotEmptyValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
-
-    public IValidationContext Error { get; set; }
-
-    public ValidationRuleType RuleType { get; set; }
-
-    public void Evaluate(IValidationContext context)
-    {
-        if (context.Instance is T instance)
+        else
         {
-            var value = this.GetValue(instance);
-
-            if (IsEmpty(value))
-            {
-                context.AddFailure(this.Error);
-            }
-            else
-            {
-                context.AddSuccess(this);
-            }
+            return false;
         }
     }
 
+    public override bool TryValidate(TValue value, out IValidationContext context)
+    {
+        context = new ValidationContext<TValue>(value);
+
+        if (IsEmpty(value))
+        {
+            context = new ValidationContext<TValue>(value);
+            context.AddFailure(this.Error);
+        }
+
+        return true;
+    }
 
     private bool IsEmpty(object member)
     {
@@ -62,17 +55,5 @@ internal class NotEmptyValidationRule<T, TValue> : IValidationRule
             IEnumerable enumerable  when !enumerable.Cast<object>().Any() => true,
             _ => false
         };
-    }
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            return expression.Compile().Invoke(instance);
-        }
-        catch
-        {
-            return null;
-        }
     }
 }

@@ -32,5 +32,5 @@ public interface IValidationRuleDescriptor<T>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    IValidationItemCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
+    IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
 }

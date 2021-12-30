@@ -143,7 +143,7 @@ public interface IValidationRuleBuilder<TValue>
     /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     IValidationRuleBuilder<TValue> EqualTo<TArgument>(TArgument value, Action<IValidationError> configure)
-        where TArgument : notnull, IEqualityComparer, IEquatable<TArgument>;
+        where TArgument : notnull, IEquatable<TArgument>;
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must not be equal to <paramref name="value"/>.

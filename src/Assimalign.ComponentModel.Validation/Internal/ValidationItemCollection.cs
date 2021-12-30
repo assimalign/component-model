@@ -15,6 +15,11 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
     {
         if (context.Instance is T instance)
         {
+            if (this.ValidationCondition is not null && !this.ValidationCondition.Invoke(instance))
+            {
+                return;
+            }
+
             var value = this.GetValue(instance);
             var tokenSource = new CancellationTokenSource();
             var parallelOptions = new ParallelOptions()

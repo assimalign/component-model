@@ -31,6 +31,8 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
         }
     }
 
+    public Func<T,bool> ValidationCondition { get; set; }
+
     public ValidationMode ItemValidationMode { get; set; }
 
     public IValidationRuleStack ItemRuleStack { get; }
@@ -61,6 +63,12 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
         {
             return null;
         }
+    }
+
+
+    public override string ToString()
+    {
+        return this.ItemExpression.ToString();
     }
 }
 

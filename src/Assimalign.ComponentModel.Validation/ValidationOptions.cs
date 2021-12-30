@@ -15,7 +15,9 @@ public sealed class ValidationOptions
     private readonly SortedList<int, IValidationRule> rules;
     private readonly IDictionary<int, IValidationProfile> profiles;
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     public ValidationOptions()
     {
         this.rules = new SortedList<int, IValidationRule>();
@@ -27,6 +29,11 @@ public sealed class ValidationOptions
     /// Will throw a <see cref="ValidationFailureException"/> rather than return <see cref="ValidationResult"/>.
     /// </summary>
     public bool ThrowExceptionOnFailure { get; set; }
+
+    /// <summary>
+    /// A 
+    /// </summary>
+    public int ValidationFailureLimit { get; set; }
 
     /// <summary>
     /// The collection of profiles.

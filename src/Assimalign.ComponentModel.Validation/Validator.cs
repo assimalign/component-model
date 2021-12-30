@@ -59,18 +59,6 @@ public sealed class Validator : IValidator
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="instance"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken = default)
-    {
-        return ValidateAsync(new ValidationContext<T>(instance) as IValidationContext, cancellationToken);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
     public ValidationResult Validate(IValidationContext context)
@@ -85,14 +73,14 @@ public sealed class Validator : IValidator
                     CancellationToken = tokenSource.Token
                 };
 
-                var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
+                var results = Parallel.ForEach(profile.ValidationItems, parallelOptions, item =>
                 {
                     if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                     {
                         tokenSource.Cancel();
                     }
 
-                    rule.Evaluate(context);
+                    item.Evaluate(context);
                 });
 
                 if (!results.IsCompleted)
@@ -109,6 +97,18 @@ public sealed class Validator : IValidator
         }
 
         return ValidationResult.Create(context);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="instance"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken = default)
+    {
+        return ValidateAsync(new ValidationContext<T>(instance) as IValidationContext, cancellationToken);
     }
 
     /// <summary>
@@ -135,14 +135,14 @@ public sealed class Validator : IValidator
                         CancellationToken = tokenSource.Token
                     };
 
-                    var results = Parallel.ForEach(profile.ValidationRules, parallelOptions, rule =>
+                    var results = Parallel.ForEach(profile.ValidationItems, parallelOptions, item =>
                     {
                         if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                         {
                             tokenSource.Cancel();
                         }
 
-                        rule.Evaluate(context);
+                        item.Evaluate(context);
                     });
                 }
             }

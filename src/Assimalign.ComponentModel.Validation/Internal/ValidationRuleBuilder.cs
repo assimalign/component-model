@@ -55,7 +55,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                 };
             }
 
-            validationItem.AddRule(new CustomValidationRule<TValue>(validation));
+            validationItem.ItemRuleStack.Push(new CustomValidationRule<TValue>(validation));
 
             return this;
         }
@@ -104,7 +104,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationItem.AddRule(new BetweenValidationRule<TValue, TBound>(lowerBound, upperBound)
+            validationItem.ItemRuleStack.Push(new BetweenValidationRule<TValue, TBound>(lowerBound, upperBound)
             {
                 Error = error
             });
@@ -156,7 +156,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationItem.AddRule(new BetweenOrEqualToValidationRule<TValue, TBound>( lowerBound, upperBound)
+            validationItem.ItemRuleStack.Push(new BetweenOrEqualToValidationRule<TValue, TBound>( lowerBound, upperBound)
             {
                 Error = error
             });
@@ -206,7 +206,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationItem.AddRule(new EqualToValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
+            validationItem.ItemRuleStack.Push(new EqualToValidationRule<TValue, TArgument>(value)
             {
                 Error = error
             });
@@ -260,10 +260,9 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
             configure.Invoke(error);
 
-            validationRule.AddRule(new GreaterThanValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
+            validationItem.ItemRuleStack.Push(new GreaterThanValidationRule<T, TValue, TArgument>(validationItem.ItemExpression, value)
             {
                 Error = error,
-                RuleType = this.ValidationRuleType
             });
 
             return this;

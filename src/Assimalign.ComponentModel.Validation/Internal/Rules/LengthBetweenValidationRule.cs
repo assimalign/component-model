@@ -5,38 +5,20 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
+internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<TValue>
     where TValue : IEnumerable
 {
     private readonly int lowerBound;
     private readonly int upperBound;
-    private readonly Expression<Func<T, TValue>> expression;
-    private readonly string expressionBody;
 
 
-    public LengthBetweenValidationRule(Expression<Func<T, TValue>> expression, int lowerBound, int upperBound)
+    public LengthBetweenValidationRule( int lowerBound, int upperBound)
     {
-        if (expression is null)
-        {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'Length()' rule is defined cannot be null.");
-        }
-        if (expression.Body is MemberExpression member)
-        {
-            this.expressionBody = string.Join('.', member.ToString().Split('.').Skip(1));
-        }
-
         this.upperBound = upperBound;
         this.lowerBound = lowerBound;
-        this.expression = expression;
     }
 
-    public string Name => $"LengthValidationRule<{typeof(T).Name}, {expressionBody ?? typeof(TValue).Name}>";
-
-    public IValidationContext Error { get; set; }
-
-    public ValidationRuleType RuleType { get; set; }
+    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public void Evaluate(IValidationContext context)
     {
@@ -55,6 +37,16 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
         }
     }
 
+    public override bool TryValidate(object value, out IValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool TryValidate(TValue value, out IValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
+
     private bool IsBetweenLength(object member)
     {
         return member switch
@@ -66,17 +58,5 @@ internal sealed class LengthBetweenValidationRule<T, TValue> : IValidationRule
             IEnumerable enumerable  when enumerable.Cast<object>().Count() >= this.lowerBound  && enumerable.Cast<object>().Count() <= this.upperBound => true,
             _ => false
         };
-    }
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            return expression.Compile().Invoke(instance);
-        }
-        catch
-        {
-            return null;
-        }
     }
 }

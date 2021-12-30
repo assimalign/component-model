@@ -6,64 +6,40 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 
-internal sealed class EmptyValidationRule<T, TValue> : ValidationRuleBase<T, TValue>
+internal sealed class EmptyValidationRule<T, TValue> : ValidationRuleBase<TValue>
     where TValue : IEnumerable
 {
+    public override string Name { get; set; }
 
-    public EmptyValidationRule(Expression<Func<T, TValue>> expression) : base (expression)
+    public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (expression is null)
+        context = null;
+
+        if (value is TValue tv)
         {
-            throw new ArgumentNullException(
-                paramName: nameof(expression),
-                message: $"The following expression where the 'Empty()' rule is defined cannot be null.");
+            return TryValidate(tv, out context);
+        }
+        if (value is null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    public override string Name => $"EmptyValidationRule<{this.ParamType.Name}, {this.ExpressionBody ?? this.ValueType.Name}>";
-
-    public override void Evaluate(IValidationContext context)
+    public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        if (context.Instance is T instance)
-        {
-            var value = this.GetValue(instance);
+        context = new ValidationContext<TValue>(value);
 
-            if (value is null)
-            {
-                context.AddSuccess(this);
-                return;
-            }
-            if (this.RuleType == ValidationRuleType.RecursiveRule)
-            {
-                if (value is IEnumerable enumerable)
-                {
-                    foreach(var enumValue in enumerable)
-                    {
-                        if (enumValue is not null && enumValue is IEnumerable enumChildValue)
-                        {
-                            if (!IsEmpty(enumChildValue))
-                            {
-                                context.AddFailure(this.Error);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception("");
-                        }
-                    }
-                }
-            }
-            else if (this.RuleType == ValidationRuleType.SingularRule && !IsEmpty(value))
-            {
-                context.AddFailure(this.Error);
-            }
-               
-            else
-            {
-                context.AddSuccess(this);
-            }
+        if (!IsEmpty(value))
+        {
+            context = new ValidationContext<TValue>(value);
+            context.AddFailure(this.Error);
         }
+
+        return true;
     }
 
     private bool IsEmpty(object member)
@@ -71,24 +47,11 @@ internal sealed class EmptyValidationRule<T, TValue> : ValidationRuleBase<T, TVa
         return member switch
         {
             null => true,
-            string      stringValue when string.IsNullOrWhiteSpace(stringValue) => true, // May not need this since string is IEnumerable
-            ICollection collection  when collection.Count == 0 => true,
-            Array       array       when array.Length == 0 => true,
-            IEnumerable enumerable  when !enumerable.Cast<object>().Any() => true,
+            string stringValue when string.IsNullOrWhiteSpace(stringValue) => true, // May not need this since string is IEnumerable
+            ICollection collection when collection.Count == 0 => true,
+            Array array when array.Length == 0 => true,
+            IEnumerable enumerable when !enumerable.Cast<object>().Any() => true,
             _ => false
         };
-    }
-
-
-    private object GetValue(T instance)
-    {
-        try
-        {
-            return expression.Compile().Invoke(instance);
-        }
-        catch
-        {
-            return default(TValue);
-        }
     }
 }

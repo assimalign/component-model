@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation;
@@ -10,7 +11,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// The logical flow is best described as if (Condition is true/false) then { Run Validation Rules }
 /// </remarks>
 /// <typeparam name="T"></typeparam>
-public interface IValidationItemCondition<T> : IValidationItem
+public interface IValidationCondition<T>
 {
     /// <summary>
     /// The Condition in which the child validation rule collection should be applied.
@@ -18,22 +19,10 @@ public interface IValidationItemCondition<T> : IValidationItem
     Expression<Func<T, bool>> Condition { get; }
 
     /// <summary>
-    /// The rule set to run if condition predicate is 'false'. <see cref="IValidationItemCondition{T}.Otherwise(Action{IValidationRuleDescriptor{T}})"/>
-    /// </summary>
-    IValidationRuleStack ItemDefaultRuleStack { get; }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    IValidationItemCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    void Otherwise(Action<IValidationRuleDescriptor<T>> configure);
-
+    IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);
 }

@@ -11,6 +11,11 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
     {
         if (context.Instance is T instance)
         {
+            if (this.ValidationCondition is not null && !this.ValidationCondition.Invoke(instance))
+            {
+                return;
+            }
+
             var value = this.GetValue(instance);
             var tokenSource = new CancellationTokenSource();
             var parallelOptions = new ParallelOptions()
@@ -58,12 +63,6 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
                 timer.Dispose();
             });
         }
-    }
-
-
-    private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs args)
-    {
-
     }
 }
 

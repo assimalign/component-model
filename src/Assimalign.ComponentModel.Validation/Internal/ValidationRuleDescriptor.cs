@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
 
@@ -12,9 +9,12 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 {
+    public ValidationMode ValidationMode { get; set; }
+
     public IList<IValidationItem> ValidationItems { get; set; }
 
-    public ValidationMode ValidationMode { get; set; }
+    public Func<T, bool> ValidationCondition { get; set; }
+
 
     /// <summary>
     /// 
@@ -36,7 +36,8 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         var item = new ValidationItem<T, TValue>()
         {
             ItemExpression = expression,
-            ItemValidationMode = this.ValidationMode
+            ItemValidationMode = this.ValidationMode,
+            ValidationCondition = this.ValidationCondition
         };
 
         this.ValidationItems.Add(item);
@@ -64,7 +65,8 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         var item = new ValidationItemCollection<T, TValue>()
         {
             ItemExpression = expression,
-            ItemValidationMode = this.ValidationMode
+            ItemValidationMode = this.ValidationMode,
+            ValidationCondition = this.ValidationCondition
         };
 
         this.ValidationItems.Add(item);
@@ -79,24 +81,28 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     /// <param name="condition">What condition is required</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
-    public IValidationItemCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
+    public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)
     {
-        var rule = new ValidationItemCondition<T>()
+        var validationCondition = new ValidationCondition<T>()
         {
             Condition = condition,
-            ConditionRuleSet = new ValidationRuleStack(),
+            ValidationItems = this.ValidationItems,
             ValidationMode = this.ValidationMode
         };
 
         var descriptor = new ValidationRuleDescriptor<T>()
         {
-             ValidationItems =  rule.ConditionRuleSet
+            ValidationCondition = this.ValidationCondition,
+            ValidationMode = this.ValidationMode
         };
         
         configure.Invoke(descriptor);
 
-        this.ValidationRules.Push(rule);
+        foreach(var item in descriptor.ValidationItems)
+        {
+            this.ValidationItems.Add(item);
+        }
 
-        return rule;
+        return validationCondition;
     }
 }
