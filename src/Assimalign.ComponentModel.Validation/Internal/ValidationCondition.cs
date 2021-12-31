@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Linq.Expressions;
 
 
 namespace Assimalign.ComponentModel.Validation.Internal;
-
 
 internal sealed class ValidationCondition<T> : IValidationCondition<T>
 {

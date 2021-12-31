@@ -26,7 +26,9 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"A null expression passed occurred at RuleFor<TValue>(Expression<Func<T, TValue>> expression).");
         }
         if (expression.Body is not MemberExpression)
         {
@@ -55,7 +57,9 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
     {
         if (expression is null)
         {
-            throw new ArgumentNullException(nameof(expression));
+            throw new ArgumentNullException(
+                paramName: nameof(expression),
+                message: $"A null expression passed occurred at RuleForEach<TValue>(Expression<Func<T, IEnumerable<TValue>>> expression).");
         }
         if (expression.Body is not MemberExpression)
         {

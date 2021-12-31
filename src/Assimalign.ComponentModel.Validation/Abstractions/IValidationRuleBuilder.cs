@@ -205,11 +205,4 @@ public interface IValidationRuleBuilder<TValue>
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     IValidationRuleBuilder<TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : notnull, IComparable;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
-    IValidationRuleBuilder<TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> configure);
 }

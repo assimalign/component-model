@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
 
+using Assimalign.ComponentModel.Validation.Internal.Extensions;
+
 internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
 {
+
+    public ValidationItem()
+    {
+
+    }
+
     public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
@@ -18,17 +24,10 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
             }
 
             var value = this.GetValue(instance);
-            var tokenSource = new CancellationTokenSource();
-            var parallelOptions = new ParallelOptions()
-            {
-                CancellationToken = tokenSource.Token
-            };
-
+            var stopwatch = new Stopwatch();
 
             foreach (var rule in this.ItemRuleStack)
             {
-                var stopwatch = new Stopwatch();
-
                 if (this.ItemValidationMode == ValidationMode.Stop && context.Errors.Any())
                 {
                     break;
@@ -51,8 +50,8 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
                     stopwatch.Stop();
                     context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
                 }
+                stopwatch.Reset();
             }
         }
     }
 }
-

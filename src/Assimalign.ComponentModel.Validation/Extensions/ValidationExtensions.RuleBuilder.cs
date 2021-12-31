@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation;
 
 using Assimalign.ComponentModel.Validation.Properties;
+using Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
@@ -16,6 +17,37 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 /// </summary>
 public static partial class ValidationExtensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> ChildRules<TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationRuleDescriptor<TValue>> configure)
+        where TValue : class
+    {
+
+        var rule = new ChildValidationRule<TValue>()
+        {
+            ValidationItems = new List<IValidationItem>(),
+            Name = $"Validate child members of {builder.ValidationItem}",
+            Error = new ValidationError()
+            {
+
+            }
+        };
+
+        var descriptor = new ValidationRuleDescriptor<TValue>()
+        {
+            ValidationItems = rule.ValidationItems
+        };
+
+        configure.Invoke(descriptor);
+
+        builder.ValidationItem.ItemRuleStack.Push(rule);
+
+        return builder;
+    }
+
     /// <summary>
     /// Creates a rule specifying that the member must be in the format of an email address.
     /// </summary>
@@ -251,7 +283,7 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> MaxLength<TValue>(this IValidationRuleBuilder<TValue> builder, int max)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         return builder.MaxLength(max, error =>
         {
@@ -283,7 +315,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> MaxLength<TValue>(this IValidationRuleBuilder<TValue> builder, int max, Action<IValidationError> configure)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (configure is null)
         {

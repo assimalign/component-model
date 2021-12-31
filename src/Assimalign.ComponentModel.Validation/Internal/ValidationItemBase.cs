@@ -9,6 +9,7 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
 {
     private Func<T, TValue> expressionCompiled;
     private Expression<Func<T, TValue>> expression;
+    private string expressionBody;
 
     public ValidationItemBase()
     {
@@ -24,6 +25,7 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
             if (value.Body is MemberExpression)
             {
                 this.expression = value;
+                this.expressionBody = expression.ToString();
                 this.expressionCompiled = this.expression.Compile();
             }
             else
@@ -39,7 +41,6 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
 
     public IValidationRuleStack ItemRuleStack { get; }
 
-
     public abstract void Evaluate(IValidationContext context);
 
     public virtual TValue GetValue(T instance)
@@ -48,16 +49,13 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
         {
             return this.expressionCompiled.Invoke(instance);
         }
-        catch
+        catch // Null Reference Exceptions tend to be thrown when chained members in a type are null.
         {
             return default(TValue);
         }
     }
 
 
-    public override string ToString()
-    {
-        return this.ItemExpression.ToString();
-    }
+    public override string ToString() => this.expressionBody;
 }
 

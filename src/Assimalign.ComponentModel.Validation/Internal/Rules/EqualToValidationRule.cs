@@ -8,9 +8,6 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-using Assimalign.ComponentModel.Validation.Internal.Exceptions;
-using Assimalign.ComponentModel.Validation.Internal.Extensions;
-
 internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
     where TArgument : notnull, IEquatable<TArgument>
 {
@@ -18,8 +15,11 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
 
     public EqualToValidationRule(TArgument argument)
     {
-        this.argument = argument;      
+        this.ArgumentType = typeof(TArgument);
+        this.argument = argument;
     }
+
+    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -49,32 +49,33 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
         {
             context = new ValidationContext<TValue>(value);
 
-            if (!this.argument.Equals(value))
+            if (value is IConvertible convertible)
+            {
+                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
+
+                if (!this.argument.Equals(convertedValue))
+                {
+                    context.AddFailure(this.Error);
+                }
+            }
+            else if (!this.argument.Equals(value))
             {
                 context.AddFailure(this.Error);
             }
 
             return true;
         }
-        catch (InvalidCastException exception)
+        catch (InvalidCastException)
         {
-            if (value is IConvertible convertible)
-            {
-                context = new ValidationContext<TValue>(value);
-                var convertedValue = (TArgument)convertible.ToType(typeof(TArgument), default);
+            context = new ValidationContext<TValue>(value);
 
-                if (!this.argument.Equals(convertedValue))
-                {
-                    context.AddFailure(this.Error);
-                }
-
-                return true;
-            }
-            else
+            if (!this.argument.Equals(value))
             {
-                context = null;
-                return false;
+                this.Error.Source = $"{this.Error.Source}. Comparison of type '{this.ArgumentType.Name}' and '{this.ValueType.Name}' is not allowed.";
+                context.AddFailure(this.Error);
             }
+
+            return true;
         }
         catch
         {

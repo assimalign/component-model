@@ -11,21 +11,51 @@ internal sealed class LengthMaxValidationRule<TValue> : ValidationRuleBase<TValu
 {
     private readonly int length;
 
-    public LengthMaxValidationRule( int length)
+    public LengthMaxValidationRule(int length)
     {
         this.length = length;
     }
 
-    public override string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override string Name { get; set; }
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        if (value is null)
+        {
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        try
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (IsOverMaxLength(value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch
+        {
+            context = null;
+            return false;
+        }
     }
 
     private bool IsOverMaxLength(object member)

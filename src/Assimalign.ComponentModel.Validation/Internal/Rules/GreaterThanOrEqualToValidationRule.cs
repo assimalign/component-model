@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
@@ -15,7 +12,10 @@ internal sealed class GreaterThanOrEqualToValidationRule<TValue, TArgument> : Va
     {
         this.argument = argument;
         this.isGreaterThanOrEqualTo = (arg, val) => arg.CompareTo(val) <= 0; // Is the argument less than the value
+        this.ArgumentType = typeof(TArgument);
     }
+
+    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -42,6 +42,26 @@ internal sealed class GreaterThanOrEqualToValidationRule<TValue, TArgument> : Va
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         try
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (value is IConvertible convertible)
+            {
+                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
+
+                if (!isGreaterThanOrEqualTo(this.argument, convertedValue))
+                {
+                    context.AddFailure(this.Error);
+                }
+            }
+            else if (!isGreaterThanOrEqualTo(this.argument, value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch (InvalidCastException)
         {
             context = new ValidationContext<TValue>(value);
 

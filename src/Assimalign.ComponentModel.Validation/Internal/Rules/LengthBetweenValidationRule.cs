@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
@@ -11,7 +10,6 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
     private readonly int lowerBound;
     private readonly int upperBound;
 
-
     public LengthBetweenValidationRule( int lowerBound, int upperBound)
     {
         this.upperBound = upperBound;
@@ -19,7 +17,6 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
     }
 
     public override string Name { get; set; }
-
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
@@ -33,7 +30,7 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
         }
         else if (value is TValue tv)
         {
-            return TryValidate(value, out context);
+            return TryValidate(tv, out context);
         }
         else
         {

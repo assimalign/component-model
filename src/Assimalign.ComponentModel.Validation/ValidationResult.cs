@@ -29,20 +29,24 @@ public sealed class ValidationResult
     /// </summary>
     public IEnumerable<IValidationError> Errors { get; }
     /// <summary>
-    /// A collection of validation rules successfully invoked.
+    /// A collection of stats relating to invoked validation rules.
     /// </summary>
     public IEnumerable<ValidationInvocation> Invocations { get; }
     /// <summary>
-    /// 
+    /// The total ticks elapsed for validation.
     /// </summary>
     public double? ValidationElapsedTicks { get; }
     /// <summary>
-    /// 
+    /// The total milliseconds elapsed for validation.
     /// </summary>
     public double? ValidationElapsedMilliseconds => this.ValidationElapsedTicks is null ? null : this.ValidationElapsedTicks / (double)TimeSpan.TicksPerMillisecond;
     /// <summary>
-    /// 
+    /// The total seconds elapsed for validation.
     /// </summary>
+    /// <remarks>
+    /// Validation should never take this long in terms of contract testing. If validation is 
+    /// totaling to seconds try refactoring code.
+    /// </remarks>
     public double? ValidationElapsedSeconds => this.ValidationElapsedTicks is null ? null : this.ValidationElapsedTicks / (double)TimeSpan.TicksPerSecond;
     /// <summary>
     /// 

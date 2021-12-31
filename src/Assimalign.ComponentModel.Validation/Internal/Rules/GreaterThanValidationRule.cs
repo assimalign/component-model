@@ -16,8 +16,10 @@ internal sealed class GreaterThanValidationRule<TValue, TArgument> : ValidationR
     {
         this.argument = argument;
         this.isGreaterThan = (arg, val) => arg.CompareTo(val) < 0; // Is the argument less than the value
+        this.ArgumentType = typeof(TArgument);
     }
 
+    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -44,6 +46,26 @@ internal sealed class GreaterThanValidationRule<TValue, TArgument> : ValidationR
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         try
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (value is IConvertible convertible)
+            {
+                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
+
+                if (!isGreaterThan(this.argument, convertedValue))
+                {
+                    context.AddFailure(this.Error);
+                }
+            }
+            else if (!isGreaterThan(this.argument, value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch (InvalidCastException)
         {
             context = new ValidationContext<TValue>(value);
 

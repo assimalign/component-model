@@ -32,7 +32,16 @@ internal static partial class ValidationInternalExtensions
         }
 
         return null;
+    }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Func<TIn,TOut> Memoise<TIn,TOut>(Func<TIn, TOut> method)
+    {
+        var cache = new Dictionary<TIn, TOut>();
+
+        return input => cache.TryGetValue(input, out var result) ? 
+            result : 
+            method.Invoke(input);
     }
 }
 

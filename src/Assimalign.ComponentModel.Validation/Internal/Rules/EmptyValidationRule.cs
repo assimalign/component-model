@@ -21,6 +21,7 @@ internal sealed class EmptyValidationRule<TValue> : ValidationRuleBase<TValue>
         }
         if (value is null)
         {
+            context = new ValidationContext<TValue>(default(TValue));
             return true;
         }
         else

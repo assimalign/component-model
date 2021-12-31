@@ -7,7 +7,7 @@ internal sealed class BetweenOrEqualToValidationRule<TValue, TBound> : Validatio
 {
     private readonly TBound lowerBound;
     private readonly TBound upperBound;
-    private readonly Func<TBound, TBound, TValue, bool> isOutOfBounds;
+    private readonly Func<TBound, TBound, object, bool> isOutOfBounds;
 
     public BetweenOrEqualToValidationRule(TBound lowerBound, TBound upperBound)
     {
@@ -20,9 +20,10 @@ internal sealed class BetweenOrEqualToValidationRule<TValue, TBound> : Validatio
 
             return lowerResults > 0 || upperResults < 0;
         };
-
-       // this.ValidationRuleSource = $"RuleFor(p => p.{this.ExpressionBody}).BetweenOrEqualTo({this.lower}, {this.upper})";
+        this.BoundaryType = typeof(TBound);
     }
+
+    public Type BoundaryType { get; }
 
     public override string Name { get; set; }
 
@@ -48,13 +49,41 @@ internal sealed class BetweenOrEqualToValidationRule<TValue, TBound> : Validatio
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = new ValidationContext<TValue>(value);
-
-        if (isOutOfBounds(this.lowerBound, this.upperBound, value))
+        try
         {
-            context.AddFailure(this.Error);
-        }
+            context = new ValidationContext<TValue>(value);
 
-        return true;
+            if (value is IConvertible convertible)
+            {
+                var convertedValue = (TBound)convertible.ToType(this.BoundaryType, default);
+
+                if (isOutOfBounds(this.lowerBound, this.upperBound, convertedValue))
+                {
+                    context.AddFailure(this.Error);
+                }
+            }
+            else if (isOutOfBounds(this.lowerBound, this.upperBound, value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch(InvalidCastException)
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (isOutOfBounds(this.lowerBound, this.upperBound, value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch
+        {
+            context = null;
+            return false;
+        }
     }
 }

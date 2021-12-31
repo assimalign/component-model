@@ -45,7 +45,7 @@ namespace Assimalign.ComponentModel.ValidationTests
             //descriptor.RuleFor(p => p.FirstName)
             //    .EmailAddress()
             //    .NotEqualTo("Chase");
-               
+
             //descriptor.RuleFor(p => p.Record)
             //    .Null()
             //    .EqualTo(new TestRecord() { FirstName = "Chase" });
@@ -57,6 +57,14 @@ namespace Assimalign.ComponentModel.ValidationTests
             //descriptor.RuleForEach(p => p.Ages)
             //    .EqualTo(half);
 
+            descriptor.RuleFor(p => p.Record)
+                .ChildRules(conifgure =>
+                {
+                    conifgure.RuleFor(p => p.FirstName);
+                });
+
+            descriptor.RuleFor(p => p.Ages)
+                .MaxLength(0);
 
             descriptor.RuleFor(p=>p.Record)
                 .NotNull()
@@ -86,7 +94,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 
         public TestRecord? Record { get; set; }
 
-        public IEnumerable<long?> Ages { get; set; }
+        public long[]? Ages { get; set; }
         public string FirstName { get; set; }
 
         public string EmailAddress { get; set; }

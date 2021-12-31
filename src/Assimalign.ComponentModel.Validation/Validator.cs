@@ -71,12 +71,6 @@ public sealed class Validator : IValidator
         {
             if (profile.ValidationType == context.InstanceType)
             {
-                var tokenSource = new CancellationTokenSource();
-                var parallelOptions = new ParallelOptions()
-                {
-                    CancellationToken = tokenSource.Token
-                };
-
                 foreach (var item in profile.ValidationItems)
                 {
                     if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())

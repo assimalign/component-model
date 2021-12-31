@@ -9,10 +9,17 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal;
 
-using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T, IEnumerable<TValue>>
 {
+    private readonly Type paramType;
+
+    public ValidationItemCollection()
+    {
+        this.paramType = typeof(T);
+    }
+
+
     public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
@@ -23,17 +30,17 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
             }
 
             var value = this.GetValue(instance);
+            var stopwatch = new Stopwatch();
 
-            foreach (var  rule in this.ItemRuleStack)
+            foreach (var rule in this.ItemRuleStack)
             {
-                var stopwatch = new Stopwatch();
-
                 if (this.ItemValidationMode == ValidationMode.Stop && context.Errors.Any())
                 {
                     break;
                 }
 
                 stopwatch.Start();
+
                 if (value is not null && value is IEnumerable<TValue> enumerable)
                 {
                     foreach (var enumValue in enumerable)
@@ -58,8 +65,13 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
                 else
                 {
                     stopwatch.Stop();
-                    context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
+                    context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks)
+                    {
+                        InvocationErrorMessage = $"The following enumerable expression: '{this.ItemExpression}' returned null for instance '{this.paramType.Name}'."
+                    });
                 }
+
+                stopwatch.Reset();
             }
         }
     }

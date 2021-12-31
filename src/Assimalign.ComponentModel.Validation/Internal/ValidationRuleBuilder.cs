@@ -63,7 +63,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     public IValidationRuleBuilder<TValue> Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : notnull, IComparable
     {
-        if (lowerBound.CompareTo(upperBound) <= 0)
+        if (lowerBound.CompareTo(upperBound) >= 0)
         {
             throw new InvalidOperationException(
                 message: $"The lower bound value cannot be greater than or equal to the upper bound value when validating 'BetweenOrEqualTo()'")
@@ -110,7 +110,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
     public IValidationRuleBuilder<TValue> BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)
         where TBound : notnull, IComparable
     {
-        if (lowerBound.CompareTo(upperBound) <= 0)
+        if (lowerBound.CompareTo(upperBound) >= 0)
         {
             throw new InvalidOperationException(
                 message: $"The lower bound value cannot be greater than or equal to the upper bound value when validating 'BetweenOrEqualTo()'")
@@ -149,7 +149,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
             var validationExpression = this.ValidationItem.ToString();
 
             configure.Code = Resources.DefaultValidationErrorCode;
-            configure.Message = string.Format(Resources.DefaultValidationMessageEqualToRule, validationExpression, typeof(TArgument).IsSystemType() ? value : typeof(TArgument).Name);
+            configure.Message = string.Format(Resources.DefaultValidationMessageEqualToRule, validationExpression, typeof(TArgument).IsSystemType(false) ? value : typeof(TArgument).Name);
             configure.Source = validationExpression;
         });
     }

@@ -66,7 +66,7 @@ public sealed class ValidationContext<T> : IValidationContext
     public IEnumerable<IValidationError> Errors => this.errors;
 
     /// <summary>
-    /// 
+    /// A collection of invoked 
     /// </summary>
     public IEnumerable<ValidationInvocation> Invocations => this.invocations;
 

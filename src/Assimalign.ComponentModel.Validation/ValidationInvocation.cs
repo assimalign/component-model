@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -11,7 +8,6 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public sealed class ValidationInvocation
 {
-    
     internal ValidationInvocation(string ruleName, bool invoked, long elapsedTicks = 0)
     {
         this.RuleName = ruleName;
@@ -23,6 +19,10 @@ public sealed class ValidationInvocation
     /// A flag indicating whether the validation rule was invoked.
     /// </summary>
     public bool Invoked { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public string  InvocationErrorMessage { get; set; }
     /// <summary>
     /// The name of the rule that was invoked.
     /// </summary>

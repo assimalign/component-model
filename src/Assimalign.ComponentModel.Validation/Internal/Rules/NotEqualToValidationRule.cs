@@ -14,8 +14,11 @@ internal sealed class NotEqualToValidationRule<TValue, TArgument> : ValidationRu
 
     public NotEqualToValidationRule(TArgument argument)
     {
+        this.ArgumentType = typeof(TArgument);
         this.argument = argument;
     }
+
+    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -45,32 +48,33 @@ internal sealed class NotEqualToValidationRule<TValue, TArgument> : ValidationRu
         {
             context = new ValidationContext<TValue>(value);
 
-            if (this.argument.Equals(value))
-            {
-                context.AddFailure(this.Error);
-            }
-
-            return true;
-        }
-        catch (InvalidCastException exception)
-        {
             if (value is IConvertible convertible)
             {
-                context = new ValidationContext<TValue>(value);
                 var convertedValue = (TArgument)convertible.ToType(typeof(TArgument), default);
 
                 if (this.argument.Equals(convertedValue))
                 {
                     context.AddFailure(this.Error);
                 }
-
-                return true;
             }
-            else
+            else if (this.argument.Equals(value))
             {
-                context = null;
-                return false;
+                context.AddFailure(this.Error);
             }
+
+            return true;
+        }
+        catch (InvalidCastException)
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (this.argument.Equals(value))
+            {
+                this.Error.Source = $"{this.Error.Source}. Comparison of type '{this.ArgumentType.Name}' and '{this.ValueType.Name}' is not allowed.";
+                context.AddFailure(this.Error);
+            }
+
+            return true;
         }
         catch
         {
