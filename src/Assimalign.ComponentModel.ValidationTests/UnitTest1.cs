@@ -57,6 +57,13 @@ namespace Assimalign.ComponentModel.ValidationTests
             //descriptor.RuleForEach(p => p.Ages)
             //    .EqualTo(half);
 
+
+            descriptor.RuleForEach(p => p.Addresses)
+                .ChildRules(configure =>
+                {
+                    configure.RuleFor(p => p.StreetOne);
+                });
+
             descriptor.RuleFor(p => p.Record)
                 .ChildRules(conifgure =>
                 {

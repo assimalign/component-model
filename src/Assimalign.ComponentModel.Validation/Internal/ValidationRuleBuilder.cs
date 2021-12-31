@@ -17,19 +17,6 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
     public IValidationItem ValidationItem { get; }
 
-    public IValidationRuleBuilder<TValue> ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(
-                paramName: nameof(configure),
-                message: "The 'configure' parameter cannot be null in: ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)");
-        }
-
-
-        throw new NotImplementedException();
-    }
-
     public IValidationRuleBuilder<TValue> Custom(Action<TValue, IValidationContext> validation)
     {
         if (validation is null)

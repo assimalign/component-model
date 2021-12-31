@@ -1,0 +1,380 @@
+﻿{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"properties": {
+		"$description": {
+			"type": "string"
+		},
+		"$validationConditions": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/$validationCondition",
+				"required": [
+					"$conditionId",
+					"$conditions"
+				]
+			}
+		},
+		"$validationItems": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/$validationItem"
+			}
+		}
+	},
+	"definitions": {
+		"$validationMemberCondition": {
+			"type": "object",
+			"properties": {
+				"$member": {
+					"type": "string"
+				},
+				"$operator": {
+					"type": "string",
+					"oneOf": [
+						{
+							"const": "eq"
+						},
+						{
+							"const": "neq"
+						},
+						{
+							"const": "lt"
+						},
+						{
+							"const": "lte"
+						},
+						{
+							"const": "gt"
+						},
+						{
+							"const": "gte"
+						}
+					]
+				},
+				"$value": {}
+			},
+			"required": [
+				"$member",
+				"$operator",
+				"$value"
+			],
+			"minProperties": 3,
+			"maxProperties": 3
+		},
+		"$validationAndCondition": {
+			"type": "object",
+			"properties": {
+				"$and": {
+					"type": "array",
+					"items": {
+						"oneOf": [
+							{
+								"$ref": "#/definitions/$validationMemberCondition"
+							},
+							{
+								"$ref": "#/definitions/$validationOrCondition"
+							},
+							{
+								"$ref": "#/definitions/$validationAndCondition"
+							}
+						]
+					}
+				}
+			},
+			"maxProperties": 1,
+			"required": [
+				"$and"
+			]
+		},
+		"$validationOrCondition": {
+			"type": "object",
+			"properties": {
+				"$or": {
+					"type": "array",
+					"items": {
+						"oneOf": [
+							{
+								"$ref": "#/definitions/$validationMemberCondition"
+							},
+							{
+								"$ref": "#/definitions/$validationOrCondition"
+							},
+							{
+								"$ref": "#/definitions/$validationAndCondition"
+							}
+						]
+					}
+				}
+			},
+			"maxProperties": 1,
+			"required": [
+				"$or"
+			]
+		},
+		"$validationCondition": {
+			"type": "object",
+			"properties": {
+				"$conditionId": {
+					"type": "string"
+				},
+				"$conditions": {
+					"oneOf": [
+						{
+							"$ref": "#/definitions/$validationMemberCondition"
+						},
+						{
+							"$ref": "#/definitions/$validationOrCondition"
+						},
+						{
+							"$ref": "#/definitions/$validationAndCondition"
+						}
+					]
+				}
+			}
+		},
+		"$validationItem": {
+			"type": "object",
+			"properties": {
+				"$itemMember": {
+					"type": "string"
+				},
+				"$itemType": {
+					"type": "string",
+					"oneOf": [
+						{
+							"const": "recursive",
+							"description": "An 'recursive' item type represents a 'RuleForEach'."
+						},
+						{
+							"const": "inline",
+							"description": "An 'inline' item type represents a 'RuleFor'."
+						}
+					]
+				},
+				"$itemCondition": {
+					"oneOf": [
+						{
+							"type": "null"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"$conditionId": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"$conditionId"
+							],
+							"maxProperties": 1
+						},
+						{
+							"$ref": "#/definitions/$validationMemberCondition"
+						},
+						{
+							"$ref": "#/definitions/$validationOrCondition"
+						},
+						{
+							"$ref": "#/definitions/$validationAndCondition"
+						}
+					]
+				},
+				"$itemRules": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/$validationRule"
+					},
+					"minItems": 1
+				}
+			},
+			"required": [
+				"$itemMember",
+				"$itemType",
+				"$itemCondition",
+				"$itemRules"
+			]
+		},
+		"$validationRule": {
+			"type": "object",
+			"oneOf": [
+				{
+					"$ref": "#/definitions/$validationRuleEqualTo"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleNotEqualTo"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleBetween"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleBetweenOrEqualTo"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleGreaterThan"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleGreaterThanOrEqualTo"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleLessThan"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleLessThanOrEqualTo"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleEmpty"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleNotEmpty"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleEmailAddress"
+				}
+			]
+		},
+		"$validationRuleEqualTo": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "EqualTo"
+				},
+				"$value": {
+					"description": ""
+				},
+				"$valueType": {
+					"type": "string"
+				}
+			}
+		},
+		"$validationRuleNotEqualTo": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "NotEqualTo"
+				},
+				"$valueType": {
+					"type": "string"
+				}
+			}
+		},
+		"$validationRuleBetween": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Between"
+				},
+				"$lower": {
+
+				},
+				"$upper": {
+
+				}
+			}
+		},
+		"$validationRuleBetweenOrEqualTo": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "BetweenOrEqualTo"
+				},
+				"$lower": {
+
+				},
+				"$upper": {
+
+				}
+			}
+		},
+		"$validationRuleGreaterThan": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "GreaterThan"
+				},
+				"$value": {
+					"description": ""
+				},
+				"$valueType": {
+					"type": "string"
+				}
+			}
+		},
+		"$validationRuleGreaterThanOrEqualTo": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "GreaterThanOrEqualTo"
+				},
+				"$value": {
+					"description": ""
+				},
+				"$valueType": {
+					"type": "string"
+				}
+			}
+		},
+		"$validationRuleLessThan": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "LessThan"
+				},
+				"$value": {
+					"description": ""
+				},
+				"$valueType": {
+					"type": "string"
+				}
+			}
+		},
+		"$validationRuleLessThanOrEqualTo": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "LessThanOrEqualTo"
+				},
+				"$value": {
+					"description": ""
+				},
+				"$valueType": {
+					"type": "string"
+				}
+			}
+		},
+		"$validationRuleEmpty": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Empty"
+				}
+			}
+		},
+		"$validationRuleNotEmpty": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "NotEmpty"
+				}
+			}
+		},
+		"$validationRuleEmailAddress": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "EmailAddress"
+				}
+			}
+		}
+	}
+}
