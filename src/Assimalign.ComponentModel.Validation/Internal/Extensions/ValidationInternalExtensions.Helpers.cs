@@ -11,8 +11,6 @@ namespace Assimalign.ComponentModel.Validation.Internal.Extensions;
 
 internal static partial class ValidationInternalExtensions
 {
-
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string GetExpressionBody<T, TValue>(this IValidationItem<T, TValue> item)
     {
@@ -24,5 +22,17 @@ internal static partial class ValidationInternalExtensions
         return null;
     }
 
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string GetExpressionBody<T, TValue>(this IValidationItem item)
+    {
+        if (item is IValidationItem<T, TValue> validationItem)
+        {
+            return validationItem.GetExpressionBody();
+        }
+
+        return null;
+
+    }
 }
 

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<TValue>
-    where TValue : IEnumerable
+    where TValue : notnull, IEnumerable
 {
     private readonly int lowerBound;
     private readonly int upperBound;
@@ -23,12 +23,41 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        if (value is null)
+        {
+            context = new ValidationContext<TValue>(default(TValue));
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(value, out context);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        try
+        {
+            context = new ValidationContext<TValue>(value);
+
+            if (!IsBetweenLength(value))
+            {
+
+            }
+
+        }
+        catch
+        {
+            context = null;
+            return false;
+        }
     }
 
     private bool IsBetweenLength(object member)

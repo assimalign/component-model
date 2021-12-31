@@ -24,20 +24,21 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
                 CancellationToken = tokenSource.Token
             };
 
-            var results = Parallel.ForEach(this.ItemRuleStack, parallelOptions, (rule, state, index) =>
+
+            foreach (var rule in this.ItemRuleStack)
             {
                 var stopwatch = new Stopwatch();
 
                 if (this.ItemValidationMode == ValidationMode.Stop && context.Errors.Any())
                 {
-                    tokenSource.Cancel();
+                    break;
                 }
 
                 stopwatch.Start();
 
                 if (rule.TryValidate(value, out var ruleContext))
                 {
-                    foreach(var error in ruleContext.Errors)
+                    foreach (var error in ruleContext.Errors)
                     {
                         context.AddFailure(error);
                     }
@@ -50,7 +51,7 @@ internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
                     stopwatch.Stop();
                     context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
                 }
-            });
+            }
         }
     }
 }

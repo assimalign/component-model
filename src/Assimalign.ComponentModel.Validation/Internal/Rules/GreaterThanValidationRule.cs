@@ -43,13 +43,12 @@ internal sealed class GreaterThanValidationRule<TValue, TArgument> : ValidationR
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = null;
-
         try
         {
+            context = new ValidationContext<TValue>(value);
+
             if (!isGreaterThan(this.argument, value))
             {
-                context = new ValidationContext<TValue>(value);
                 context.AddFailure(this.Error);
             }
 
@@ -57,6 +56,7 @@ internal sealed class GreaterThanValidationRule<TValue, TArgument> : ValidationR
         }
         catch
         {
+            context = null;
             return false;
         }
     }

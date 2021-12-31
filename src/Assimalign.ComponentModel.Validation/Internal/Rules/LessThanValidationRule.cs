@@ -41,13 +41,12 @@ internal sealed class LessThanValidationRule<TValue, TArgument> : ValidationRule
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = null;
-
         try
         {
+            context = new ValidationContext<TValue>(value);
+
             if (!isLessThan(this.argument, value))
             {
-                context = new ValidationContext<TValue>(value);
                 context.AddFailure(this.Error);
             }
 
@@ -55,6 +54,7 @@ internal sealed class LessThanValidationRule<TValue, TArgument> : ValidationRule
         }
         catch
         {
+            context = null;
             return false;
         }
     }

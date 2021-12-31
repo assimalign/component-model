@@ -34,15 +34,13 @@ internal sealed class EmailValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = null;
-
         try
         {
+            context = new ValidationContext<TValue>(value);
             var stringValue = value as string;
 
             if (!Regex.IsMatch(stringValue, pattern))
             {
-                context = new ValidationContext<TValue>(value);
                 context.AddFailure(this.Error);
                 return false;
             }
@@ -53,6 +51,7 @@ internal sealed class EmailValidationRule<TValue> : ValidationRuleBase<TValue>
         }
         catch
         {
+            context = null;
             return false;
         }
     }

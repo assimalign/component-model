@@ -61,7 +61,8 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new EmailValidationRule<string>()
         {
-            Error = error
+            Error = error,
+            Name= $"Validate {builder.ValidationItem} is valid email format"
         });
 
         return builder;

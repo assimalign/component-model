@@ -77,19 +77,14 @@ public sealed class Validator : IValidator
                     CancellationToken = tokenSource.Token
                 };
 
-                var results = Parallel.ForEach(profile.ValidationItems, parallelOptions, item =>
+                foreach (var item in profile.ValidationItems)
                 {
                     if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                     {
-                        tokenSource.Cancel();
+                        break;
                     }
 
                     item.Evaluate(context);
-                });
-
-                if (!results.IsCompleted)
-                {
-                    throw new ValidationInternalException("Unable to complete validation");
                 }
             }
         }
@@ -138,20 +133,19 @@ public sealed class Validator : IValidator
                         new CancellationTokenSource() :
                         CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-                    var parallelOptions = new ParallelOptions()
+                    foreach(var item in profile.ValidationItems)
                     {
-                        CancellationToken = tokenSource.Token
-                    };
-
-                    var results = Parallel.ForEach(profile.ValidationItems, parallelOptions, item =>
-                    {
+                        if (tokenSource.IsCancellationRequested)
+                        {
+                            return default;
+                        }
                         if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
                         {
-                            tokenSource.Cancel();
+                            break;
                         }
 
                         item.Evaluate(context);
-                    });
+                    }
                 }
             }
 

@@ -49,13 +49,21 @@ internal sealed class BetweenValidationRule<TValue, TBound> : ValidationRuleBase
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = new ValidationContext<TValue>(value);
-
-        if (isOutOfBounds(this.lowerBound, this.upperBound, value))
+        try
         {
-            context.AddFailure(this.Error);
-        }
+            context = new ValidationContext<TValue>(value);
 
-        return true;
+            if (isOutOfBounds(this.lowerBound, this.upperBound, value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch
+        {
+            context = null;
+            return false;
+        }
     }
 }

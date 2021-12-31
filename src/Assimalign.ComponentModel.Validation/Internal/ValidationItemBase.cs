@@ -7,6 +7,7 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValue>
 {
+    private Func<T, TValue> expressionCompiled;
     private Expression<Func<T, TValue>> expression;
 
     public ValidationItemBase()
@@ -23,6 +24,7 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
             if (value.Body is MemberExpression)
             {
                 this.expression = value;
+                this.expressionCompiled = this.expression.Compile();
             }
             else
             {
@@ -44,7 +46,7 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
     {
         try
         {
-            return this.ItemExpression.Compile().Invoke(instance);
+            return this.expressionCompiled.Invoke(instance);
         }
         catch
         {

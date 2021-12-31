@@ -31,15 +31,22 @@ internal sealed class EmptyValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = new ValidationContext<TValue>(value);
-
-        if (!IsEmpty(value))
+        try
         {
             context = new ValidationContext<TValue>(value);
-            context.AddFailure(this.Error);
-        }
 
-        return true;
+            if (!IsEmpty(value))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        catch
+        {
+            context = null;
+            return false;
+        }
     }
 
     private bool IsEmpty(object member)

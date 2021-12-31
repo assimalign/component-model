@@ -26,18 +26,15 @@ internal sealed class CustomValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = null;
-
         try
         {
             context = new ValidationContext<TValue>(value);
-
             validation.Invoke(value, context);
-
             return true;
         }
         catch
         {
+            context = null;
             return false;
         }
     }

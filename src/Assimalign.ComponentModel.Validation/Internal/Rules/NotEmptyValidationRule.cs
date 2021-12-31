@@ -37,7 +37,6 @@ internal class NotEmptyValidationRule<TValue> : ValidationRuleBase<TValue>
 
         if (IsEmpty(value))
         {
-            context = new ValidationContext<TValue>(value);
             context.AddFailure(this.Error);
         }
 

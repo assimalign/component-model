@@ -45,8 +45,6 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
 
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
-        context = null;
-
         try
         {
             context = new ValidationContext<TValue>(value);
@@ -62,11 +60,11 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
         {
             if (value is IConvertible convertible)
             {
+                context = new ValidationContext<TValue>(value);
                 var convertedValue = (TArgument)convertible.ToType(typeof(TArgument), default);
 
                 if (!this.argument.Equals(convertedValue))
                 {
-                    context = new ValidationContext<TValue>(value);
                     context.AddFailure(this.Error);
                 }
 
@@ -74,11 +72,13 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
             }
             else
             {
+                context = null;
                 return false;
             }
         }
         catch
         {
+            context = null;
             return false;
         }
     }
