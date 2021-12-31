@@ -25,15 +25,6 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: ChildRules(Action<IValidationRuleDescriptor<TValue>> configure)");
         }
-        if (this.ValidationItem is IValidationItem<T, TValue> validationItem)
-        {
-
-
-        }
-        else
-        {
-            throw new ValidationItemUnsupportedException(this.ValidationItem);
-        }
 
 
         throw new NotImplementedException();

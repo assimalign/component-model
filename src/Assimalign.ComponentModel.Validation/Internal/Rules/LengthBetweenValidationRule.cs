@@ -49,9 +49,10 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
 
             if (!IsBetweenLength(value))
             {
-
+                context.AddFailure(this.Error);
             }
 
+            return true;
         }
         catch
         {

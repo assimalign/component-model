@@ -1,7 +1,7 @@
 ﻿
 
 
-var validatorBenchmarkRunTime = DateTime.Now.AddSeconds(5);
+var validatorBenchmarkRunTime = DateTime.Now.AddSeconds(20);
 var validatorTestObject = new ValidatorTestObject();
 var validatorElapsedTimerAverager = new ValidatorMovingAverage(15);
 var validator = Validator.Create(configure =>

@@ -54,7 +54,7 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate<T>(T instance)
     {
-        return Validate(new ValidationContext<T>(instance) as IValidationContext);
+        return Validate(new ValidationContext<T>(instance, true) as IValidationContext);
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public sealed class Validator : IValidator
     /// <returns></returns>
     public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken = default)
     {
-        return ValidateAsync(new ValidationContext<T>(instance) as IValidationContext, cancellationToken);
+        return ValidateAsync(new ValidationContext<T>(instance, true) as IValidationContext, cancellationToken);
     }
 
     /// <summary>

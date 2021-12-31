@@ -44,14 +44,13 @@ public static partial class ValidationExtensions
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<string> EmailAddress(this IValidationRuleBuilder<string> builder, Action<IValidationError> configure)
     {
-
         if (configure is null)
         {
             throw new ArgumentNullException(
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: EmailAddress(Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).EmailAddress({configure})."
+                Source = $"RuleFor[Each]({builder.ValidationItem}).EmailAddress({configure})."
             };
         }
 
@@ -136,14 +135,14 @@ public static partial class ValidationExtensions
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: Length(int min, int max, Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).Length({min}, {max}, {configure})."
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Length({min}, {max}, {configure})."
             };
         }
         if (min > max)
         {
             throw new InvalidOperationException($"The minimum length cannot be larger than the maximum length.")
             {
-                Source = $"RuleFor({builder.ValidationItem}).Length({min},{max}, {configure})"
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Length({min},{max}, {configure})"
             };
         }
 
@@ -153,7 +152,8 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new LengthBetweenValidationRule<TValue>(min, max)
         {
-            Error = error
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is within range of {min} and {max}"
         });
 
         return builder;
@@ -217,7 +217,7 @@ public static partial class ValidationExtensions
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: Length(int exact, Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).Length({exact}, {configure})."
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Length({exact}, {configure})."
             };
         }
 
@@ -227,7 +227,8 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new LengthValidationRule<TValue>(exact)
         {
-            Error = error
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} equals the exact range of {exact}"
         });
 
         return builder;
@@ -290,7 +291,7 @@ public static partial class ValidationExtensions
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: MaxLength(int max, Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).MaxLength({max}, {configure})."
+                Source = $"RuleFor[Each]({builder.ValidationItem}).MaxLength({max}, {configure})."
             };
         }
 
@@ -300,7 +301,8 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new LengthMaxValidationRule<TValue>(max)
         {
-            Error = error
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is not outside the range of {max}"
         });
 
         return builder;
@@ -363,7 +365,7 @@ public static partial class ValidationExtensions
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: MinLength(Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).MinLength({min}, {configure})."
+                Source = $"RuleFor[Each]({builder.ValidationItem}).MinLength({min}, {configure})."
             };
         }
 
@@ -373,12 +375,12 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new LengthMinValidationRule<TValue>(min)
         {
-            Error = error
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is at least within range of {min}"
         });
 
         return builder;
     }
-
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must not be empty.
@@ -417,7 +419,7 @@ public static partial class ValidationExtensions
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: NotEmpty(Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).NotEmpty({configure}) or RuleForEach().Empty({configure})"
+                Source = $"RuleFor[Each]({builder.ValidationItem}).NotEmpty({configure})"
             };
         }
 
@@ -427,7 +429,8 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new NotEmptyValidationRule<TValue>()
         {
-            Error = error
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is not empty"
         });
 
         return builder;
@@ -469,7 +472,7 @@ public static partial class ValidationExtensions
                 paramName: nameof(configure),
                 message: "The 'configure' parameter cannot be null in: Empty(Action<IValidationError> configure)")
             {
-                Source = $"RuleFor({builder.ValidationItem}).Empty({configure}) or RuleForEach({builder.ValidationItem}).Empty({configure})"
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Empty({configure})"
             };
         }
 
@@ -479,7 +482,8 @@ public static partial class ValidationExtensions
 
         builder.ValidationItem.ItemRuleStack.Push(new EmptyValidationRule<TValue>()
         {
-            Error = error
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is empty"
         });
 
         return builder;

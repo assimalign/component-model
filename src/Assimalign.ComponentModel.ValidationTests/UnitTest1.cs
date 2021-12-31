@@ -59,6 +59,7 @@ namespace Assimalign.ComponentModel.ValidationTests
 
 
             descriptor.RuleFor(p=>p.Record)
+                .NotNull()
                 .EqualTo(new TestRecord() { FirstName = "Chase" });
 
             descriptor

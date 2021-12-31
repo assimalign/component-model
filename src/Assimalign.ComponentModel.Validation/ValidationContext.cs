@@ -32,6 +32,22 @@ public sealed class ValidationContext<T> : IValidationContext
         Instance = instance;
     }
 
+
+    internal ValidationContext(T instance, bool throwExceptionForNullInstance)
+    {
+        if (throwExceptionForNullInstance && instance is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(T),
+                message: $"The instance of type '{typeof(T).Name}' cannot be null");
+        } 
+        this.type = typeof(T);
+        this.errors = new ConcurrentStack<IValidationError>();
+        this.invocations = new ConcurrentStack<ValidationInvocation>();
+
+        Instance = instance;
+    }
+
     /// <summary>
     /// The instance to validate.
     /// </summary>
