@@ -3,7 +3,7 @@ name: assimalign.componentmodel.validation.build.ci
 on:
   push:
     paths: 
-    - 'src/Assimalign.ComponentModel.Validation'
+    - 'src/Assimalign.ComponentModel.Validation/**'
 
 jobs:
   build:
