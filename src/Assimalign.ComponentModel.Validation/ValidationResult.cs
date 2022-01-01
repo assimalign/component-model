@@ -21,6 +21,7 @@ public sealed class ValidationResult
     }
 
 
+
     /// <summary>
     /// An indicator of whether the type validated was successful.
     /// </summary>
