@@ -1,9 +1,10 @@
 <Project>
-    <PropertyGroup>
-        <Copyright>© Assimalign LLC 2021</Copyright>
-        <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-        <LangVersion>10.0</LangVersion>
-        <PackageIconUrl>https://corporate.assets.assimalign.com/assets/logos/.assimalign.logo.png</PackageIconUrl>
-		    <PackageProjectUrl>https://github.com/Assimalign-LLC/asal-component-model</PackageProjectUrl>
-    </PropertyGroup>
-  </Project>
+	<PropertyGroup>
+		<Copyright>© Assimalign LLC 2021</Copyright>
+		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+		<LangVersion>10.0</LangVersion>
+		<Authors>Chase R. Crawford</Authors>
+		<PackageIconUrl>https://corporate.assets.assimalign.com/assets/logos/.assimalign.logo.png</PackageIconUrl>
+		<PackageProjectUrl>https://github.com/Assimalign-LLC/asal-component-model</PackageProjectUrl>
+	</PropertyGroup>
+</Project>

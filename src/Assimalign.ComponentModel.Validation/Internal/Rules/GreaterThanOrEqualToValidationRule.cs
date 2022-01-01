@@ -2,20 +2,17 @@
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class GreaterThanOrEqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
-    where TArgument : notnull, IComparable
+internal sealed class GreaterThanOrEqualToValidationRule<TValue> : ValidationRuleBase<TValue>
+    where TValue : struct, IComparable, IComparable<TValue>
 {
-    private readonly TArgument argument;
-    private readonly Func<TArgument, object, bool> isGreaterThanOrEqualTo;
+    private readonly TValue argument;
+    private readonly Func<TValue, TValue, bool> isGreaterThanOrEqualTo;
 
-    public GreaterThanOrEqualToValidationRule(TArgument argument)
+    public GreaterThanOrEqualToValidationRule(TValue argument)
     {
         this.argument = argument;
         this.isGreaterThanOrEqualTo = (arg, val) => arg.CompareTo(val) <= 0; // Is the argument less than the value
-        this.ArgumentType = typeof(TArgument);
     }
-
-    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -42,26 +39,6 @@ internal sealed class GreaterThanOrEqualToValidationRule<TValue, TArgument> : Va
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         try
-        {
-            context = new ValidationContext<TValue>(value);
-
-            if (value is IConvertible convertible)
-            {
-                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
-
-                if (!isGreaterThanOrEqualTo(this.argument, convertedValue))
-                {
-                    context.AddFailure(this.Error);
-                }
-            }
-            else if (!isGreaterThanOrEqualTo(this.argument, value))
-            {
-                context.AddFailure(this.Error);
-            }
-
-            return true;
-        }
-        catch (InvalidCastException)
         {
             context = new ValidationContext<TValue>(value);
 

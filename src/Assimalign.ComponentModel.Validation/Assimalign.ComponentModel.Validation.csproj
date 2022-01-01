@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<!--Package Build Configurations-->
 		<Version>1.0.0-pre.0.1</Version>
-		<PackageTags>Validation</PackageTags>
+		<PackageTags>validation</PackageTags>
 		<PackageId>Assimalign.ComponentModel.Validation</PackageId>
 		<AssemblyName>Assimalign.ComponentModel.Validation</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel.Validation</RootNamespace>

@@ -17,15 +17,17 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 /// </summary>
 public static partial class ValidationExtensions
 {
+
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
     /// <param name="configure">A delegate to configure a custom validation error.</param>
-    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <returns></returns>
     public static IValidationRuleBuilder<TValue> ChildRules<TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationRuleDescriptor<TValue>> configure)
         where TValue : class
     {
-
         var rule = new ChildValidationRule<TValue>()
         {
             ValidationItems = new List<IValidationItem>(),
@@ -118,7 +120,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     /// <exception cref="InvalidOperationException">Is thrown when <paramref name="min"/> is greater than <paramref name="max"/>.</exception>
     public static IValidationRuleBuilder<TValue> Length<TValue>(this IValidationRuleBuilder<TValue> builder, int min, int max)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (min > max)
         {
@@ -159,7 +161,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     /// <exception cref="InvalidOperationException">Is thrown when <paramref name="min"/> is greater than <paramref name="max"/>.</exception>
     public static IValidationRuleBuilder<TValue> Length<TValue>(this IValidationRuleBuilder<TValue> builder, int min, int max, Action<IValidationError> configure)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (configure is null)
         {
@@ -208,7 +210,7 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> Length<TValue>(this IValidationRuleBuilder<TValue> builder, int exact)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         return builder.Length(exact, error =>
         {
@@ -241,7 +243,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{T, TValue}.ValidationRule"/> is not of type <see cref="IValidationRule{T, TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> Length<TValue>(this IValidationRuleBuilder<TValue> builder, int exact, Action<IValidationError> configure)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (configure is null)
         {
@@ -357,7 +359,7 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> MinLength<TValue>(this IValidationRuleBuilder<TValue> builder, int min)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         return builder.MinLength(min, error =>
         {
@@ -389,7 +391,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> MinLength<TValue>(this IValidationRuleBuilder<TValue> builder, int min, Action<IValidationError> configure)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (configure is null)
         {
@@ -421,7 +423,7 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> NotEmpty<TValue>(this IValidationRuleBuilder<TValue> builder)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         return builder.NotEmpty(configure =>
         {
@@ -443,7 +445,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> NotEmpty<TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationError> configure)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (configure is null)
         {
@@ -474,7 +476,7 @@ public static partial class ValidationExtensions
     /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> Empty<TValue>(this IValidationRuleBuilder<TValue> builder)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         return builder.Empty(configure =>
         {
@@ -496,7 +498,7 @@ public static partial class ValidationExtensions
     /// <exception cref="ArgumentNullException">Is thrown when the <paramref name="configure"/> is null.</exception>
     /// <exception cref="ValidationException">Is thrown when <see cref="IValidationRuleBuilder{TValue}.ValidationItem"/> is not of type <see cref="IValidationRule{TValue}"/>.</exception>
     public static IValidationRuleBuilder<TValue> Empty<TValue>(this IValidationRuleBuilder<TValue> builder, Action<IValidationError> configure)
-        where TValue : IEnumerable
+        where TValue : notnull, IEnumerable
     {
         if (configure is null)
         {
@@ -520,5 +522,704 @@ public static partial class ValidationExtensions
 
         return builder;
     }
-}
 
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> Between<TValue>(this IValidationRuleBuilder<TValue> builder, TValue lowerBound, TValue upperBound)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.Between<TValue>(lowerBound, upperBound, configure =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            configure.Code = Resources.DefaultValidationErrorCode;
+            configure.Message = string.Format(Resources.DefaultValidationMessageBetweenRule, validationExpression, lowerBound, upperBound);
+            configure.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> Between<TValue>(this IValidationRuleBuilder<TValue> builder, TValue lowerBound, TValue upperBound, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (lowerBound.CompareTo(upperBound) >= 0)
+        {
+            throw new InvalidOperationException(
+                message: $"The lower bound value cannot be greater than or equal to the upper bound value when validating 'BetweenOrEqualTo()'")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Between{typeof(TValue).Name}>({lowerBound}, {upperBound})"
+            };
+        }
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Between<{typeof(TValue).Name}>({lowerBound}, {upperBound}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new BetweenValidationRule<TValue>(lowerBound, upperBound)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is between {lowerBound} and {upperBound}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue?> Between<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue lowerBound, TValue upperBound)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.Between<TValue>(lowerBound, upperBound, configure =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            configure.Code = Resources.DefaultValidationErrorCode;
+            configure.Message = string.Format(Resources.DefaultValidationMessageBetweenRule, validationExpression, lowerBound, upperBound);
+            configure.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue?> Between<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue lowerBound, TValue upperBound, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (lowerBound.CompareTo(upperBound) >= 0)
+        {
+            throw new InvalidOperationException(
+                message: $"The lower bound value cannot be greater than or equal to the upper bound value when validating 'BetweenOrEqualTo()'")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Between{typeof(TValue).Name}>({lowerBound}, {upperBound})"
+            };
+        }
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: Between<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Between<{typeof(TValue).Name}>({lowerBound}, {upperBound}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new BetweenValidationRule<TValue>(lowerBound, upperBound)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is between {lowerBound} and {upperBound}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between or equal to <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> BetweenOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue lowerBound, TValue upperBound)
+        where TValue : struct, IComparable, IComparable<TValue>, IConvertible
+    {
+        return builder.BetweenOrEqualTo<TValue>(lowerBound, upperBound, configure =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            configure.Code = Resources.DefaultValidationErrorCode;
+            configure.Message = string.Format(Resources.DefaultValidationMessageBetweenOrEqualToRule, validationExpression, lowerBound, upperBound);
+            configure.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between or equal to <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> BetweenOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue lowerBound, TValue upperBound, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>, IConvertible
+    {
+        if (lowerBound.CompareTo(upperBound) >= 0)
+        {
+            throw new InvalidOperationException(
+                message: $"The lower bound value cannot be greater than or equal to the upper bound value when validating 'BetweenOrEqualTo()'")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).BetweenOrEqualTo<{typeof(TValue).Name}>({lowerBound}, {upperBound})"
+            };
+        }
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).BetweenOrEqualTo<{typeof(TValue).Name}>({lowerBound}, {upperBound}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new BetweenOrEqualToValidationRule<TValue>(lowerBound, upperBound)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is between or equal to {lowerBound} and {upperBound}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between or equal to <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue?> BetweenOrEqualTo<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue lowerBound, TValue upperBound)
+        where TValue : struct, IComparable, IComparable<TValue>, IConvertible
+    {
+        return builder.BetweenOrEqualTo<TValue>(lowerBound, upperBound, configure =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            configure.Code = Resources.DefaultValidationErrorCode;
+            configure.Message = string.Format(Resources.DefaultValidationMessageBetweenOrEqualToRule, validationExpression, lowerBound, upperBound);
+            configure.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be between or equal to <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="lowerBound"></param>
+    /// <param name="upperBound"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue?> BetweenOrEqualTo<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue lowerBound, TValue upperBound, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>, IConvertible
+    {
+        if (lowerBound.CompareTo(upperBound) >= 0)
+        {
+            throw new InvalidOperationException(
+                message: $"The lower bound value cannot be greater than or equal to the upper bound value when validating 'BetweenOrEqualTo()'")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).BetweenOrEqualTo<{typeof(TValue).Name}>({lowerBound}, {upperBound})"
+            };
+        }
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: BetweenOrEqualTo<TBound>(TBound lowerBound, TBound upperBound, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).BetweenOrEqualTo<{typeof(TValue).Name}>({lowerBound}, {upperBound}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new BetweenOrEqualToValidationRule<TValue>(lowerBound, upperBound)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is between or equal to {lowerBound} and {upperBound}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> GreaterThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.GreaterThan<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageGreaterThanRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> GreaterThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: GreaterThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).GreaterThan<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new GreaterThanValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is greater than {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue?> GreaterThan<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.GreaterThan<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageGreaterThanRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue?> GreaterThan<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: GreaterThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).GreaterThan<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new GreaterThanValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is greater than {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> GreaterThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.GreaterThanOrEqualTo<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageGreaterThanOrEqualToRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> GreaterThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: GreaterThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).GreaterThan<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new GreaterThanOrEqualToValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} greater than or equal to {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<TValue?> GreaterThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.GreaterThanOrEqualTo<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageGreaterThanOrEqualToRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue?> GreaterThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value, Action<IValidationError> configure)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: GreaterThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).GreaterThan<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new GreaterThanOrEqualToValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} greater than or equal to {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> LessThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.LessThan<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageLessThanRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> LessThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: LessThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).LessThan<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new LessThanValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is less than {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue?> LessThan<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.LessThan<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageLessThanRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue?> LessThan<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: LessThan<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).LessThan<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new LessThanValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is less than {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue> LessThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.LessThan<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageLessThanOrEqualToRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> LessThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: LessThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).LessThanOrEqualTo<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new LessThanOrEqualToValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is less than or equal to {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    public static IValidationRuleBuilder<TValue?> LessThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value)
+       where TValue : struct, IComparable, IComparable<TValue>
+    {
+        return builder.LessThan<TValue>(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageLessThanOrEqualToRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns><see cref="IValidationRuleBuilder{TValue}"/></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue?> LessThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue?> builder, TValue value, Action<IValidationError> configure)
+        where TValue : struct, IComparable, IComparable<TValue>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: LessThanOrEqualTo<TValue>(this IValidationRuleBuilder<TValue> builder, TValue value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).LessThanOrEqualTo<{typeof(TValue).Name}>({value}, {configure})"
+            };
+        }
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new LessThanOrEqualToValidationRule<TValue>(value)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} is less than or equal to {value}"
+        });
+
+        return builder;
+    }
+}

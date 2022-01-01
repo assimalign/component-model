@@ -30,6 +30,16 @@
           "$value": 5
         }
       ]
+    },
+    {
+      "$itemMember": "Gender",
+      "$itemCondition":null,
+      "$itemType": "inline",
+      "$itemRules": [
+        {
+          "$rule": "EqualTo"
+        }
+      ]
     }
   ]
 }

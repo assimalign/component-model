@@ -10,11 +10,12 @@ public static partial class ValidatorTestObjectDescriptor
 {
     public static void ConfigureBetweenTest(this IValidationRuleDescriptor<ValidatorTestObject> descriptor)
     {
+
         // Short Tests
         descriptor.RuleFor(p => p.BetweenFields.ShortEqualToSuccessField)
-            .Between(10, 13);
+            .Between((short)8, (short)45);
         descriptor.RuleFor(p => p.BetweenFields.ShortEqualToFailureField)
-             .Between(10, 13);
+             .Between((short)10, (short)13);
 
         // Int Tests
         descriptor.RuleFor(p => p.BetweenFields.IntEqualToSuccessField)

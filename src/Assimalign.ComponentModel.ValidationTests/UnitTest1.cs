@@ -71,6 +71,9 @@ namespace Assimalign.ComponentModel.ValidationTests
                 });
 
             descriptor.RuleFor(p => p.Ages)
+                .Length(3)
+
+                .Length(2,5)
                 .MaxLength(0);
 
             descriptor.RuleFor(p=>p.Record)
@@ -80,24 +83,36 @@ namespace Assimalign.ComponentModel.ValidationTests
             descriptor
                 .When(p => p.Age > 10, configure =>
                   {
+                      configure.RuleFor(p => p.Age)
+                        .Between(10, 99)
+                        .NotEqualTo(5);
+
                       configure.RuleFor(p => p.FirstName)
-                          .EqualTo("Chase");
+                        .NotEmpty()
+                        .EqualTo("Chase");
                   })
                 .When(p => p.Age < 10, configure =>
                  {
                      configure.RuleFor(p => p.FirstName)
                            .EqualTo("NotChase");
                  });
-
+            
             
            // descriptor.RuleForEach(p => p.Addresses);
         }
     }
 
+    public enum UserGender
+    {
+        Male = 0,
+        Female = 1
+    }
+
 
     public class User : IComparable
     {
-        public int Age { get; set; }
+        public UserGender Gender { get; set; }
+        public long? Age { get; set; }
 
         public TestRecord? Record { get; set; }
 

@@ -10,20 +10,22 @@ namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
 internal abstract class ValidationConfigItem 
 {
-
     public ValidationConfigItem()
     {
         this.ItemRuleStack = new ValidationRuleStack();
     }
 
+    [JsonPropertyName("$itemMember")]
+    public string Member { get; set; }
 
+    [JsonPropertyName("$itemRules")]
+    public IEnumerable<ValidationConfigItemRule> Rules { get; set; }
 
-    [JsonPropertyName("itemMember")]
-    public string ItemMember { get; set; }
+    [JsonPropertyName("$itemType")]
+    public ValidationConfigItemType ItemType { get; set; }
 
-    [JsonPropertyName("itemRules")]
-    public IEnumerable<ValidationConfigItemRule> ItemRules { get; set; }
-
+    [JsonPropertyName("$itemCondition")]
+    public ValidationConfigCondition Condition { get; set; }
 
     [JsonIgnore]
     public IValidationRuleStack ItemRuleStack { get; }
@@ -48,29 +50,4 @@ internal class ValidationConfigRuleEqualTo : IValidationRule
     {
         throw new NotImplementedException();
     }
-}
-
-
-
-internal class ValidationConfigItemCollection
-{
-
-    [JsonPropertyName("$ruleFor")]
-    public ValidationConfigItem RuleFor { get; set; }
-
-
-    [JsonPropertyName("$ruleForEach")]
-    public ValidationConfigItem RuleForEach { get; set; }
-
-
-    [JsonPropertyName("$when")]
-    public ValidationConfigItem When { get; set; }
-}
-
-
-
-
-internal class ValidationConfigItemRule
-{
-
 }

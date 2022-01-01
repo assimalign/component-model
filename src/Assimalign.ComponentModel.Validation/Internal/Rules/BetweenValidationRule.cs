@@ -2,14 +2,14 @@
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class BetweenValidationRule<TValue, TBound> : ValidationRuleBase<TValue>
-    where TBound : notnull, IComparable
+internal sealed class BetweenValidationRule<TValue> : ValidationRuleBase<TValue>
+    where TValue : struct, IComparable, IComparable<TValue>
 {
-    private readonly TBound lowerBound;
-    private readonly TBound upperBound;
-    private readonly Func<TBound, TBound, object, bool> isOutOfBounds;
+    private readonly TValue lowerBound;
+    private readonly TValue upperBound;
+    private readonly Func<TValue, TValue, TValue, bool> isOutOfBounds;
 
-    public BetweenValidationRule(TBound lowerBound, TBound upperBound) 
+    public BetweenValidationRule(TValue lowerBound, TValue upperBound) 
     {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
@@ -21,8 +21,6 @@ internal sealed class BetweenValidationRule<TValue, TBound> : ValidationRuleBase
             return lowerResults >= 0 || upperResults <= 0;
         };
     }
-
-    public Type BoundaryType { get; }
 
     public override string Name { get; set; }
 
@@ -50,26 +48,6 @@ internal sealed class BetweenValidationRule<TValue, TBound> : ValidationRuleBase
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         try
-        {
-            context = new ValidationContext<TValue>(value);
-
-            if (value is IConvertible convertible)
-            {
-                var convertedValue = (TBound)convertible.ToType(this.BoundaryType, default);
-
-                if (isOutOfBounds(this.lowerBound, this.upperBound, convertedValue))
-                {
-                    context.AddFailure(this.Error);
-                }
-            }
-            else if (isOutOfBounds(this.lowerBound, this.upperBound, value))
-            {
-                context.AddFailure(this.Error);
-            }
-
-            return true;
-        }
-        catch (InvalidCastException)
         {
             context = new ValidationContext<TValue>(value);
 

@@ -8,7 +8,6 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 using Assimalign.ComponentModel.Validation.Internal.Extensions;
 
 internal sealed class NotEqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
-    where TArgument : IEquatable<TArgument>
 {
     private readonly TArgument argument;
 

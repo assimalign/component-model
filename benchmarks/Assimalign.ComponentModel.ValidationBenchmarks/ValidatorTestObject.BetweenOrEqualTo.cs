@@ -12,25 +12,25 @@ public static partial class ValidatorTestObjectDescriptor
     {
         // Short Tests
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.ShortEqualToSuccessField)
-            .BetweenOrEqualTo(10, 13);
+            .BetweenOrEqualTo((short)10, (short)13);
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.ShortEqualToFailureField)
-             .BetweenOrEqualTo(10, 13);
+            .BetweenOrEqualTo((short)10, (short)13);
 
         // Int Tests
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.IntEqualToSuccessField)
-             .BetweenOrEqualTo(10, 13);
+            .BetweenOrEqualTo(10, 13);
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.IntEqualToFailureField)
-             .BetweenOrEqualTo(10, 13);
+            .BetweenOrEqualTo(10, 13);
 
         // Long Tests
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.LongEqualToSuccessField)
-             .BetweenOrEqualTo(10, 13);
+            .BetweenOrEqualTo(10, 13);
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.LongEqualToFailureField)
-             .BetweenOrEqualTo(10, 13);
+            .BetweenOrEqualTo(10, 13);
 
         // DateTime Tests
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.DateTimeEqualToSuccessField)
-             .BetweenOrEqualTo(new DateTime(2021, 12, 1), new DateTime(2021, 12, 2));
+            .BetweenOrEqualTo(new DateTime(2021, 12, 1), new DateTime(2021, 12, 2));
         descriptor.RuleFor(p => p.BetweenOrEqualToFields.DateTimeEqualToFailureField)
             .BetweenOrEqualTo(new DateTime(2021, 12, 1), new DateTime(2021, 12, 2));
     }

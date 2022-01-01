@@ -1,25 +1,18 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class GreaterThanValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
-    where TArgument : notnull, IComparable
+internal sealed class GreaterThanValidationRule<TValue> : ValidationRuleBase<TValue>
+    where TValue : struct, IComparable, IComparable<TValue>
 {
-    private readonly TArgument argument;
-    private readonly Func<TArgument, object, bool> isGreaterThan;
+    private readonly TValue argument;
+    private readonly Func<TValue, TValue, bool> isGreaterThan;
 
-    public GreaterThanValidationRule(TArgument argument)
+    public GreaterThanValidationRule(TValue argument)
     {
         this.argument = argument;
         this.isGreaterThan = (arg, val) => arg.CompareTo(val) < 0; // Is the argument less than the value
-        this.ArgumentType = typeof(TArgument);
     }
-
-    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -46,26 +39,6 @@ internal sealed class GreaterThanValidationRule<TValue, TArgument> : ValidationR
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         try
-        {
-            context = new ValidationContext<TValue>(value);
-
-            if (value is IConvertible convertible)
-            {
-                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
-
-                if (!isGreaterThan(this.argument, convertedValue))
-                {
-                    context.AddFailure(this.Error);
-                }
-            }
-            else if (!isGreaterThan(this.argument, value))
-            {
-                context.AddFailure(this.Error);
-            }
-
-            return true;
-        }
-        catch (InvalidCastException)
         {
             context = new ValidationContext<TValue>(value);
 

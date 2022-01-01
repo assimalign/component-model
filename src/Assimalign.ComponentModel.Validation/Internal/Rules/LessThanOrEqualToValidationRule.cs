@@ -2,20 +2,17 @@
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class LessThanOrEqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
-    where TArgument : notnull, IComparable
+internal sealed class LessThanOrEqualToValidationRule<TValue> : ValidationRuleBase<TValue>
+    where TValue : struct, IComparable, IComparable<TValue>
 {
-    private readonly TArgument argument;
-    private readonly Func<TArgument, object, bool> isLessThanOrEqualTo;
+    private readonly TValue argument;
+    private readonly Func<TValue, TValue, bool> isLessThanOrEqualTo;
 
-    public LessThanOrEqualToValidationRule(TArgument argument)
+    public LessThanOrEqualToValidationRule(TValue argument)
     {
         this.argument = argument;
         this.isLessThanOrEqualTo = (arg, val) => arg.CompareTo(val) >= 0;
-        this.ArgumentType = typeof(TArgument);
     }
-
-    public Type ArgumentType { get; }
 
     public override string Name { get; set; }
 
@@ -42,26 +39,6 @@ internal sealed class LessThanOrEqualToValidationRule<TValue, TArgument> : Valid
     public override bool TryValidate(TValue value, out IValidationContext context)
     {
         try
-        {
-            context = new ValidationContext<TValue>(value);
-
-            if (value is IConvertible convertible)
-            {
-                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
-
-                if (!isLessThanOrEqualTo(this.argument, convertedValue))
-                {
-                    context.AddFailure(this.Error);
-                }
-            }
-            else if (!isLessThanOrEqualTo(this.argument, value))
-            {
-                context.AddFailure(this.Error);
-            }
-
-            return true;
-        }
-        catch (InvalidCastException)
         {
             context = new ValidationContext<TValue>(value);
 

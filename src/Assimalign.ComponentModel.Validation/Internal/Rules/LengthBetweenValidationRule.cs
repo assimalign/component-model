@@ -5,7 +5,7 @@ using System.Linq;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<TValue>
-    where TValue : notnull, IEnumerable
+    where TValue : IEnumerable
 {
     private readonly int lowerBound;
     private readonly int upperBound;

@@ -1,21 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<PackageTags>validation;configurable</PackageTags>
+		<PackageId>Assimalign.ComponentModel.Validation.Configurable</PackageId>
+		<AssemblyName>Assimalign.ComponentModel.Validation.Configurable</AssemblyName>
+		<RootNamespace>Assimalign.ComponentModel.Validation.Configurable</RootNamespace>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+		<!--Company Branding Information-->
+		<PackageIcon>.assimalign.logo.png</PackageIcon>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Assimalign.ComponentModel.Validation\Assimalign.ComponentModel.Validation.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Assimalign.ComponentModel.Validation\Assimalign.ComponentModel.Validation.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\.assimalign.logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Internal\Extensions\" />
-    <Folder Include="Internal\Exceptions\" />
-    <Folder Include="Internal\Serialization\" />
-  </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties configurable_1validation_1schema_1sample_1json__JsonSchema="https://json-schema.org/draft-07/schema" /></VisualStudio></ProjectExtensions>
-
+	<ItemGroup>
+		<Folder Include="Internal\Extensions\" />
+		<Folder Include="Internal\Exceptions\" />
+		<Folder Include="Internal\Serialization\" />
+	</ItemGroup>
 </Project>

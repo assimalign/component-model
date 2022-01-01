@@ -7,24 +7,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal class ValidationConfigPlan
+internal class ValidationConfig
 {
-
-
-    /// <summary>
-    /// 
-    /// </summary>
     [JsonPropertyName("$description")]
     public string Description { get; set; }
 
-
+    [JsonPropertyName("$validationConditions")]
+    public IEnumerable<ValidationConfigCondition> Conditions { get; set; }
 
     [JsonPropertyName("$validationItems")]
-    public IEnumerable<ValidationConfigItem> ValidationItems { get; set; }
-
-
-
-
+    public IEnumerable<ValidationConfigItem> Items { get; set; }
 
 
     public void Compile<T>()
@@ -32,8 +24,3 @@ internal class ValidationConfigPlan
         throw new NotImplementedException();
     }
 }
-
-
-
-
-

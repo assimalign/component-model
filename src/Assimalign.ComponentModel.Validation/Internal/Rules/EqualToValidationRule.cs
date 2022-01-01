@@ -9,7 +9,6 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
 internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
-    where TArgument : notnull, IEquatable<TArgument>
 {
     private readonly TArgument argument;
 

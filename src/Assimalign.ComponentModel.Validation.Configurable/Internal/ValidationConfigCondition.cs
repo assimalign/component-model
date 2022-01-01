@@ -28,7 +28,6 @@ internal class ValidationConfigCondition
     public object Value { get; set; }
 
 
-
     public Expression<Func<T, bool>> Build<T>()
     {
         var parameter = Expression.Parameter(typeof(T));
