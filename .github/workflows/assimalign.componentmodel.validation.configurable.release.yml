@@ -1,4 +1,4 @@
-name: assimalign.componentmodel.validation.release.ci
+name: assimalign.componentmodel.validation.configurable.release.ci
 
 on:
   release:
@@ -22,12 +22,12 @@ jobs:
     
     - name: Restore Project
       run: dotnet restore 
-      working-directory: './src/Assimalign.ComponentModel.Validation'
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable'
     
     - name: Build Project
       run: dotnet build --configuration Release --no-restore
-      working-directory: './src/Assimalign.ComponentModel.Validation'
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable'
     
     - name: Publish Nuget Package
       run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json
-      working-directory: './src/Assimalign.ComponentModel.Validation/bin/Release/'
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable/bin/Release/'
