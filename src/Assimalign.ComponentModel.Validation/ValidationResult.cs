@@ -23,7 +23,7 @@ public sealed class ValidationResult
 
 
     /// <summary>
-    /// An indicator of whether the type validated was success.
+    /// An indicator of whether the type validated was successful.
     /// </summary>
     public bool IsValid => Errors.Count() == 0;
     /// <summary>

@@ -28,7 +28,7 @@ public sealed class Validator : IValidator
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="options"></param>
+    /// <param name="options">Required for setup</param>
     public Validator(ValidationOptions options)
     {
         this.options = options;

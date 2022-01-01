@@ -29,7 +29,7 @@ public abstract class MapperProfile<TSource, TTarget> :
     private readonly IList<Action<TSource, TTarget>> before = new List<Action<TSource, TTarget>>();
 
     /// <summary>
-    /// 
+    /// Temp
     /// </summary>
     public MapperProfile()
     {

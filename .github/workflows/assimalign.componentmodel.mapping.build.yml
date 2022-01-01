@@ -1,8 +1,9 @@
-name: assimalign.componentmodel.mapping.release.ci
+name: assimalign.componentmodel.mapping.build.ci
 
 on:
-  release:
-    types: [created]
+  push:
+    paths: 
+    - 'src/Assimalign.ComponentModel.Mapping/**'
 
 jobs:
   build:
@@ -27,7 +28,3 @@ jobs:
     - name: Build Project
       run: dotnet build --configuration Release --no-restore
       working-directory: './src/Assimalign.ComponentModel.Mapping'
-    
-    - name: Publish Nuget Package
-      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json
-      working-directory: './src/Assimalign.ComponentModel.Mapping/bin/Release/'
