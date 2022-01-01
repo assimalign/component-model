@@ -1,7 +1,7 @@
 name: assimalign.componentmodel.validation.configurable.build.ci
 on:
   push:
-    paths: [ './src/Assimalign.ComponentModel.Validation.Configurable/*']
+    paths: './src/Assimalign.ComponentModel.Validation.Configurable/
 
 jobs:
   build:

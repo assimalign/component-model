@@ -20,6 +20,7 @@ public sealed class ValidationResult
         this.ValidationElapsedTicks = elapsedTicks;
     }
 
+
     /// <summary>
     /// An indicator of whether the type validated was successful.
     /// </summary>
