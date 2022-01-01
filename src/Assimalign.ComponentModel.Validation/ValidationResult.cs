@@ -13,6 +13,7 @@ public sealed class ValidationResult
 {
     private ValidationResult() { }
 
+
     internal ValidationResult(IValidationContext context, double? elapsedTicks = null)
     {
         this.Errors = context.Errors;
