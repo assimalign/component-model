@@ -7,10 +7,7 @@
   - [Model Mapping](#model-mapping)
   - [Model Mapping Configurable](#model-mapping-configurable)
 
-🟧 - 
-🟥
-🟦
-🟩 - 
+
 
 # Assimalign Component Model
 A collection of libraries extends functionality of System.ComponentModel within dotnet runtime.
