@@ -1,0 +1,35 @@
+
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup dotnet 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.x'
+    
+    - name: Setup dotnet 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'
+        include-prerelease: true
+    
+    - name: Restore Project dependencies
+      run: dotnet restore 
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable'
+    
+    - name: Build Projects .Net Core App 3.1
+      run: dotnet build --configuration Release --no-restore
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable'
+    
+    - name: Publish
+      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable/bin/Release/'
