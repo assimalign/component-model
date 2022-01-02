@@ -20,9 +20,9 @@ public abstract class RuleBaseTest
     public abstract void DecimalSucessTest();
     public abstract void DecimalFailureTest();
     public abstract void DoubleSuccessTest();
-    public abstract void DoubleFaiureTest();
+    public abstract void DoubleFailureTest();
     public abstract void DateTimeSuccessTest();
-    public abstract void DateTimeFilaureTest();
+    public abstract void DateTimeFailureTest();
     public abstract void DateOnlySuccessTest();
     public abstract void DateOnlyFailureTest();
     public abstract void TimeSpanSuccessTest();

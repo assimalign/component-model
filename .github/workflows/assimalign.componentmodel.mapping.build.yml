@@ -28,3 +28,7 @@ jobs:
     - name: Build Project
       run: dotnet build --configuration Release --no-restore
       working-directory: './src/Assimalign.ComponentModel.Mapping'
+
+    - name: Run Unit Tests
+      run: dotnet test --no-restore --verbosity normal
+      working-directory: './tests/Assimalign.ComponentModel.MappingTests'

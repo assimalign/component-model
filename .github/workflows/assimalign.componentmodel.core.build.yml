@@ -1,8 +1,9 @@
-name: assimalign.componentmodel.validation.build.ci
+name: assimalign.componentmodel.core.build.ci
 
 on:
   push:
     paths: 
+    - 'src/Assimalign.ComponentModel.Mapping/**'
     - 'src/Assimalign.ComponentModel.Validation/**'
 
 jobs:
@@ -23,13 +24,8 @@ jobs:
     
     - name: Restore Project
       run: dotnet restore 
-      working-directory: './src/Assimalign.ComponentModel.Validation'
+      working-directory: './src/Assimalign.ComponentModel.Core'
     
     - name: Build Project
       run: dotnet build --configuration Release --no-restore
-      working-directory: './src/Assimalign.ComponentModel.Validation'
-
-    - name: Run Unit Tests
-      run: dotnet test --no-restore --verbosity normal
-      working-directory: './tests/Assimalign.ComponentModel.ValidationTests'
-  
+      working-directory: './src/Assimalign.ComponentModel.Core'

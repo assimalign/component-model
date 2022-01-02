@@ -10,7 +10,7 @@ internal sealed class LengthBetweenValidationRule<TValue> : ValidationRuleBase<T
     private readonly int lowerBound;
     private readonly int upperBound;
 
-    public LengthBetweenValidationRule( int lowerBound, int upperBound)
+    public LengthBetweenValidationRule(int lowerBound, int upperBound)
     {
         this.upperBound = upperBound;
         this.lowerBound = lowerBound;

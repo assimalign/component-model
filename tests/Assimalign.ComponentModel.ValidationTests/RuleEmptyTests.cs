@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.ValidationTests.Rules.CreditCardTests
+namespace Assimalign.ComponentModel.ValidationTests
 {
-    public class CreditCardFormatTests
+    public class RuleEmptyTests
     {
-        
+
     }
 }

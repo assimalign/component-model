@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.ValidationTests.Rules.Between
+namespace Assimalign.ComponentModel.ValidationTests
 {
-    public class DoubleBetweenValidationRuleTests
+    public class RuleNotEmptyTests
     {
-        
+
     }
 }

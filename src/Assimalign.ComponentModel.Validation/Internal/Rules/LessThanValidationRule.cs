@@ -11,7 +11,16 @@ internal sealed class LessThanValidationRule<TValue> : ValidationRuleBase<TValue
     public LessThanValidationRule(TValue argument)
     { 
         this.argument = argument;
-        this.isLessThan = (arg, val) => arg.CompareTo(val) >= 0;
+        this.isLessThan = (arg, val) =>
+        {
+            var result = arg.CompareTo(val);
+
+            if (result > 0)
+            {
+                return true;
+            }
+            return false;
+        };
     }
 
 
