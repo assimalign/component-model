@@ -2,6 +2,10 @@ name: assimalign.componentmodel.core.build.ci
 
 on:
   push:
+    branches:
+    - 'development'
+    - 'users/**'
+    - 'features/**'
     paths: 
     - 'src/Assimalign.ComponentModel.Mapping/**'
     - 'tests/Assimalign.ComponentModel.MappingTests/**'
