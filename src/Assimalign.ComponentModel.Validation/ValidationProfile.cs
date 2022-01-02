@@ -7,7 +7,7 @@ namespace Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Internal;
 
 /// <summary>
-/// 
+/// A validation profile is used to describe the rules of <typeparamref name="T"/>.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public abstract class ValidationProfile<T> : IValidationProfile<T>

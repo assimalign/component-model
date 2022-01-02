@@ -4,8 +4,8 @@ on:
   push:
     branches:
     - 'development'
-    - 'users/*'
-    - 'features/*'
+    - 'users/**'
+    - 'features/**'
     paths: 
     - 'src/Assimalign.ComponentModel.Validation/**'
     - 'tests/Assimalign.ComponentModel.ValidationTests/**'
