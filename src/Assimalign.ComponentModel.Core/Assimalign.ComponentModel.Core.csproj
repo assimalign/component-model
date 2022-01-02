@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>1.0.0-pre.0.1</Version>
-		<PackageId>Assimalign.ComponentModel</PackageId>
+		<PackageId>Assimalign.ComponentModel.Core</PackageId>
 		<AssemblyName>Assimalign.ComponentModel</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel</RootNamespace>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

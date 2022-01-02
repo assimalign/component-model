@@ -2,6 +2,10 @@ name: assimalign.componentmodel.validation.configurable.build.ci
 
 on:
   push:
+    branches:
+    - 'development'
+    - 'users/*'
+    - 'features/*'
     paths: 
     - 'src/Assimalign.ComponentModel.Validation.Configurable/**'
 
