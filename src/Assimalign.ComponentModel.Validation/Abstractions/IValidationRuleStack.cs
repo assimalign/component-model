@@ -19,34 +19,38 @@ public interface IValidationRuleStack :
     IReadOnlyCollection<IValidationRule>
 {
     /// <summary>
-    /// 
+    /// Returns the most recent validation rule within the 
+    /// stack by removing it.
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="IValidationRule"/></returns>
     IValidationRule Pop();
 
     /// <summary>
-    /// 
+    /// Attempts to return the most recent validation rule within the 
+    /// stack by removing it.
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    bool TryPop(out IValidationRule result);
+    /// <param name="rule"></param>
+    /// <returns><see cref="bool"/></returns>
+    bool TryPop(out IValidationRule rule);
 
     /// <summary>
-    /// 
+    /// Returns the most recent validation rule within the 
+    /// stack without removing it.
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="IValidationRule"/></returns>
     IValidationRule Peek();
 
     /// <summary>
-    /// 
+    /// Attempts to return the most recent validation rule within the 
+    /// stack without removing it.
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    bool TryPeek(out IValidationRule result);
+    /// <param name="rule"></param>
+    /// <returns><see cref="bool"/></returns>
+    bool TryPeek(out IValidationRule rule);
 
     /// <summary>
-    /// 
+    /// Adds a new validation rule to the stack.
     /// </summary>
-    /// <param name="item"></param>
-    void Push(IValidationRule item);
+    /// <param name="rule"></param>
+    void Push(IValidationRule rule);
 }

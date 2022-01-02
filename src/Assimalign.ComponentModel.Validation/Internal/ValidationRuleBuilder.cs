@@ -62,7 +62,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
         configure.Invoke(error);
 
-        this.ValidationItem.ItemRuleStack.Push(new EqualToValidationRule<TValue, TValue>(value)
+        this.ValidationItem.ItemRuleStack.Push(new EqualToValidationRule<TValue>(value)
         {
             Error = error,
             Name = $"Validate {this.ValidationItem} is equal to {value}"
@@ -99,7 +99,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
 
         configure.Invoke(error);
 
-        this.ValidationItem.ItemRuleStack.Push(new NotEqualToValidationRule<TValue, TValue>(value)
+        this.ValidationItem.ItemRuleStack.Push(new NotEqualToValidationRule<TValue>(value)
         {
             Error = error,
             Name = $"Validate {this.ValidationItem} is not equal to {value}"

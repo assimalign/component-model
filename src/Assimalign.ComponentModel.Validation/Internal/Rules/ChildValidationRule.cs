@@ -8,7 +8,6 @@ namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 internal sealed class ChildValidationRule<TValue> : ValidationRuleBase<TValue>
     where TValue : class
 {
-
     public ValidationMode ValidationMode { get; set; }
 
     public IList<IValidationItem> ValidationItems { get; set; }
@@ -17,7 +16,7 @@ internal sealed class ChildValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
-        if (value is null)
+        if (value is null) // No need to validate an object that is null
         {
             context = new ValidationContext<TValue>(default(TValue));
             return true;

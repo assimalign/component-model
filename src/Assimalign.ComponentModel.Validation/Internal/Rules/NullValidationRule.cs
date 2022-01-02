@@ -15,7 +15,7 @@ internal sealed class NullValidationRule<TValue> : ValidationRuleBase<TValue>
             context = new ValidationContext<TValue>(default(TValue));
             return true;
         }
-        else if(value is not null && value is TValue tv)
+        else if (value is not null && value is TValue tv)
         {
             context = new ValidationContext<TValue>(tv);
             context.AddFailure(this.Error);

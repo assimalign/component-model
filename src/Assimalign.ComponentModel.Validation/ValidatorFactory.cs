@@ -46,6 +46,6 @@ public sealed class ValidatorFactory : IValidatorFactory
 
         configure.Invoke(builder);
 
-        return new ValidatorFactory(builder.Validators);
+        return new ValidatorFactory(builder.validators);
     }
 }

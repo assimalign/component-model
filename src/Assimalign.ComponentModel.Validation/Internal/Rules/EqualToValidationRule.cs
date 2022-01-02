@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Linq.Expressions;
-
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleBase<TValue>
+internal sealed class EqualToValidationRule<TValue> : ValidationRuleBase<TValue>
 {
-    private readonly TArgument argument;
+    private readonly TValue argument;
 
-    public EqualToValidationRule(TArgument argument)
+    public EqualToValidationRule(TValue argument)
     {
-        this.ArgumentType = typeof(TArgument);
+        this.ArgumentType = typeof(TValue);
         this.argument = argument;
     }
 
@@ -48,16 +42,7 @@ internal sealed class EqualToValidationRule<TValue, TArgument> : ValidationRuleB
         {
             context = new ValidationContext<TValue>(value);
 
-            if (value is IConvertible convertible)
-            {
-                var convertedValue = (TArgument)convertible.ToType(this.ArgumentType, default);
-
-                if (!this.argument.Equals(convertedValue))
-                {
-                    context.AddFailure(this.Error);
-                }
-            }
-            else if (!this.argument.Equals(value))
+            if (!this.argument.Equals(value))
             {
                 context.AddFailure(this.Error);
             }

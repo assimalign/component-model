@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<!--Package Build Configurations-->
-		<Version>1.0.0-pre.0.1</Version>
+		<Version>1.0.0-pre.0.2</Version>
 		<PackageTags>validation;fluent</PackageTags>
 		<PackageId>Assimalign.ComponentModel.Validation</PackageId>
 		<AssemblyName>Assimalign.ComponentModel.Validation</AssemblyName>

@@ -42,12 +42,9 @@ internal sealed class EmailValidationRule<TValue> : ValidationRuleBase<TValue>
             if (!Regex.IsMatch(stringValue, pattern))
             {
                 context.AddFailure(this.Error);
-                return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
         catch
         {
