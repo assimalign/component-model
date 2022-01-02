@@ -2,12 +2,13 @@
 	<PropertyGroup>
 		<!--Package Build Configurations-->
 		<Version>1.0.0-pre.0.1</Version>
-		<PackageTags>validation</PackageTags>
+		<PackageTags>validation;fluent</PackageTags>
 		<PackageId>Assimalign.ComponentModel.Validation</PackageId>
 		<AssemblyName>Assimalign.ComponentModel.Validation</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel.Validation</RootNamespace>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Description>The following library offers an extensive set of fluent APIs for object validation built on .NET.</Description>
 
 		<!--Company Branding Information-->
 		<PackageIcon>.assimalign.logo.png</PackageIcon>

@@ -6,7 +6,7 @@
 		<PackageId>Assimalign.ComponentModel.Mapping</PackageId>
 		<AssemblyName>Assimalign.ComponentModel.Mapping</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel.Mapping</RootNamespace>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageTags>Validation</PackageTags>
 		<!--Company Branding Information-->

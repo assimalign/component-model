@@ -4,7 +4,7 @@
 		<PackageId>Assimalign.ComponentModel</PackageId>
 		<AssemblyName>Assimalign.ComponentModel</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel</RootNamespace>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<!--Company Branding Information-->
 		<PackageIcon>.assimalign.logo.png</PackageIcon>

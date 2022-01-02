@@ -41,7 +41,7 @@ Below is a list of available libraries.
 
 
 **Summary:**
-Fluent object building using interfaces and func's
+A library for Fluent object building using interfaces and func's
 
 <br/>
 <br/>
@@ -58,10 +58,10 @@ Fluent object building using interfaces and func's
 
 **Summary:**
 
-The following library offers an extensive set of fluent APIs for model validation which extend the [System.ComponentModel](https://github.com/dotnet/runtime/tree/main/src/libraries/System.ComponentModel) within [dotnet/runtime](https://github.com/dotnet/runtime). The implementation is very similar to [FluentValidation](https://github.com/FluentValidation) however the intent of remaking this library was to focus on three areas of improvement: 
-- **Remove Constructor Configuration**
+The following library offers an extensive set of fluent APIs for object validation which extend the [System.ComponentModel](https://github.com/dotnet/runtime/tree/main/src/libraries/System.ComponentModel) within [dotnet/runtime](https://github.com/dotnet/runtime). The implementation is very similar to [FluentValidation](https://github.com/FluentValidation) however the intent of remaking this library was to focus on three areas of improvement: 
+- **Remove Constructor Configuration into Configurable Method**
 - **Simplify the Abstraction for easier extensibility**
-- Allow for Configurable based validation rules
+- **Allow for Configurable based Validation via Configuration Provider**
 
 
 <br/>
@@ -77,7 +77,7 @@ The following library offers an extensive set of fluent APIs for model validatio
 
 
 **Summary:**
-This library extends off of the [Fluent Model Validation](#fluent-model-validation) library adding configurable APIs. In many cases changes to 
+This library extends off of the [Fluent Model Validation](#fluent-model-validation) library adding configurable APIs.
 
 <br/>
 <br/>
