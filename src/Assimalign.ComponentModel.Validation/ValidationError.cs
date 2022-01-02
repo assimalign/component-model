@@ -7,6 +7,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public sealed class ValidationError : IValidationError
 {
+
     /// <summary>
     /// The default constructor.
     /// </summary>
