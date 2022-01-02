@@ -12,7 +12,7 @@ using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Rules;
 
-public class RuleLengthMinTest
+public class RuleLengthMinTests
 {
     public IValidationContext RunLengthMinTest<TValue>(int min, TValue value)
         where TValue : IEnumerable

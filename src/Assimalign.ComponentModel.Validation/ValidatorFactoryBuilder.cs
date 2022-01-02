@@ -9,7 +9,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public sealed class ValidatorFactoryBuilder
 {
-    private readonly IDictionary<string, IValidator> validators;
+    internal readonly IDictionary<string, IValidator> validators;
 
     internal ValidatorFactoryBuilder()
     {
@@ -19,7 +19,7 @@ public sealed class ValidatorFactoryBuilder
     /// <summary>
     /// 
     /// </summary>
-    public IDictionary<string, IValidator> Validators => this.validators;
+    public IEnumerable<IValidator> Validators => this.validators.Values;
 
     /// <summary>
     /// 

@@ -6,6 +6,7 @@ on:
     - main
     paths: 
     - 'src/Assimalign.ComponentModel.Validation/**'
+    - 'tests/Assimalign.ComponentModel.ValidationTests/**'
 
 jobs:
   build:
@@ -30,6 +31,14 @@ jobs:
     - name: Build Project
       run: dotnet build --configuration Release --no-restore
       working-directory: './src/Assimalign.ComponentModel.Validation'
+
+    - name: Restore Unit Tests Project
+      run: dotnet restore 
+      working-directory: './tests/Assimalign.ComponentModel.ValidationTests'
+
+    - name: Run Unit Tests
+      run: dotnet test --no-restore --verbosity normal
+      working-directory: './tests/Assimalign.ComponentModel.ValidationTests'
     
     - name: Publish Nuget Package
       run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json

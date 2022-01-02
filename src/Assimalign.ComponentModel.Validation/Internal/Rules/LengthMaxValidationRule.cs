@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-
 internal sealed class LengthMaxValidationRule<TValue> : ValidationRuleBase<TValue>
     where TValue : IEnumerable
 {

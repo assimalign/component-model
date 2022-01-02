@@ -28,10 +28,11 @@ public sealed class ValidationOptions
     /// </summary>
     public bool ThrowExceptionOnFailure { get; set; }
 
-    /// <summary>
-    /// A 
-    /// </summary>
-    public int ValidationFailureLimit { get; set; }
+
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    // public int ValidationFailureLimit { get; set; }
 
     /// <summary>
     /// The collection of profiles.
@@ -57,7 +58,7 @@ public sealed class ValidationOptions
         if (this.profiles.ContainsKey(index))
         {
             throw new InvalidOperationException($"A Validation Profile for type: {profile.GetType().Name} has already been registered. " +
-                $"If needing to implement two different validation profiles for the type {profile.GetType().Name} then use the ValidationFacotry.");
+                $"If needing to implement two different validation profiles for type {profile.GetType().Name} then use the ValidationFacotry.");
         }
 
         this.profiles[index] = profile;

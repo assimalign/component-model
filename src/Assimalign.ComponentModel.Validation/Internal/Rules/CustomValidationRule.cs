@@ -21,7 +21,19 @@ internal sealed class CustomValidationRule<TValue> : ValidationRuleBase<TValue>
 
     public override bool TryValidate(object value, out IValidationContext context)
     {
-        return TryValidate(value ?? default(TValue), out context);
+        if (value is not TValue && value is null)
+        {
+            return TryValidate(default(TValue), out context);
+        }
+        else if (value is TValue tv)
+        {
+            return TryValidate(tv, out context);
+        }
+        else
+        {
+            context = null;
+            return false;
+        }
     }
 
     public override bool TryValidate(TValue value, out IValidationContext context)
