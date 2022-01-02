@@ -11,7 +11,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable
     {
         public ValidatorBuilder()
         {
-            var temp = "";
+            
         }
     }
 }

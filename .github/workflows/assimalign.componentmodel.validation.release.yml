@@ -1,8 +1,11 @@
 name: assimalign.componentmodel.validation.release.ci
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+    - main
+    paths: 
+    - 'src/Assimalign.ComponentModel.Validation/**'
 
 jobs:
   build:

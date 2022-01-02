@@ -1,8 +1,11 @@
 name: assimalign.componentmodel.mapping.release.ci
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+    - main
+    paths: 
+    - 'src/Assimalign.ComponentModel.Mapping/**'
 
 jobs:
   build:
