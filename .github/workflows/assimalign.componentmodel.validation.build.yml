@@ -4,6 +4,7 @@ on:
   push:
     paths: 
     - 'src/Assimalign.ComponentModel.Validation/**'
+    - 'tests/Assimalign.ComponentModel.ValidationTests/**'
 
 jobs:
   build:

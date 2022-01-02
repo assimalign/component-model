@@ -8,6 +8,10 @@ namespace Assimalign.ComponentModel.ValidationTests
 {
     public class RuleNotEmptyTests
     {
+        public RuleNotEmptyTests()
+        {
+
+        }
 
     }
 }
