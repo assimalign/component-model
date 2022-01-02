@@ -29,6 +29,10 @@ jobs:
       run: dotnet build --configuration Release --no-restore
       working-directory: './src/Assimalign.ComponentModel.Validation'
 
+    - name: Restore Unit Tests Project
+      run: dotnet restore 
+      working-directory: './tests/Assimalign.ComponentModel.ValidationTests'
+
     - name: Run Unit Tests
       run: dotnet test --no-restore --verbosity normal
       working-directory: './tests/Assimalign.ComponentModel.ValidationTests'
