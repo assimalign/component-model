@@ -64,7 +64,6 @@ namespace Assimalign.ComponentModel.MappingTests
                         source.Details ??= new EmployeeDetails();
                     });
 
-                descriptor.After
 
                 descriptor
                     .ForTarget(target => target.FirstName)

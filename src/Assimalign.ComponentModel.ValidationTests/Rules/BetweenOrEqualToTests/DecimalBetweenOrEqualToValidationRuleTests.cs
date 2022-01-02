@@ -10,7 +10,6 @@ namespace Assimalign.ComponentModel.ValidationTests.Rules.BetweenOrEqualTo;
 
 public class DecimalBetweenOrEqualToValidationTests
 {
-
     public partial class TestClass
     {
         public decimal Decimal { get; set; }
