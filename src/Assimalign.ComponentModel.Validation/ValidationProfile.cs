@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+
+
+namespace Assimalign.ComponentModel.Validation;
+
+using Assimalign.ComponentModel.Validation.Internal;
+
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public abstract class ValidationProfile<T> : IValidationProfile<T>
+{
+    private readonly Type validationType;
+    private readonly IList<IValidationItem> validationItems;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ValidationProfile()
+    {
+        this.validationType = typeof(T);
+        this.validationItems = new List<IValidationItem>();
+    }
+
+    /// <summary>
+    /// A collection validation rules to apply to the instance of <typeparamref name="T"/>
+    /// for a given context.
+    /// </summary>
+    public IEnumerable<IValidationItem> ValidationItems => this.validationItems;
+
+    /// <summary>
+    /// The type of <typeparamref name="T"/> being validated.
+    /// </summary>
+    public Type ValidationType => this.validationType;
+
+    /// <summary>
+    /// A flag indicating whether to cascade through all validation rules after first failure.
+    /// </summary>
+    public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    void IValidationProfile.Configure()
+    {
+        this.Configure(new ValidationRuleDescriptor<T>()
+        {
+            ValidationItems = this.ValidationItems as IList<IValidationItem>,
+            ValidationMode = this.ValidationMode
+        });
+    }
+
+    /// <summary>
+    /// Configures the validation rules to be applied on the type <typeparamref name="T"/>
+    /// </summary>
+    /// <param name="descriptor"></param>
+    public abstract void Configure(IValidationRuleDescriptor<T> descriptor);
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+public abstract class ValidationProfile : IValidationProfile
+{
+    private readonly Type validationType;
+    private readonly IList<IValidationItem> validationItems;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ValidationProfile(Type type)
+    {
+        this.validationType = type;
+        this.validationItems = new List<IValidationItem>();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Type ValidationType => this.validationType;
+
+    /// <summary>
+    /// A flag indicating whether to cascade through all validation rules after first failure.
+    /// </summary>
+    public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IEnumerable<IValidationItem> ValidationItems => this.validationItems;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract void Configure();
+}

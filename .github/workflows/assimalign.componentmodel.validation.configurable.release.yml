@@ -1,0 +1,36 @@
+name: assimalign.componentmodel.validation.configurable.release.ci
+
+on:
+  push:
+    branches:
+    - main
+    paths: 
+    - 'src/Assimalign.ComponentModel.Validation.Configurable/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.x'
+    
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'
+    
+    - name: Restore Project
+      run: dotnet restore 
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable'
+    
+    - name: Build Project
+      run: dotnet build --configuration Release --no-restore
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable'
+    
+    - name: Publish Nuget Package
+      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable/bin/Release/'

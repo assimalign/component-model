@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--Package Build Configurations-->
+		<Version>1.0.0-pre.0.1</Version>
+		<PackageId>Assimalign.ComponentModel.Mapping</PackageId>
+		<AssemblyName>Assimalign.ComponentModel.Mapping</AssemblyName>
+		<RootNamespace>Assimalign.ComponentModel.Mapping</RootNamespace>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageTags>Validation</PackageTags>
+		<!--Company Branding Information-->
+		<PackageIcon>.assimalign.logo.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\.assimalign.logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>
