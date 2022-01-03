@@ -11,6 +11,14 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 /// </summary>
 public interface IValidationConfigBuilder
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <returns></returns>
+    IValidationConfigBuilder Register(IValidationConfigProvider provider);
+
     /// <summary>
     /// 
     /// </summary>

@@ -41,5 +41,5 @@ jobs:
       working-directory: './tests/Assimalign.ComponentModel.ValidationTests'
     
     - name: Publish Nuget Package
-      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_PUBLISHING_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: './src/Assimalign.ComponentModel.Validation/bin/Release/'
