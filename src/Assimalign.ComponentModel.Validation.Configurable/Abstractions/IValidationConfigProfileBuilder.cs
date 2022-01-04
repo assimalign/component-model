@@ -9,14 +9,14 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 /// <summary>
 /// 
 /// </summary>
-public interface IValidationConfigBuilder
+public interface IValidationConfigProfileBuilder
 {
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TProvider"></typeparam>
     /// <returns></returns>
-    IValidationConfigBuilder AddConfigProvider<TProvider>()
+    IValidationConfigProfileBuilder AddConfigProvider<TProvider>()
         where TProvider : IValidationConfigProvider, new();
 
     /// <summary>
@@ -24,7 +24,7 @@ public interface IValidationConfigBuilder
     /// </summary>
     /// <typeparam name="TProvider"></typeparam>
     /// <returns></returns>
-    IValidationConfigBuilder AddConfigProvider<TProvider>(TProvider provider)
+    IValidationConfigProfileBuilder AddConfigProvider<TProvider>(TProvider provider)
         where TProvider : IValidationConfigProvider;
 
     /// <summary>
@@ -33,7 +33,7 @@ public interface IValidationConfigBuilder
     /// <typeparam name="TProvider"></typeparam>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IValidationConfigBuilder AddConfigProvider<TProvider>(Func<TProvider> configure)
+    IValidationConfigProfileBuilder AddConfigProvider<TProvider>(Func<TProvider> configure)
         where TProvider : IValidationConfigProvider;
 
     /// <summary>

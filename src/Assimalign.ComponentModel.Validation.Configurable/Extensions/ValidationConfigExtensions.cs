@@ -18,7 +18,7 @@ public static partial class ValidationConfigExtensions
     /// </summary>
     /// <param name="json"></param>
     /// <returns></returns>
-    public static IValidationConfigBuilder AddJsonProvider<T>(this IValidationConfigBuilder builder, string json)
+    public static IValidationConfigProfileBuilder AddJsonProvider<T>(this IValidationConfigProfileBuilder builder, string json)
         where T : class
     {
 
@@ -30,7 +30,7 @@ public static partial class ValidationConfigExtensions
 
    
 
-    public static IValidator Create(this Validator validator, Func<IValidationConfigBuilder, IValidationProfile[]> configure)
+    public static IValidator Create(this Validator validator, Func<IValidationConfigProfileBuilder, IValidationProfile[]> configure)
     {
         var builder = new ValidationConfigBuilder();
         var profiles = configure.Invoke(builder);
@@ -50,7 +50,7 @@ public static partial class ValidationConfigExtensions
 public sealed partial class ValidatorConfigurable
 {
 
-    public static IValidator Create(Func<IValidationConfigBuilder, IValidationProfile[]> configure)
+    public static IValidator Create(Func<IValidationConfigProfileBuilder, IValidationProfile[]> configure)
     {
         var builder = new ValidationConfigBuilder();
         var profiles = configure.Invoke(builder);

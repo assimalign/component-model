@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-public sealed class ValidationConfigBuilder : IValidationConfigBuilder
+public sealed class ValidationConfigBuilder : IValidationConfigProfileBuilder
 {
     public readonly IList<IValidationConfigProvider> profiles;
 
@@ -24,21 +24,21 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
         }
     }
 
-    public IValidationConfigBuilder AddConfigProvider<TProvider>() 
+    public IValidationConfigProfileBuilder AddConfigProvider<TProvider>() 
         where TProvider : IValidationConfigProvider, new()
     {
         this.profiles.Add(new TProvider());
         return this;
     }
 
-    public IValidationConfigBuilder AddConfigProvider<TProvider>(TProvider provider) 
+    public IValidationConfigProfileBuilder AddConfigProvider<TProvider>(TProvider provider) 
         where TProvider : IValidationConfigProvider
     {
         this.profiles.Add(provider);
         return this;
     }
 
-    public IValidationConfigBuilder AddConfigProvider<TProvider>(Func<TProvider> configure) 
+    public IValidationConfigProfileBuilder AddConfigProvider<TProvider>(Func<TProvider> configure) 
         where TProvider : IValidationConfigProvider
     {
         this.profiles.Add(configure.Invoke());
@@ -47,7 +47,7 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
 
 
 
-    public static IValidator Create(Func<IValidationConfigBuilder, IValidationProfile[]> configure)
+    public static IValidator Create(Func<IValidationConfigProfileBuilder, IValidationProfile[]> configure)
     {
         var builder = new ValidationConfigBuilder();
         var profiles = configure.Invoke(builder);

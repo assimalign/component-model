@@ -1,10 +1,13 @@
 <Project>
 	<PropertyGroup>
+		<Version>1.0.0-pre.0.3</Version>
 		<Copyright>© Assimalign LLC 2021</Copyright>
 		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
 		<LangVersion>10.0</LangVersion>
 		<Authors>Chase R. Crawford</Authors>
 		<PackageIconUrl>https://corporate.assets.assimalign.com/assets/logos/.assimalign.logo.png</PackageIconUrl>
 		<PackageProjectUrl>https://github.com/Assimalign-LLC/asal-component-model</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Assimalign-LLC/asal-component-model</RepositoryUrl>
+		<RepositoryType></RepositoryType>
 	</PropertyGroup>
 </Project>

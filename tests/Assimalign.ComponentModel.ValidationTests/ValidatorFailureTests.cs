@@ -45,7 +45,6 @@ public class ValidatorFailureTests
             configure.AddProfile(new TestObjectValidationProfile(descriptor =>
             {
                 descriptor.RuleFor(p => p.FirstName)
-                    .Matches("")
                     .NotEmpty();
             }));
         });

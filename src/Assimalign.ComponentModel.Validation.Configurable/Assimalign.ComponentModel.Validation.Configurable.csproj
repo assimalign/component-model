@@ -6,6 +6,9 @@
 		<RootNamespace>Assimalign.ComponentModel.Validation.Configurable</RootNamespace>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Description>
+
+		</Description>
 
 		<!--Company Branding Information-->
 		<PackageIcon>.assimalign.logo.png</PackageIcon>

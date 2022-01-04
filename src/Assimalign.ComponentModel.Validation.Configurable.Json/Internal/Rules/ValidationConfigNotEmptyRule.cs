@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Configurable
-{
-    internal class ValidatorPlanPredicate
+namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
+
+    public class ValidationConfigNotEmptyRule
     {
-        
+
     }
-}

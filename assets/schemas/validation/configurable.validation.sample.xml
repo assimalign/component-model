@@ -5,6 +5,12 @@
             <item-member></item-member>
             <item-type></item-type>
 
+            <item-rules>
+                <rule>
+                    
+                </rule>
+            </item-rules>
+
         </validation-item>
 
     </validation-items>

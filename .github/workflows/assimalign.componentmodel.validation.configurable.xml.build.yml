@@ -1,0 +1,34 @@
+name: assimalign.componentmodel.validation.configurable.xml.build.ci
+
+on:
+  push:
+    branches:
+    - 'development'
+    - 'users/**'
+    - 'features/**'
+    paths: 
+    - 'src/Assimalign.ComponentModel.Validation.Configurable.Xml/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.x'
+    
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'
+    
+    - name: Restore Project
+      run: dotnet restore 
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable.Xml'
+    
+    - name: Build Project
+      run: dotnet build --configuration Release --no-restore
+      working-directory: './src/Assimalign.ComponentModel.Validation.Configurable.Xml'

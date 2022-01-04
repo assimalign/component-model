@@ -1,13 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<PackageId>Assimalign.ComponentModel.Validation.Configurable.Json</PackageId>
 		<RootNamespace>Assimalign.ComponentModel.Validation.Configurable</RootNamespace>
-		<AssemblyName>Assimalign.ComponentModel.Validation.Configurable</AssemblyName>
+		<AssemblyName>Assimalign.ComponentModel.Validation.Configurable.Json</AssemblyName>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Description>
+			
+		</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Internal\Exceptions\" />
+	  <Folder Include="Internal\Extensions\" />
+	  <Folder Include="Internal\Serialization\Json\" />
 	</ItemGroup>
 
 </Project>
