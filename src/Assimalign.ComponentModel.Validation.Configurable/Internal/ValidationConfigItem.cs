@@ -8,46 +8,20 @@ using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal abstract class ValidationConfigItem 
-{
-    public ValidationConfigItem()
-    {
-        this.ItemRuleStack = new ValidationRuleStack();
-    }
+using Assimalign.ComponentModel.Validation.Configurable.Internal.Serialization;
 
+[JsonConverter(typeof(ItemRuleConverter))]
+internal class ValidationConfigItem 
+{
     [JsonPropertyName("$itemMember")]
     public string Member { get; set; }
-
-    [JsonPropertyName("$itemRules")]
-    public IEnumerable<ValidationConfigItemRule> Rules { get; set; }
 
     [JsonPropertyName("$itemType")]
     public ValidationConfigItemType ItemType { get; set; }
 
-    [JsonPropertyName("$itemCondition")]
-    public ValidationConfigCondition Condition { get; set; }
+    [JsonPropertyName("$itemConditionId")]
+    public string ConditionId { get; set; }
 
-    [JsonIgnore]
-    public IValidationRuleStack ItemRuleStack { get; }
-
-    public void Evaluate(IValidationContext context)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-//internal abstract class ValidationConfig
-
-internal class ValidationConfigRuleEqualTo : IValidationRule
-{
-
-    [JsonPropertyName("$value")]
-    public object Value { get; set; }
-
-    public string Name => throw new NotImplementedException();
-
-    public bool TryValidate(object value, out IValidationContext context)
-    {
-        throw new NotImplementedException();
-    }
+    [JsonPropertyName("$itemRules")]
+    public IEnumerable<ValidationConfigRule> Rules { get; set; }
 }

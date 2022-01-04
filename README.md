@@ -10,7 +10,13 @@
 
 
 # Assimalign Component Model
-A collection of libraries extending the functionality of System.ComponentModel within dotnet runtime.
+A collection of libraries extending the functionality of [System.ComponentModel](https://github.com/dotnet/runtime) within dotnet runtime. The namespace [System.ComponentModel](https://github.com/dotnet/runtime) provides classes used to implement the run-time and design-time behavior of components and controls. 
+
+The packages within Assimalign.ComponentModel are mainly focused of design-time behavior.
+
+For example when when designing behavior.
+
+Common Names: DTO (Data-Transfer Objects), POCO (Plain Ole CLR Object)
 
 
 # Available Libraries

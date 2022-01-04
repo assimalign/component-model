@@ -1,0 +1,11 @@
+<validation-profile>
+
+    <validation-items>
+        <validation-item>
+            <item-member></item-member>
+            <item-type></item-type>
+
+        </validation-item>
+
+    </validation-items>
+</validation-profile>

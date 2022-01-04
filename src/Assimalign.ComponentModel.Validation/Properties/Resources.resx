@@ -153,6 +153,9 @@
   <data name="DefaultValidationMessageLessThanRule" xml:space="preserve">
     <value>The following expression: {0} must be less than '{1}'.</value>
   </data>
+  <data name="DefaultValidationMessageMatchesRule" xml:space="preserve">
+    <value>The following expression: {0} must match this pattern '{1}'.</value>
+  </data>
   <data name="DefaultValidationMessageMaxLengthRule" xml:space="preserve">
     <value>The following expression: {0} requires a maximum length of '{1}'.</value>
   </data>

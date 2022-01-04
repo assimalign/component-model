@@ -16,9 +16,7 @@
     {
       "$itemMember": "Age",
       "$itemType": "inline",
-      "$itemCondition": {
-        "$conditionId": "01226486"
-      },
+      "$itemConditionId": "01226486",
       "$itemRules": [
         {
           "$rule": "Between",
@@ -32,12 +30,29 @@
       ]
     },
     {
-      "$itemMember": "Gender",
-      "$itemCondition":null,
-      "$itemType": "inline",
+      "$itemMember": "Addresses",
+      "$itemConditionId": "",
+      "$itemType": "recursive",
       "$itemRules": [
         {
-          "$rule": "EqualTo"
+          "$rule": "Child",
+          "$validationItems": [
+            {
+              "$itemMember": "StreetOne",
+              "$itemConditionId": null,
+              "$itemType": "inline",
+              "$itemRules": [
+                {
+                  "$rule": "NotEmpty"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$rule":  "Between",
+          "$lower": "",
+          "$upper": ""
         }
       ]
     }

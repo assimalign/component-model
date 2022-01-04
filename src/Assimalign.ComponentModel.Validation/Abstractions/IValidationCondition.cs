@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation;
@@ -14,14 +13,9 @@ namespace Assimalign.ComponentModel.Validation;
 public interface IValidationCondition<T>
 {
     /// <summary>
-    /// The Condition in which the child validation rule collection should be applied.
-    /// </summary>
-    Expression<Func<T, bool>> Condition { get; }
-
-    /// <summary>
     /// 
     /// </summary>
-    /// <param name="condition">What condition is required</param>
+    /// <param name="condition">The Condition in which the child validation rule collection should be applied.</param>
     /// <param name="configure">The validation to </param>
     /// <returns></returns>
     IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure);

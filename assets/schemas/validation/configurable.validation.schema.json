@@ -6,7 +6,7 @@
 		},
 		"$validationConditions": {
 			"type": "array",
-			"items": {
+			"items": {				
 				"$ref": "#/definitions/$validationCondition",
 				"required": [
 					"$conditionId",
@@ -151,33 +151,41 @@
 						}
 					]
 				},
-				"$itemCondition": {
+				"$itemConditionId": {
 					"oneOf": [
 						{
+							"type": "string"
+						},
+						{
 							"type": "null"
-						},
-						{
-							"type": "object",
-							"properties": {
-								"$conditionId": {
-									"type": "string"
-								}
-							},
-							"required": [
-								"$conditionId"
-							],
-							"maxProperties": 1
-						},
-						{
-							"$ref": "#/definitions/$validationMemberCondition"
-						},
-						{
-							"$ref": "#/definitions/$validationOrCondition"
-						},
-						{
-							"$ref": "#/definitions/$validationAndCondition"
 						}
 					]
+					// "oneOf": [
+					// 	{
+					// 		"type": "null"
+					// 	},
+					// 	{
+					// 		"type": "object",
+					// 		"properties": {
+					// 			"$conditionId": {
+					// 				"type": "string"
+					// 			}
+					// 		},
+					// 		"required": [
+					// 			"$conditionId"
+					// 		],
+					// 		"maxProperties": 1
+					// 	},
+					// 	{
+					// 		"$ref": "#/definitions/$validationMemberCondition"
+					// 	},
+					// 	{
+					// 		"$ref": "#/definitions/$validationOrCondition"
+					// 	},
+					// 	{
+					// 		"$ref": "#/definitions/$validationAndCondition"
+					// 	}
+					// ]
 				},
 				"$itemRules": {
 					"type": "array",
@@ -190,12 +198,39 @@
 			"required": [
 				"$itemMember",
 				"$itemType",
-				"$itemCondition",
+				"$itemConditionId",
 				"$itemRules"
 			]
 		},
 		"$validationRule": {
 			"type": "object",
+			"properties": {
+				"$rule": {
+					"enum": [
+						"Between",
+						"BetweenOrEqualTo",
+						"Child",
+						"EqualTo",
+						"NotEqualTo",
+						"GreaterThan",
+						"GreaterThanOrEqualTo",
+						"LessThan",
+						"LessThanOrEqualTo",
+						"Empty",
+						"NotEmpty",
+						"Null",
+						"NotNull",
+						"Length",
+						"LengthBetween",
+						"LengthMax",
+						"LengthMin",
+						"Match",
+						"EmailAddress",
+						"PhoneNumber",
+						"CreditCard"
+					]
+				}
+			},
 			"oneOf": [
 				{
 					"$ref": "#/definitions/$validationRuleEqualTo"
@@ -229,6 +264,30 @@
 				},
 				{
 					"$ref": "#/definitions/$validationRuleEmailAddress"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleChildren"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleNull"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleNotNull"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleLength"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleLengthBetween"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleLengthMax"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleLengthMin"
+				},
+				{
+					"$ref": "#/definitions/$validationRuleRegexMatch"
 				}
 			]
 		},
@@ -245,7 +304,11 @@
 				"$valueType": {
 					"type": "string"
 				}
-			}
+			},
+			"required": [
+				"$rule",
+				"$value"
+			]
 		},
 		"$validationRuleNotEqualTo": {
 			"type": "object",
@@ -254,10 +317,17 @@
 					"type": "string",
 					"const": "NotEqualTo"
 				},
+				"$value": {
+					"description": ""
+				},
 				"$valueType": {
 					"type": "string"
 				}
-			}
+			},
+			"required": [
+				"$rule",
+				"$value"
+			]
 		},
 		"$validationRuleBetween": {
 			"type": "object",
@@ -266,13 +336,14 @@
 					"type": "string",
 					"const": "Between"
 				},
-				"$lower": {
-
-				},
-				"$upper": {
-
-				}
-			}
+				"$lower": {},
+				"$upper": {}
+			},
+			"required": [
+				"$rule",
+				"$lower",
+				"$upper"
+			]
 		},
 		"$validationRuleBetweenOrEqualTo": {
 			"type": "object",
@@ -281,13 +352,14 @@
 					"type": "string",
 					"const": "BetweenOrEqualTo"
 				},
-				"$lower": {
-
-				},
-				"$upper": {
-
-				}
-			}
+				"$lower": {},
+				"$upper": {}
+			},
+			"required": [
+				"$rule",
+				"$lower",
+				"$upper"
+			]
 		},
 		"$validationRuleGreaterThan": {
 			"type": "object",
@@ -302,7 +374,11 @@
 				"$valueType": {
 					"type": "string"
 				}
-			}
+			},
+			"required": [
+				"$rule",
+				"$value"
+			]
 		},
 		"$validationRuleGreaterThanOrEqualTo": {
 			"type": "object",
@@ -317,7 +393,12 @@
 				"$valueType": {
 					"type": "string"
 				}
-			}
+			},
+			"required": [
+				"$rule",
+				"$value"
+			]
+		
 		},
 		"$validationRuleLessThan": {
 			"type": "object",
@@ -332,7 +413,11 @@
 				"$valueType": {
 					"type": "string"
 				}
-			}
+			},
+			"required": [
+				"$rule",
+				"$value"
+			]
 		},
 		"$validationRuleLessThanOrEqualTo": {
 			"type": "object",
@@ -347,7 +432,11 @@
 				"$valueType": {
 					"type": "string"
 				}
-			}
+			},
+			"required": [
+				"$rule",
+				"$value"
+			]
 		},
 		"$validationRuleEmpty": {
 			"type": "object",
@@ -356,7 +445,10 @@
 					"type": "string",
 					"const": "Empty"
 				}
-			}
+			},
+			"required": [
+				"$rule"
+			]
 		},
 		"$validationRuleNotEmpty": {
 			"type": "object",
@@ -365,7 +457,10 @@
 					"type": "string",
 					"const": "NotEmpty"
 				}
-			}
+			},
+			"required": [
+				"$rule"
+			]
 		},
 		"$validationRuleEmailAddress": {
 			"type": "object",
@@ -374,7 +469,143 @@
 					"type": "string",
 					"const": "EmailAddress"
 				}
-			}
+			},
+			"required": [
+				"$rule"
+			]
+		},
+		"$validationRuleChildren": {
+			"type": "object",
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Child"
+				},
+				"$validationItems": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/$validationItem"
+					},
+					"minItems": 1
+				}
+			},
+			"required": [
+				"$rule",
+				"$validationItems"
+			]
+		},
+		"$validationRuleNull": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Null"
+				}
+			},
+			"required": [
+				"$rule"
+			]
+		},
+		"$validationRuleNotNull": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "NotNull"
+				}
+			},
+			"required": [
+				"$rule"
+			]
+		},
+		"$validationRuleLength": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Length"
+				},
+				"$exact": {
+					"type": "number",
+					"minimum": 0
+				}
+			},
+			"required": [
+				"$rule",
+				"$exact"
+			]
+		},
+		"$validationRuleLengthBetween": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Length"
+				},
+				"$min": {
+					"type": "number",
+					"minimum": 0
+				},
+				"$max": {
+					"type": "number",
+					"minimum": 1
+				}
+			},
+			"required": [
+				"$rule",
+				"$min",
+				"$max"
+			]
+		},
+		"$validationRuleLengthMax": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Length"
+				},
+				"$max": {
+					"type": "number",
+					"minimum": 1
+				}
+			},
+			"required": [
+				"$rule",
+				"$max"
+			]
+		},
+		"$validationRuleLengthMin": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Length"
+				},
+				"$min": {
+					"type": "number",
+					"minimum": 0
+				}
+			},
+			"required": [
+				"$rule",
+				"$min"
+			]
+		},
+		"$validationRuleRegexMatch": {
+			"properties": {
+				"$rule": {
+					"type": "string",
+					"const": "Length"
+				},
+				"$pattern": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": [
+				"$rule",
+				"$pattern"
+			]
+		},
+		"$validationRulePhoneNumber": {
+
+		},
+		"$validationRuleCreditCard": {
+
 		}
 	}
 }

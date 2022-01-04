@@ -169,6 +169,15 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following expression: {0} must match this pattern &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageMatchesRule {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageMatchesRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following expression: {0} requires a maximum length of &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageMaxLengthRule {

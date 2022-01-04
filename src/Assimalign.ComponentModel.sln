@@ -45,7 +45,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.ValidationBenchmarks", "..\benchmarks\Assimalign.ComponentModel.ValidationBenchmarks\Assimalign.ComponentModel.ValidationBenchmarks.csproj", "{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.ConfigurableTests", "..\tests\Assimalign.ComponentModel.Validation.ConfigurableTests\Assimalign.ComponentModel.Validation.ConfigurableTests.csproj", "{46058D90-5988-4DCC-9658-CFDBC8F5C919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.ConfigurableTests", "..\tests\Assimalign.ComponentModel.Validation.ConfigurableTests\Assimalign.ComponentModel.Validation.ConfigurableTests.csproj", "{46058D90-5988-4DCC-9658-CFDBC8F5C919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable.Json", "Assimalign.ComponentModel.Validation.Configurable.Json\Assimalign.ComponentModel.Validation.Configurable.Json.csproj", "{948A2100-4178-4B45-A536-97ECEBB51AC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable.Xml", "Assimalign.ComponentModel.Validation.Configurable.Xml\Assimalign.ComponentModel.Validation.Configurable.Xml.csproj", "{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +97,14 @@ Global
 		{46058D90-5988-4DCC-9658-CFDBC8F5C919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46058D90-5988-4DCC-9658-CFDBC8F5C919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46058D90-5988-4DCC-9658-CFDBC8F5C919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948A2100-4178-4B45-A536-97ECEBB51AC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948A2100-4178-4B45-A536-97ECEBB51AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948A2100-4178-4B45-A536-97ECEBB51AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948A2100-4178-4B45-A536-97ECEBB51AC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +123,8 @@ Global
 		{2CBF5391-A9EB-4DB7-A67B-B5824201950A} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E} = {E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}
 		{46058D90-5988-4DCC-9658-CFDBC8F5C919} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
+		{948A2100-4178-4B45-A536-97ECEBB51AC3} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
+		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB64B35-D4BC-43E2-B8F1-A3DDAA061175}

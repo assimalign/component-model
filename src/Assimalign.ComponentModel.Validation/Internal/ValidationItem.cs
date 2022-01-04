@@ -8,12 +8,6 @@ using Assimalign.ComponentModel.Validation.Internal.Extensions;
 
 internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
 {
-
-    public ValidationItem()
-    {
-
-    }
-
     public override void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)

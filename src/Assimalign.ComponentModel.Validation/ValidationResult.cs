@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -12,7 +10,6 @@ namespace Assimalign.ComponentModel.Validation;
 public sealed class ValidationResult
 {
     private ValidationResult() { }
-
 
     internal ValidationResult(IValidationContext context, double? elapsedTicks = null)
     {

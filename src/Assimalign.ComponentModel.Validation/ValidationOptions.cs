@@ -10,7 +10,6 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public sealed class ValidationOptions
 {
-    private readonly SortedList<int, IValidationRule> rules;
     private readonly IDictionary<int, IValidationProfile> profiles;
 
     /// <summary>
@@ -18,13 +17,13 @@ public sealed class ValidationOptions
     /// </summary>
     public ValidationOptions()
     {
-        this.rules = new SortedList<int, IValidationRule>();
         this.profiles = new Dictionary<int, IValidationProfile>();
     }
 
 
     /// <summary>
-    /// Will throw a <see cref="ValidationFailureException"/> rather than return <see cref="ValidationResult"/>.
+    /// Will throw a <see cref="ValidationFailureException"/> rather 
+    /// than return <see cref="ValidationResult"/>.
     /// </summary>
     public bool ThrowExceptionOnFailure { get; set; }
 
@@ -38,6 +37,17 @@ public sealed class ValidationOptions
     /// The collection of profiles.
     /// </summary>
     public IEnumerable<IValidationProfile> Profiles => this.profiles.Values;
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TProfile"></typeparam>
+    public void AddProfile<TProfile>()
+        where TProfile : IValidationProfile, new()
+    {
+        this.AddProfile(new TProfile());
+    }
 
     /// <summary>
     /// 
@@ -62,11 +72,6 @@ public sealed class ValidationOptions
         }
 
         this.profiles[index] = profile;
-    }
-
-    internal bool TryGetProfile(int index, out IValidationProfile profile)
-    {
-        return this.profiles.TryGetValue(index, out profile);
     }
 }
 

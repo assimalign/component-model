@@ -11,6 +11,7 @@ using Assimalign.ComponentModel.Validation.Properties;
 using Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// 
@@ -1218,6 +1219,145 @@ public static partial class ValidationExtensions
         {
             Error = error,
             Name = $"Validate {builder.ValidationItem} is less than or equal to {value}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="pattern"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> Matches(this IValidationRuleBuilder<string> builder, string pattern)
+    {
+        if (string.IsNullOrEmpty(pattern))
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(pattern),
+                message: "The 'pattern' parameter cannot be null in: Matches<string>(this IValidationRuleBuilder<string> builder, string pattern)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Matches<string>({pattern})"
+            };
+        }
+
+        return builder.Matches(pattern, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageMatchesRule, validationExpression, pattern);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="pattern"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> Matches(this IValidationRuleBuilder<string> builder, string pattern, Action<IValidationError> configure)
+    {
+        if (string.IsNullOrEmpty(pattern))
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(pattern),
+                message: "The 'pattern' parameter cannot be null in: Matches<string>(this IValidationRuleBuilder<string> builder, string pattern, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Matches<string>({pattern}, {configure})"
+            };
+        }
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: Matches<string>(this IValidationRuleBuilder<string> builder, string pattern, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Matches<string>({pattern}, {configure})"
+            };
+        }
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MatchValidationRule(pattern)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} must match pattern: {pattern}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="pattern"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> Matches(this IValidationRuleBuilder<string> builder, string pattern, RegexOptions options)
+    {
+        if (string.IsNullOrEmpty(pattern))
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(pattern),
+                message: "The 'pattern' parameter cannot be null in: Matches<string>(this IValidationRuleBuilder<string> builder, string pattern, RegexOptions options)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Matches<string>({pattern}, {options})"
+            };
+        }
+        return builder.Matches(pattern, options, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageMatchesRule, validationExpression, pattern);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="pattern"></param>
+    /// <param name="options"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> Matches(this IValidationRuleBuilder<string> builder, string pattern, RegexOptions options, Action<IValidationError> configure)
+    {
+        if (string.IsNullOrEmpty(pattern))
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(pattern),
+                message: "The 'pattern' parameter cannot be null in: Matches<string>(this IValidationRuleBuilder<string> builder, string pattern, RegexOptions options, RegexOptions options)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Matches<string>({pattern}, {options}, {configure})"
+            };
+        }
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: Matches<string>(this IValidationRuleBuilder<string> builder, string pattern, RegexOptions options, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Matches<string>({pattern}, {options}, {configure})"
+            };
+        }
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MatchValidationRule(pattern, options)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} must match pattern: {pattern}"
         });
 
         return builder;

@@ -17,4 +17,8 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
+	</ItemGroup>
+
 </Project>

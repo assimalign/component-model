@@ -24,6 +24,6 @@
 	<ItemGroup>
 		<Folder Include="Internal\Extensions\" />
 		<Folder Include="Internal\Exceptions\" />
-		<Folder Include="Internal\Serialization\" />
+		<Folder Include="Internal\Serialization\Json\" />
 	</ItemGroup>
 </Project>
