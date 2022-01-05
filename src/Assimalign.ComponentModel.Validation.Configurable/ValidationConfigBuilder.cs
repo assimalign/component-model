@@ -20,7 +20,7 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<IValidationConfigProvider> Providers => this.providers;
+    public IList<IValidationConfigProvider> Providers => this.providers;
 
     /// <summary>
     /// 
@@ -67,7 +67,7 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public IValidationConfigBuilder Configure(Func<IValidationConfigSource> configure)
+    public IValidationConfigBuilder Configure(Func<IValidationConfigSource, IValidationConfigProvider> configure)
     {
         throw new NotImplementedException();
     }

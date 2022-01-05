@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Assimalign.ComponentModel.Mapping\Assimalign.ComponentModel.Mapping.csproj" />
+		<ProjectReference Include="..\..\src\Assimalign.ComponentModel.Mapping\Assimalign.ComponentModel.Mapping.csproj" />
 	</ItemGroup>
 
 </Project>
