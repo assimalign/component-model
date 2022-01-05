@@ -1,64 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-public sealed class ValidationConfigBuilder : IValidationConfigProfileBuilder
+public sealed class ValidationConfigBuilder : IValidationConfigBuilder
 {
-    public readonly IList<IValidationConfigProvider> profiles;
+    public readonly IList<IValidationConfigProvider> providers;
 
 
-    public ValidationConfigBuilder()
+    private ValidationConfigBuilder()
     {
-        this.profiles = new List<IValidationConfigProvider>();
+        this.providers = new List<IValidationConfigProvider>();
     }
 
-    public IEnumerable<IValidationProfile> Build()
+    /// <summary>
+    /// 
+    /// </summary>
+    public IEnumerable<IValidationConfigProvider> Providers => this.providers;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public IValidator Build()
     {
-        foreach(var profile in this.profiles)
-        {
-            yield return profile.Compile();
-        }
-    }
-
-    public IValidationConfigProfileBuilder AddConfigProvider<TProvider>() 
-        where TProvider : IValidationConfigProvider, new()
-    {
-        this.profiles.Add(new TProvider());
-        return this;
-    }
-
-    public IValidationConfigProfileBuilder AddConfigProvider<TProvider>(TProvider provider) 
-        where TProvider : IValidationConfigProvider
-    {
-        this.profiles.Add(provider);
-        return this;
-    }
-
-    public IValidationConfigProfileBuilder AddConfigProvider<TProvider>(Func<TProvider> configure) 
-        where TProvider : IValidationConfigProvider
-    {
-        this.profiles.Add(configure.Invoke());
-        return this;
-    }
-
-
-
-    public static IValidator Create(Func<IValidationConfigProfileBuilder, IValidationProfile[]> configure)
-    {
-        var builder = new ValidationConfigBuilder();
-        var profiles = configure.Invoke(builder);
-
-
         return new Validator(configure =>
         {
-            foreach (var profile in profiles)
+            foreach (var provider in providers)
             {
+                var profile = provider.Compile();
                 configure.AddProfile(profile);
             }
         });
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <returns></returns>
+    public IValidationConfigBuilder Add(IValidationConfigProvider provider)
+    {
+        this.providers.Add(provider);
+        return this;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public IValidationConfigBuilder Configure(Func<IValidationConfigProvider> configure)
+    {
+        var provider = configure.Invoke();
+        this.providers.Add(provider);
+        return this;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public IValidationConfigBuilder Configure(Func<IValidationConfigSource> configure)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public static IValidationConfigBuilder Create() =>
+        new ValidationConfigBuilder();    
 }

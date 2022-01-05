@@ -47,9 +47,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.ConfigurableTests", "..\tests\Assimalign.ComponentModel.Validation.ConfigurableTests\Assimalign.ComponentModel.Validation.ConfigurableTests.csproj", "{46058D90-5988-4DCC-9658-CFDBC8F5C919}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable.Json", "Assimalign.ComponentModel.Validation.Configurable.Json\Assimalign.ComponentModel.Validation.Configurable.Json.csproj", "{948A2100-4178-4B45-A536-97ECEBB51AC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.Configurable.Json", "Assimalign.ComponentModel.Validation.Configurable.Json\Assimalign.ComponentModel.Validation.Configurable.Json.csproj", "{948A2100-4178-4B45-A536-97ECEBB51AC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable.Xml", "Assimalign.ComponentModel.Validation.Configurable.Xml\Assimalign.ComponentModel.Validation.Configurable.Xml.csproj", "{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.Configurable.Xml", "Assimalign.ComponentModel.Validation.Configurable.Xml\Assimalign.ComponentModel.Validation.Configurable.Xml.csproj", "{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable.JsonTests", "..\tests\Assimalign.ComponentModel.Validation.Configurable.JsonTests\Assimalign.ComponentModel.Validation.Configurable.JsonTests.csproj", "{EF3069EF-9642-4702-AB74-4C0156C19F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ComponentModel.Validation.Configurable.XmlTests", "..\tests\Assimalign.ComponentModel.Validation.Configurable.XmlTests\Assimalign.ComponentModel.Validation.Configurable.XmlTests.csproj", "{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +109,14 @@ Global
 		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF3069EF-9642-4702-AB74-4C0156C19F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF3069EF-9642-4702-AB74-4C0156C19F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF3069EF-9642-4702-AB74-4C0156C19F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF3069EF-9642-4702-AB74-4C0156C19F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +137,8 @@ Global
 		{46058D90-5988-4DCC-9658-CFDBC8F5C919} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
 		{948A2100-4178-4B45-A536-97ECEBB51AC3} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
 		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
+		{EF3069EF-9642-4702-AB74-4C0156C19F77} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
+		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB64B35-D4BC-43E2-B8F1-A3DDAA061175}

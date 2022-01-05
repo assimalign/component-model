@@ -4,7 +4,7 @@
 		<PackageId>Assimalign.ComponentModel.Validation.Configurable</PackageId>
 		<AssemblyName>Assimalign.ComponentModel.Validation.Configurable</AssemblyName>
 		<RootNamespace>Assimalign.ComponentModel.Validation.Configurable</RootNamespace>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Description>
 
@@ -22,11 +22,5 @@
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Internal\Extensions\" />
-		<Folder Include="Internal\Exceptions\" />
-		<Folder Include="Internal\Serialization\Json\" />
 	</ItemGroup>
 </Project>

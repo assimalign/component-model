@@ -1,13 +1,13 @@
 ﻿namespace Assimalign.ComponentModel.Validation.Configurable;
 
 /// <summary>
-/// Configuration 
+/// 
 /// </summary>
-public interface IValidationConfigProvider
+public interface IValidationConfigSource
 {
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    IValidationProfile Compile();
+    IValidationConfigProvider Build();
 }

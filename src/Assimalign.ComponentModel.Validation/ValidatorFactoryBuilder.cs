@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -35,5 +36,22 @@ public sealed class ValidatorFactoryBuilder
 
         return this;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name=""></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public ValidatorFactoryBuilder AddValidator<T>(Expression<Func<T, bool>> condition, Action<ValidationOptions> configure)
+    {
+        var validator = Validator.Create(configure);
+
+        this.validators.Add(validatorName.ToLower(), validator);
+
+        return this;
+    }
+
 }
 

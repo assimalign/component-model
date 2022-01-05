@@ -11,16 +11,40 @@ namespace Assimalign.ComponentModel.Validation.ConfigurableTests
         [Fact]
         public void Test1()
         {
-            var validator = ValidationConfigBuilder.Create(configure =>
-            {
-                configure.AddConfigProvider(default);
+            //var factory = ValidatorFactory.Configure(configure =>
+            //{
+            //    configure.AddValidator("scenario 1", options =>
+            //    {
+            //        options.AddProfile(Loans)
+            //    });
 
-                return configure.Build();
-            });
+            //    configure.AddValidator<Person>(condition => )
+            //});
+            var validator = ValidationConfigBuilder.Create()
+                .Configure(source =>
+                {
+                    return source.Build();
+                })
+                .Configure(configure =>
+                {
+                    return configure.Build();
+                })
+                .Build();
 
-            var profile =  builder.Build<User>().Compile();
+
+           
+
+
+            
+
+            
 
         }
+    }
+
+    public class Person
+    {
+
     }
 
 

@@ -4,7 +4,7 @@
 		<PackageId>Assimalign.ComponentModel.Validation.Configurable.Xml</PackageId>
 		<RootNamespace>Assimalign.ComponentModel.Validation.Configurable</RootNamespace>
 		<AssemblyName>Assimalign.ComponentModel.Validation.Configurable.Xml</AssemblyName>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Description>
 
