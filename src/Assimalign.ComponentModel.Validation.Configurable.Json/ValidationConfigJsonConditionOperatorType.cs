@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal enum ValidationConfigConditionOperatorType : int
+internal enum ValidationConfigJsonConditionOperatorType : int
 {
     None = 0,
     Equal = 1,

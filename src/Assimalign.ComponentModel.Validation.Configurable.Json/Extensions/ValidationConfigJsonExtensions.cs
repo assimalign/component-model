@@ -22,9 +22,10 @@ public static class ValidationConfigJsonExtensions
     public static IValidationConfigBuilder ConfigureJson<T>(this IValidationConfigBuilder builder, string json)
         where T : class
     {
+        var provider = ValidationConfigSource.Create(json)
+            .Build(); ;
 
-
-        return builder;
+        return builder.Add(provider);
     }
 
     /// <summary>
@@ -36,6 +37,8 @@ public static class ValidationConfigJsonExtensions
     public static IValidationConfigBuilder ConfigureJson<T>(this IValidationConfigBuilder builder, Stream stream)
         where T : class
     {
+
+        builder.Configure()
 
 
         return builder;

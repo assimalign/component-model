@@ -10,9 +10,9 @@ namespace Assimalign.ComponentModel.Validation.Configurable.Internal.Serializati
 
 using Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal class ItemRuleConverter : JsonConverter<ValidationConfigRule>
+internal class ItemRuleConverter : JsonConverter<ValidationConfigJsonRule>
 {
-    public override ValidationConfigRule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ValidationConfigJsonRule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         while (reader.TokenType != JsonTokenType.EndObject)
         {
@@ -33,13 +33,13 @@ internal class ItemRuleConverter : JsonConverter<ValidationConfigRule>
         throw new Exception();
     }
 
-    public override void Write(Utf8JsonWriter writer, ValidationConfigRule value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ValidationConfigJsonRule value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
 
-    private ValidationConfigRule GetNotEqualToRule(ref Utf8JsonReader reader)
+    private ValidationConfigJsonRule GetNotEqualToRule(ref Utf8JsonReader reader)
     {
         while (reader.TokenType != JsonTokenType.EndObject)
         {
@@ -49,7 +49,7 @@ internal class ItemRuleConverter : JsonConverter<ValidationConfigRule>
         }
     }
 
-    private ValidationConfigRule GetEqualToRule(ref Utf8JsonReader reader)
+    private ValidationConfigJsonRule GetEqualToRule(ref Utf8JsonReader reader)
     {
 
     }

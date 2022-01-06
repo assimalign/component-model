@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal class ValidationConfigConditionItem
+internal class ValidationConfigJsonConditionItem
 {
 
     [JsonPropertyName("$conditionId")]
     public string Id { get; set; }
 
     [JsonPropertyName("$conditions")]
-    public IEnumerable<ValidationConfigCondition> Conditions { get; set; }
+    public IEnumerable<ValidationConfigJsonCondition> Conditions { get; set; }
 }
 

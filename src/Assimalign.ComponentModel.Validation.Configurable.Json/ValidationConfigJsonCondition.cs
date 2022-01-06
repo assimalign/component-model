@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
 
-internal class ValidationConfigCondition
+internal class ValidationConfigJsonCondition
 {
     [JsonPropertyName("$and")]
-    public IEnumerable<ValidationConfigCondition> And { get; set; }
+    public IEnumerable<ValidationConfigJsonCondition> And { get; set; }
 
     [JsonPropertyName("$or")]
-    public IEnumerable<ValidationConfigCondition> Or { get; set; }
+    public IEnumerable<ValidationConfigJsonCondition> Or { get; set; }
 
     [JsonPropertyName("$member")]
     public string Member { get; set; }
 
     [JsonPropertyName("$operator")]
-    public ValidationConfigConditionOperatorType Operator { get; set; }
+    public ValidationConfigJsonConditionOperatorType Operator { get; set; }
 
     [JsonPropertyName("$value")]
     public object Value { get; set; }
@@ -43,7 +43,7 @@ internal class ValidationConfigCondition
     /// <param name="instance"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    private Expression GetLambdaExpressionBody(ValidationConfigCondition instance, Expression parameter)
+    private Expression GetLambdaExpressionBody(ValidationConfigJsonCondition instance, Expression parameter)
     {
         // Represent a Parent expression to reference for any child expression
         Expression parent = null;

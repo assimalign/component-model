@@ -10,7 +10,13 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
         public Class1()
         {
             var validator = ValidationConfigBuilder.Create()
-                .ConfigureJson("");
+                .ConfigureJson<User>("");
+        }
+
+
+        public class User
+        {
+
         }
 
 

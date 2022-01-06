@@ -11,28 +11,28 @@ public interface IValidationConfigBuilder
     /// <summary>
     /// A collection of configuration providers.
     /// </summary>
-    IList<IValidationConfigProvider> Providers { get; }
+    IList<IValidationProfile> Providers { get; }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="provider"></param>
     /// <returns>><see cref="IValidationConfigBuilder"/></returns>
-    IValidationConfigBuilder Add(IValidationConfigProvider provider);
+    IValidationConfigBuilder Add(IValidationProfile provider);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="configure"></param>
     /// <returns><see cref="IValidationConfigBuilder"/></returns>
-    IValidationConfigBuilder Configure(Func<IValidationConfigProvider> configure);
+    IValidationConfigBuilder Configure(Func<IValidationProfile> configure);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="source"></param>
+    /// <param name="configure"></param>
     /// <returns>><see cref="IValidationConfigBuilder"/></returns>
-    IValidationConfigBuilder Configure(Func<IValidationConfigSource, IValidationConfigProvider> source);
+    IValidationConfigBuilder Configure(Func<IValidationConfigSource> configure);
 
     /// <summary>
     /// 

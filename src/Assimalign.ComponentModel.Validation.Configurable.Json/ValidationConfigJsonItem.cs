@@ -11,17 +11,24 @@ namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 using Assimalign.ComponentModel.Validation.Configurable.Internal.Serialization;
 
 [JsonConverter(typeof(ItemRuleConverter))]
-internal class ValidationConfigItem 
+internal class ValidationConfigJsonItem : IValidationItem
 {
     [JsonPropertyName("$itemMember")]
     public string Member { get; set; }
 
     [JsonPropertyName("$itemType")]
-    public ValidationConfigItemType ItemType { get; set; }
+    public ValidationConfigJsonItemType ItemType { get; set; }
 
     [JsonPropertyName("$itemConditionId")]
     public string ConditionId { get; set; }
 
     [JsonPropertyName("$itemRules")]
-    public IEnumerable<ValidationConfigRule> Rules { get; set; }
+    public IEnumerable<ValidationConfigJsonRule> Rules { get; set; }
+
+    public IValidationRuleStack ItemRuleStack => throw new NotImplementedException();
+
+    public void Evaluate(IValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
 }

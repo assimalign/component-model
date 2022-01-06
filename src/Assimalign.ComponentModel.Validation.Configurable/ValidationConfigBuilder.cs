@@ -9,18 +9,18 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 
 public sealed class ValidationConfigBuilder : IValidationConfigBuilder
 {
-    public readonly IList<IValidationConfigProvider> providers;
+    public readonly IList<IValidationProfile> providers;
 
 
     private ValidationConfigBuilder()
     {
-        this.providers = new List<IValidationConfigProvider>();
+        this.providers = new List<IValidationProfile>();
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public IList<IValidationConfigProvider> Providers => this.providers;
+    public IList<IValidationProfile> Providers => this.providers;
 
     /// <summary>
     /// 
@@ -43,7 +43,7 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
     /// </summary>
     /// <param name="provider"></param>
     /// <returns></returns>
-    public IValidationConfigBuilder Add(IValidationConfigProvider provider)
+    public IValidationConfigBuilder Add(IValidationProfile provider)
     {
         this.providers.Add(provider);
         return this;
@@ -54,7 +54,7 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
     /// </summary>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public IValidationConfigBuilder Configure(Func<IValidationConfigProvider> configure)
+    public IValidationConfigBuilder Configure(Func<IValidationProfile> configure)
     {
         var provider = configure.Invoke();
         this.providers.Add(provider);
@@ -67,7 +67,7 @@ public sealed class ValidationConfigBuilder : IValidationConfigBuilder
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public IValidationConfigBuilder Configure(Func<IValidationConfigSource, IValidationConfigProvider> configure)
+    public IValidationConfigBuilder Configure(Func<IValidationConfigSource> configure)
     {
         throw new NotImplementedException();
     }

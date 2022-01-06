@@ -9,7 +9,7 @@ using System.Xml.Resolvers;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal abstract class ValidationConfigRule : IValidationRule
+internal abstract class ValidationConfigJsonRule : IValidationRule
 {
     [JsonPropertyName("$rule")]
     public string RuleName { get; set; }

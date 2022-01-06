@@ -7,18 +7,17 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Description>
-			
+
 		</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
+		<ProjectReference Include="..\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Internal\Exceptions\" />
-	  <Folder Include="Internal\Extensions\" />
-	  <Folder Include="Internal\Serialization\Json\" />
+		<Folder Include="Exceptions\" />
+		<Folder Include="Serialization\Json\" />
 	</ItemGroup>
 
 </Project>

@@ -7,7 +7,9 @@
 		<RootNamespace>Assimalign.ComponentModel.Validation</RootNamespace>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Description>The following library offers an extensive set of fluent APIs for object validation built on .NET.</Description>
+		<Description>
+			The following library offers an extensive set of fluent APIs for object validation built on .NET.
+		</Description>
 
 		<!--Company Branding Information-->
 		<PackageIcon>.assimalign.logo.png</PackageIcon>

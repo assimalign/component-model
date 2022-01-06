@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
 
-internal class ValidationConfigProfile
+internal class ValidationConfigJsonProfile<T> : IValidationProfile
+    where T : class
 {
     [JsonPropertyName("$description")]
     public string Description { get; set; }
@@ -16,9 +17,19 @@ internal class ValidationConfigProfile
     public ValidationMode ValidationMode { get; set; }
 
     [JsonPropertyName("$validationConditions")]
-    public IEnumerable<ValidationConfigCondition> Conditions { get; set; }
+    public IEnumerable<ValidationConfigJsonCondition> Conditions { get; set; }
 
     [JsonPropertyName("$validationItems")]
-    public IEnumerable<ValidationConfigItem> Items { get; set; }
+    public IEnumerable<ValidationConfigJsonItem> Items { get; set; }
 
+    [JsonIgnore]
+    public Type ValidationType { get; }
+
+    [JsonIgnore]
+    public IEnumerable<IValidationItem> ValidationItems => this.Items;
+
+    public void Configure()
+    {
+        throw new NotImplementedException();
+    }
 }
