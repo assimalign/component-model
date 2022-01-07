@@ -16,17 +16,18 @@ public interface IValidationProfile
     Type ValidationType { get; }
 
     /// <summary>
+    /// Specifies whether the validator should continue 
+    /// or stop after the first validation failure.
+    /// </summary>
+    [MemberNotNull]
+    ValidationMode ValidationMode { get; }
+
+    /// <summary>
     /// A collection of validation rules to apply 
     /// to the context being validated.
     /// </summary>
     [MemberNotNull]
     IEnumerable<IValidationItem> ValidationItems { get; }
-
-    /// <summary>
-    /// Specifies whether the validator should continue or stop after the first validation failure.
-    /// </summary>
-    [MemberNotNull]
-    ValidationMode ValidationMode { get; }
 
     /// <summary>
     /// Configures the validation rules for the specified type.

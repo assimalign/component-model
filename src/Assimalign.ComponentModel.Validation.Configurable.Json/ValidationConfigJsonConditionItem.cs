@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
+namespace Assimalign.ComponentModel.Validation.Configurable;
 
 internal class ValidationConfigJsonConditionItem
 {

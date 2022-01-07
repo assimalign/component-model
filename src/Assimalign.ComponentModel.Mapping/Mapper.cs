@@ -95,11 +95,14 @@ namespace Assimalign.ComponentModel.Mapping
         {
 
 
-            var profile = this.profiles.FirstOrDefault(x => x.Context.SourceType == typeof(TSource) && x.Context.TargetType == typeof(TTarget));
+            var profile = this.profiles.FirstOrDefault(x => x.Context.SourceType == sourceType && x.Context.TargetType == targetType);
 
 
-            foreach (var action in profile.Context.MapperActions)
+
+
+            foreach (var action in profile.Context.)
             {
+                
                 if (action is Action<TSource, TTarget> mapperAction)
                 {
                     mapperAction.Invoke(source, target);

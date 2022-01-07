@@ -18,6 +18,7 @@
 	<ItemGroup>
 		<Folder Include="Exceptions\" />
 		<Folder Include="Serialization\Json\" />
+		<Folder Include="Utilities\" />
 	</ItemGroup>
 
 </Project>

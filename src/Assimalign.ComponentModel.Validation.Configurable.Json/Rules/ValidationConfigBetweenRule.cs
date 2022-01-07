@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Configurable.Internal.Rules;
+namespace Assimalign.ComponentModel.Validation.Configurable.Rules;
 
 internal class ValidationConfigBetweenRule : ValidationConfigJsonRule
 {
@@ -15,5 +15,10 @@ internal class ValidationConfigBetweenRule : ValidationConfigJsonRule
 
     [JsonPropertyName("$$upper")]
     public object UpperBound { get; set; }
+
+    public override bool TryValidate(object value, out IValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
 }
 

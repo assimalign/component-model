@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-
-
-internal class ValidationConfigJsonProvider : IValidationProfile
+public interface IValidationConfig
 {
-    public Validation.IValidationProfile Compile()
-    {
-        throw new NotImplementedException();
-    }
+
 }

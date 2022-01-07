@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
+namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal enum ValidationConfigJsonConditionOperatorType : int
+internal enum ValidationConfigOperatorType : int
 {
     None = 0,
     Equal = 1,

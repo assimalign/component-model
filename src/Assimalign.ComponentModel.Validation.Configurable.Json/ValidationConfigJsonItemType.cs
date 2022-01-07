@@ -1,4 +1,4 @@
-﻿namespace Assimalign.ComponentModel.Validation.Configurable.Internal;
+﻿namespace Assimalign.ComponentModel.Validation.Configurable;
 
 internal enum ValidationConfigJsonItemType
 {

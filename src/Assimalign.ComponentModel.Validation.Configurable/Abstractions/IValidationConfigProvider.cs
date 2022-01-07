@@ -9,5 +9,5 @@ public interface IValidationConfigProvider
     /// 
     /// </summary>
     /// <returns></returns>
-    IValidationProfile Compile();
+    IValidationProfile GetProfile();
 }

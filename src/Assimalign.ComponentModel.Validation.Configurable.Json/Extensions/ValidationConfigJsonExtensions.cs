@@ -22,10 +22,14 @@ public static class ValidationConfigJsonExtensions
     public static IValidationConfigBuilder ConfigureJson<T>(this IValidationConfigBuilder builder, string json)
         where T : class
     {
-        var provider = ValidationConfigSource.Create(json)
-            .Build(); ;
+        var profile = JsonSerializer.Deserialize<ValidationConfigJsonProfile<T>>(json, new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true
+        });
 
-        return builder.Add(provider);
+        profile.Configure();
+
+        return builder;
     }
 
     /// <summary>
@@ -38,7 +42,7 @@ public static class ValidationConfigJsonExtensions
         where T : class
     {
 
-        builder.Configure()
+       
 
 
         return builder;

@@ -5,14 +5,14 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Validation.Configurable.Internal.Rules;
+namespace Assimalign.ComponentModel.Validation.Configurable.Rules;
 
 
 internal class ValidationConfigChildRule : ValidationConfigJsonRule
 {
 
     [JsonPropertyName("$validationItems")]
-    public IEnumerable<ValidationConfigJsonItem> Items { get; set; }
+    public IEnumerable<ValidationConfigJsonItem<object>> Items { get; set; }
 
     public override bool TryValidate(object value, out IValidationContext context)
     {

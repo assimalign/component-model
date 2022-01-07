@@ -1,17 +1,4 @@
-<validation-profile>
-
-    <validation-items>
-        <validation-item>
-            <item-member></item-member>
-            <item-type></item-type>
-
-            <item-rules>
-                <rule>
-                    
-                </rule>
-            </item-rules>
-
-        </validation-item>
-
-    </validation-items>
-</validation-profile>
+<?xml-model href="http://www.w3schools.com configurable.validation.schema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<validation-profiles>
+    
+</validation-profiles>
