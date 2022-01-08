@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 
@@ -7,9 +8,32 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 
 internal sealed class ValidationCondition<T> : IValidationCondition<T>
 {
+    private IList<IValidationItem> validationItems;
+
+    public ValidationCondition()
+    {
+        this.validationItems = new List<IValidationItem>();
+    }
+
     public ValidationMode ValidationMode { get; set; }
 
-    public IList<IValidationItem> ValidationItems { get; set; }
+    public IEnumerable<IValidationItem> ValidationItems
+    {
+        get => this.validationItems;
+        set
+        {
+            if (value is IList<IValidationItem> list)
+            {
+                this.validationItems = list;
+            }
+            else
+            {
+                this.validationItems = value.ToList();
+            }
+        }
+    }
+
+    public Func<object, bool> CanEvaluate => this.Condition as Func<object, bool>;
 
     public Expression<Func<T, bool>> Condition { get; set; }
 
@@ -32,7 +56,7 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
 
         foreach (var item in descriptor.ValidationItems)
         {
-            this.ValidationItems.Add(item);
+            this.validationItems.Add(item);
         }
 
         return validationCondition;

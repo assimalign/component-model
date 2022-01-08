@@ -10,7 +10,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable.XmlTests
         [Fact]
         public void Test1()
         {
-            var validator = ValidationConfigBuilder.Create()
+            var validator = ValidationConfigurableBuilder.Create()
                .ConfigureXml<object>("")
                .Build();
                

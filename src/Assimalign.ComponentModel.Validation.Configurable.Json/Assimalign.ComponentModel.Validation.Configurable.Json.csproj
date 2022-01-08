@@ -12,12 +12,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Internal\**" />
+	  <Compile Remove="Rules\**" />
+	  <EmbeddedResource Remove="Internal\**" />
+	  <EmbeddedResource Remove="Rules\**" />
+	  <None Remove="Internal\**" />
+	  <None Remove="Rules\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Exceptions\" />
-		<Folder Include="Serialization\Json\" />
 		<Folder Include="Utilities\" />
 	</ItemGroup>
 

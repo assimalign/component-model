@@ -20,7 +20,7 @@ namespace Assimalign.ComponentModel.Validation.ConfigurableTests
 
             //    configure.AddValidator<Person>(condition => )
             //});
-            var validator = ValidationConfigBuilder.Create()
+            var validator = ValidationConfigurableBuilder.Create()
                 .Configure(source =>
                 {
                     return source.Build();

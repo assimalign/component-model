@@ -5,7 +5,6 @@ using System.Collections.Concurrent;
 
 namespace Assimalign.ComponentModel.Validation;
 
-
 /// <summary>
 /// 
 /// </summary>
@@ -38,7 +37,7 @@ public sealed class ValidationContext<T> : IValidationContext
         if (throwExceptionForNullInstance && instance is null)
         {
             throw new ArgumentNullException(
-                paramName: nameof(T),
+                paramName: nameof(instance),
                 message: $"The instance of type '{typeof(T).Name}' cannot be null");
         } 
         this.type = typeof(T);

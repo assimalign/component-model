@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Validation.Configurable.Rules;
 
 
-internal class ValidationConfigChildRule : ValidationConfigJsonRule
+internal class ValidationConfigChildRule : ValidationRuleConfiguraiton
 {
 
     [JsonPropertyName("$validationItems")]
-    public IEnumerable<ValidationConfigJsonItem<object>> Items { get; set; }
+    public IEnumerable<ValidationConfigurableJsonItem<object>> Items { get; set; }
 
     public override bool TryValidate(object value, out IValidationContext context)
     {

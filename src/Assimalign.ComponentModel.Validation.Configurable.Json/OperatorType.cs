@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal enum ValidationConfigOperatorType : int
+internal enum OperatorType : int
 {
     None = 0,
     Equal = 1,

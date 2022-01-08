@@ -111,27 +111,28 @@ namespace Assimalign.ComponentModel.Mapping.Internal
                         $"Cannot implicitly convert '{sourceMember.Type}' to '{targetMember.Type}'. This is a transformation in must be done in the 'ForTarget()' or 'ForSource()' APIs.");
                 }
 
-                // Create the 'TSource' -> 'TTarget' Mapping
-                Action<TSource, TTarget> forwardMapperAction = (sourceInstance, targetInstance) =>
+                if (targetMember.Member is PropertyInfo targetProperty && sourceMember.Member is PropertyInfo sourceProperty)
                 {
-                    var sourceValue = sourceFunc.Invoke(sourceInstance);
-
-                    if (targetMember.Member is PropertyInfo property)
+                    // Create the 'TSource' -> 'TTarget' Mapping
+                    Action<TSource, TTarget> forwardMapperAction = (sourceInstance, targetInstance) =>
                     {
-                        property.SetValue(targetInstance, sourceValue);
-                    }
-                };
+                        var sourceValue = sourceFunc.Invoke(sourceInstance);
 
-                // Create the reverse 'TSource' <- 'TTarget' Mapping
-                Action<TTarget, TSource> reverseMapperAction = (targetInstance, sourceInstance) =>
+                        targetProperty.SetValue(targetInstance, sourceValue);
+                    };
+
+                    // Create the reverse 'TSource' <- 'TTarget' Mapping
+                    Action<TTarget, TSource> reverseMapperAction = (targetInstance, sourceInstance) =>
+                    {
+                        var targetValue = targetFunc.Invoke(targetInstance);
+
+                        sourceProperty.SetValue(sourceInstance, targetValue);
+                    };
+                }
+                else
                 {
-                    var targetValue = targetFunc.Invoke(targetInstance);
-
-                    if (targetMember.Member is PropertyInfo property)
-                    {
-                        property.SetValue(sourceInstance, targetValue);
-                    }
-                };
+                    // TODO: Throw Internal Exception
+                }
 
                 // this.Context.MapperActions.Add(mapperAction);
 

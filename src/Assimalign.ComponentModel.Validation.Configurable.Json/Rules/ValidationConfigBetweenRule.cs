@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Rules;
 
-internal class ValidationConfigBetweenRule : ValidationConfigJsonRule
+internal class ValidationConfigBetweenRule : ValidationRuleConfiguraiton
 {
 
     [JsonPropertyName("$lower")]

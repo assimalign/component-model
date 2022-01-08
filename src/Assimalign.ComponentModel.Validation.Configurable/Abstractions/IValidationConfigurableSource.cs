@@ -3,11 +3,11 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IValidationConfigSource
+public interface IValidationConfigurableSource
 {
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    IValidationConfigProvider Build();
+    IValidationConfigurableProvider Build();
 }

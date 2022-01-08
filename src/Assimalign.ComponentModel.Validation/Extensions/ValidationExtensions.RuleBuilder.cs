@@ -1362,4 +1362,37 @@ public static partial class ValidationExtensions
 
         return builder;
     }
+
+
+
+
+    public static IValidationRuleBuilder<TValue> MustContain<TValue>(this IValidationRuleBuilder<TValue> builder)
+    {
+        return builder;
+    }
+
+    public static IValidationRuleBuilder<TValue> MustNotContain<TValue>(this IValidationRuleBuilder<TValue> builder)
+    {
+        return builder;
+    }
+
+    public static IValidationRuleBuilder<string> MustStartWith(this IValidationRuleBuilder<string> builder)
+    {
+        return builder;
+    }
+
+    public static IValidationRuleBuilder<string> MustNotStartWith(this IValidationRuleBuilder<string> builder)
+    {
+        return builder;
+    }
+
+    public static IValidationRuleBuilder<string> MustEndWith(this IValidationRuleBuilder<string> builder)
+    {
+        return builder;
+    }
+
+    public static IValidationRuleBuilder<string> MustNotEndWith(this IValidationRuleBuilder<string> builder)
+    {
+        return builder;
+    }
 }

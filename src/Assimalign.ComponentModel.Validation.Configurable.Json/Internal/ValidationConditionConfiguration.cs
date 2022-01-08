@@ -11,20 +11,20 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-internal class ValidationConfigJsonCondition
+internal class ValidationConditionConfiguration
 {
     [JsonPropertyName("$and")]
-    public IEnumerable<ValidationConfigJsonCondition> And { get; set; }
+    public IEnumerable<ValidationConditionConfiguration> And { get; set; }
 
     [JsonPropertyName("$or")]
-    public IEnumerable<ValidationConfigJsonCondition> Or { get; set; }
+    public IEnumerable<ValidationConditionConfiguration> Or { get; set; }
 
     [JsonPropertyName("$member")]
     public string Member { get; set; }
 
     [JsonPropertyName("$operator")]
-    [JsonConverter(typeof(ValidationConfigOperatorTypeConverter))]
-    public ValidationConfigOperatorType Operator { get; set; }
+    [JsonConverter(typeof(ValidationConfigurableOperatorTypeConverter))]
+    public OperatorType Operator { get; set; }
 
     [JsonPropertyName("$value")]
     public object Value { get; set; }

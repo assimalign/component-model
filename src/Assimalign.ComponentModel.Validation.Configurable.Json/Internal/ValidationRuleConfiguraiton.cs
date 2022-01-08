@@ -9,10 +9,8 @@ using System.Xml.Resolvers;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal abstract class ValidationConfigJsonRule : IValidationRule
+internal class ValidationRuleConfiguraiton
 {
     [JsonPropertyName("$rule")]
     public string Name { get; set; }
-
-    public abstract bool TryValidate(object value, out IValidationContext context);
 }

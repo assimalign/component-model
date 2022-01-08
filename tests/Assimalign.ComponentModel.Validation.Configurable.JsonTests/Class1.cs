@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Configurable;
+using System.Linq;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
 {
@@ -11,19 +12,32 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
         [Fact]
         public void Test()
         {
-            var validator = ValidationConfigBuilder.Create()
-                .ConfigureJson<Person>(@"
+            var validator = ValidationConfigurableBuilder.Create()
+                .AddJsonSource<Person>(@"
                 {
                     ""$description"": """",
                     ""$validationItems"": [
                         {
                             ""$itemMember"": ""firstName"",
                             ""$itemType"": ""Inline"",
-                            ""$itemConditionId"": null,
-                            ""$itemRules"": []
+                            ""$itemRules"": [
+                                {
+                                    ""$rule"": ""EqualTo""
+                                },
+                                {
+                                    ""$rule"": ""NotEqualTo""
+                                },
+                                {
+                                    ""$rule"": ""NotEmpty""
+                                }
+                            ]
                         }
                     ]
-                }");
+                }")
+                .Build()
+                .ToValidator(); 
+
+
         }
 
 

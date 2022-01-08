@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
 using Assimalign.ComponentModel.Validation;
+using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
 public static class ValidationConfigJsonExtensions
 {
@@ -18,18 +19,19 @@ public static class ValidationConfigJsonExtensions
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="json"></param>
+    /// <param name="options"></param>
     /// <returns></returns>
-    public static IValidationConfigBuilder ConfigureJson<T>(this IValidationConfigBuilder builder, string json)
+    public static IValidationConfigurableBuilder AddJsonSource<T>(this IValidationConfigurableBuilder builder, string json, JsonSerializerOptions options = null)
         where T : class
     {
-        var profile = JsonSerializer.Deserialize<ValidationConfigJsonProfile<T>>(json, new JsonSerializerOptions()
+        return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
-            PropertyNameCaseInsensitive = true
-        });
-
-        profile.Configure();
-
-        return builder;
+            options ??= new JsonSerializerOptions();
+            options.Converters.Add(new ValidationConfigurableJsonRuleConverter<T>());
+            options.Converters.Add(new ValidationConfigurableJsonItemConverter<T>());
+            options.Converters.Add(new ValidationConfigurableJsonConditionConverter<T>());
+            return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
+        }));
     }
 
     /// <summary>
@@ -38,14 +40,21 @@ public static class ValidationConfigJsonExtensions
     /// <param name="builder"></param>
     /// <param name="stream"></param>
     /// <returns></returns>
-    public static IValidationConfigBuilder ConfigureJson<T>(this IValidationConfigBuilder builder, Stream stream)
+    public static IValidationConfigurableBuilder AddJsonSource<T>(this IValidationConfigurableBuilder builder, Stream stream, JsonSerializerOptions options = null)
         where T : class
     {
-
-       
-
-
-        return builder;
+        return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                var json = reader.ReadToEnd();
+                options ??= new JsonSerializerOptions();
+                options.Converters.Add(new ValidationConfigurableJsonRuleConverter<T>());
+                options.Converters.Add(new ValidationConfigurableJsonItemConverter<T>());
+                options.Converters.Add(new ValidationConfigurableJsonConditionConverter<T>());
+                return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
+            }
+        }));
     }
 
     private static void WriteObject<T>(ValidationProfile<T> profile)

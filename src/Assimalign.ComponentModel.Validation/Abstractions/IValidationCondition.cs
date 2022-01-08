@@ -1,7 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Assimalign.ComponentModel.Validation;
+
+/// <summary>
+/// 
+/// </summary>
+public interface IValidationCondition
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    Func<object, bool> CanEvaluate { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    IEnumerable<IValidationItem> ValidationItems { get; }
+}
+
 
 /// <summary>
 /// Represents a validation item for which other validation rules should be applied. 
@@ -10,7 +28,7 @@ namespace Assimalign.ComponentModel.Validation;
 /// The logical flow is best described as if (Condition is true/false) then { Run Validation Rules }
 /// </remarks>
 /// <typeparam name="T"></typeparam>
-public interface IValidationCondition<T>
+public interface IValidationCondition<T> : IValidationCondition
 {
     /// <summary>
     /// 

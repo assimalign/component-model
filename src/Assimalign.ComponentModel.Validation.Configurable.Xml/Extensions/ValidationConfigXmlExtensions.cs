@@ -19,7 +19,7 @@ public static class ValidationConfigXmlExtensions
     /// <param name="builder"></param>
     /// <param name="xml"></param>
     /// <returns></returns>
-    public static IValidationConfigBuilder ConfigureXml<T>(this IValidationConfigBuilder builder, string xml)
+    public static IValidationConfigurableBuilder ConfigureXml<T>(this IValidationConfigurableBuilder builder, string xml)
         where T : class
     {
 
@@ -34,7 +34,7 @@ public static class ValidationConfigXmlExtensions
     /// <param name="builder"></param>
     /// <param name="xml"></param>
     /// <returns></returns>
-    public static IValidationConfigBuilder ConfigureXml<T>(this IValidationConfigBuilder builder, Stream xml)
+    public static IValidationConfigurableBuilder ConfigureXml<T>(this IValidationConfigurableBuilder builder, Stream xml)
         where T : class
     {
 

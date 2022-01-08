@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.Internal.Rules;
 
-internal class ValidationConfigEqualToRule : ValidationConfigJsonRule
+internal class ValidationConfigEqualToRule : ValidationRuleConfiguraiton
 {
     [JsonPropertyName("$value")]
     public object Value { get; set; }

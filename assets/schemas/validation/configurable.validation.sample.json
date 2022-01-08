@@ -6,10 +6,19 @@
     {
       "$conditionId": "01226486",
       "$conditions": {
-        "$member": "Profile.Gender",
-        "$operator": "eq",
-        "$value": "Female"
-      }
+        "$and": [
+          {
+            "$member": "Profile.Gender",
+            "$operator": "eq",
+            "$value": "Female"
+          }
+        ]
+      },
+      "$validationItems": [
+        {
+
+        }
+      ]
     }
   ],
   "$validationItems": [
