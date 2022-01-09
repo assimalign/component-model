@@ -28,9 +28,11 @@
       "$itemConditionId": "01226486",
       "$itemRules": [
         {
-          "$rule": "Between",
-          "$lower": 0,
-          "$upper": 13
+          "$rule": "Length",
+          "$exact": 0,
+          "$error": {
+            "$message": ""
+          }
         },
         {
           "$rule": "NotEqualTo",

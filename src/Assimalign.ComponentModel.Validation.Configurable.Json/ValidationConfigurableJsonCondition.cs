@@ -3,31 +3,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-internal class ValidationConditionConfiguration
+internal class ValidationConfigurableJsonCondition<T> : IValidationCondition
 {
+   
     [JsonPropertyName("$and")]
-    public IEnumerable<ValidationConditionConfiguration> And { get; set; }
+    public IEnumerable<ValidationConfigurableJsonCondition<T>> And { get; set; }
 
     [JsonPropertyName("$or")]
-    public IEnumerable<ValidationConditionConfiguration> Or { get; set; }
+    public IEnumerable<ValidationConfigurableJsonCondition<T>> Or { get; set; }
 
     [JsonPropertyName("$member")]
     public string Member { get; set; }
 
     [JsonPropertyName("$operator")]
-    [JsonConverter(typeof(ValidationConfigurableOperatorTypeConverter))]
+    [JsonConverter(typeof(EnumConverter<OperatorType>))]
     public OperatorType Operator { get; set; }
 
     [JsonPropertyName("$value")]
     public object Value { get; set; }
+
+    [JsonPropertyName("$validationItems")]
+    public IList<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
+
+
+
+    [JsonIgnore]
+    IEnumerable<IValidationItem> IValidationCondition.ValidationItems => this.ValidationItems;
+
+    [JsonIgnore]
+    public Expression<Func<T, bool>> Condition { get; set; }
+
+
+    public Expression<Func<T, bool>> GetCondition()
+    {
+        return default;
+    }
+
+
 
 
     //public Expression<Func<T, bool>> Build<T>()
@@ -302,3 +321,4 @@ internal class ValidationConditionConfiguration
     //    }
     //}
 }
+

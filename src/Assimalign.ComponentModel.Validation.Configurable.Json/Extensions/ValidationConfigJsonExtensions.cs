@@ -27,9 +27,9 @@ public static class ValidationConfigJsonExtensions
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
             options ??= new JsonSerializerOptions();
-            options.Converters.Add(new ValidationConfigurableJsonRuleConverter<T>());
-            options.Converters.Add(new ValidationConfigurableJsonItemConverter<T>());
-            options.Converters.Add(new ValidationConfigurableJsonConditionConverter<T>());
+            //options.Converters.Add(new ValidationConfigurableJsonRuleConverter<T>());
+            //options.Converters.Add(new ValidationConfigurableJsonItemConverter<T>());
+            //options.Converters.Add(new ValidationConfigurableJsonConditionConverter<T>());
             return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
         }));
     }
@@ -48,10 +48,7 @@ public static class ValidationConfigJsonExtensions
             using (var reader = new StreamReader(stream))
             {
                 var json = reader.ReadToEnd();
-                options ??= new JsonSerializerOptions();
-                options.Converters.Add(new ValidationConfigurableJsonRuleConverter<T>());
-                options.Converters.Add(new ValidationConfigurableJsonItemConverter<T>());
-                options.Converters.Add(new ValidationConfigurableJsonConditionConverter<T>());
+
                 return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
             }
         }));

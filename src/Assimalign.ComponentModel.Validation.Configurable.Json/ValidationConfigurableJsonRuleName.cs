@@ -7,7 +7,20 @@ internal enum ValidationConfigurableJsonRuleName
     Between,
     BetweenOrEqualTo,
     Empty,
-    NotEmpty
+    NotEmpty,
+    GreaterThan,
+    GreaterThanOrEqualTo,
+    LessThan,
+    LessThanOrEqualTo,
+    EmailAddress,
+    Null,
+    NotNull,
+    Length,
+    LengthBetween,
+    LengthMax,
+    LengthMin,
+    Child,
+    Matches
 }
 
 

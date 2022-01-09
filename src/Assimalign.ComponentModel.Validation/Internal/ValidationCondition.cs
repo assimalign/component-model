@@ -33,8 +33,6 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
         }
     }
 
-    public Func<object, bool> CanEvaluate => this.Condition as Func<object, bool>;
-
     public Expression<Func<T, bool>> Condition { get; set; }
 
     public IValidationCondition<T> When(Expression<Func<T, bool>> condition, Action<IValidationRuleDescriptor<T>> configure)

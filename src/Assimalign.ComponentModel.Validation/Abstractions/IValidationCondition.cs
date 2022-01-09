@@ -9,10 +9,6 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public interface IValidationCondition
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    Func<object, bool> CanEvaluate { get; }
 
     /// <summary>
     /// 

@@ -19,7 +19,7 @@ internal sealed class ValidationConfigurable : IValidationConfigurable
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<IValidationConfigurableProvider> Providers { get; }
+    public IEnumerable<IValidationConfigurableProvider> Providers => this.providers;
 
     /// <summary>
     /// 

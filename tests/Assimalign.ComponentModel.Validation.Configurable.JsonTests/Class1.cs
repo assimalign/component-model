@@ -2,6 +2,7 @@
 using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Configurable;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
 {
@@ -22,21 +23,40 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
                             ""$itemType"": ""Inline"",
                             ""$itemRules"": [
                                 {
-                                    ""$rule"": ""EqualTo""
+                                    ""$rule"": ""NotEmpty"",
+                                    ""$error"": {
+                                        ""$message"": ""The following property 'firstName' cannot be empty."",
+                                        ""$code"": ""400.001""
+                                    }
                                 },
                                 {
-                                    ""$rule"": ""NotEqualTo""
-                                },
+                                    ""$rule"": ""EqualTo"",
+                                    ""$value"": ""Chase""
+                                }
+                            ]
+                        },
+                        {
+                            ""$itemMember"": ""Addresses"",
+                            ""$itemType"": ""Recursive"",
+                            ""$itemRules"": [
                                 {
                                     ""$rule"": ""NotEmpty""
                                 }
                             ]
                         }
                     ]
-                }")
+                }", new System.Text.Json.JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                })
                 .Build()
-                .ToValidator(); 
+                .ToValidator();
 
+
+            var results = validator.Validate(new Person()
+            {
+                FirstName = ""
+            });
 
         }
 
@@ -45,9 +65,15 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public IEnumerable<PersonAddress> Addresses { get; set; }
         }
 
-
-
+        public class PersonAddress
+        {
+            public string StreetOne { get; set; }
+            public string StreetTwo { get; set; }
+            public string City { get; set; }
+            public string ZipCode { get; set; }
+        }
     }
 }

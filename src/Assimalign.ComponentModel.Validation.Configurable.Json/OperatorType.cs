@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Assimalign.ComponentModel.Validation.Configurable;
 
-namespace Assimalign.ComponentModel.Validation.Configurable;
-
-internal enum OperatorType : int
+internal enum OperatorType 
 {
     None = 0,
-    Equal = 1,
-    NotEqual = 2,
-    GreaterThan = 3,
-    GreaterThanOrEqual = 4,
-    LessThan = 5,
-    LessThanOrEqual = 6,
+    EQ = 1,
+    NE = 2,
+    GT = 3,
+    GTE = 4,
+    LT = 5,
+    LTE = 6,
 }

@@ -336,6 +336,9 @@
 					"type": "string",
 					"const": "Between"
 				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
+				},
 				"$lower": {},
 				"$upper": {}
 			},
@@ -368,6 +371,9 @@
 					"type": "string",
 					"const": "GreaterThan"
 				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
+				},
 				"$value": {
 					"description": ""
 				},
@@ -386,6 +392,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "GreaterThanOrEqualTo"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				},
 				"$value": {
 					"description": ""
@@ -407,6 +416,9 @@
 					"type": "string",
 					"const": "LessThan"
 				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
+				},
 				"$value": {
 					"description": ""
 				},
@@ -425,6 +437,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "LessThanOrEqualTo"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				},
 				"$value": {
 					"description": ""
@@ -456,6 +471,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "NotEmpty"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				}
 			},
 			"required": [
@@ -468,6 +486,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "EmailAddress"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				}
 			},
 			"required": [
@@ -480,6 +501,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "Child"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				},
 				"$validationItems": {
 					"type": "array",
@@ -499,6 +523,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "Null"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				}
 			},
 			"required": [
@@ -510,6 +537,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "NotNull"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				}
 			},
 			"required": [
@@ -521,6 +551,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "Length"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				},
 				"$exact": {
 					"type": "number",
@@ -537,6 +570,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "Length"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				},
 				"$min": {
 					"type": "number",
@@ -559,6 +595,9 @@
 					"type": "string",
 					"const": "Length"
 				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
+				},
 				"$max": {
 					"type": "number",
 					"minimum": 1
@@ -574,6 +613,9 @@
 				"$rule": {
 					"type": "string",
 					"const": "Length"
+				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
 				},
 				"$min": {
 					"type": "number",
@@ -591,6 +633,9 @@
 					"type": "string",
 					"const": "Length"
 				},
+				"$error": {
+					"$ref": "#/definitions/$validationError"
+				},
 				"$pattern": {
 					"type": "string",
 					"minLength": 1
@@ -606,6 +651,23 @@
 		},
 		"$validationRuleCreditCard": {
 
+		},
+		"$validationError": {
+			"type": "object",
+			"properties": {
+				"$code": {
+					"type": "string"
+				},
+				"$message": {
+					"type": "string"
+				},
+				"$source": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"$message"
+			]
 		}
 	}
 }
