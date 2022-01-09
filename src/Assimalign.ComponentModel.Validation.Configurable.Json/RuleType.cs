@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal enum ValidationConfigurableJsonRuleName
+internal enum RuleType
 {
     EqualTo,
     NotEqualTo,
@@ -22,5 +22,3 @@ internal enum ValidationConfigurableJsonRuleName
     Child,
     Matches
 }
-
-

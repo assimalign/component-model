@@ -9,8 +9,7 @@
 			"items": {				
 				"$ref": "#/definitions/$validationCondition",
 				"required": [
-					"$conditionId",
-					"$conditions"
+					"$condition"
 				]
 			}
 		},
@@ -114,10 +113,7 @@
 		"$validationCondition": {
 			"type": "object",
 			"properties": {
-				"$conditionId": {
-					"type": "string"
-				},
-				"$conditions": {
+				"$condition": {
 					"oneOf": [
 						{
 							"$ref": "#/definitions/$validationMemberCondition"
@@ -129,8 +125,18 @@
 							"$ref": "#/definitions/$validationAndCondition"
 						}
 					]
+				},
+				"$validationItems": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/$validationItem"
+					},
+					"minItems": 1
 				}
-			}
+			},
+			"required": [
+				"$validationItems"
+			]
 		},
 		"$validationItem": {
 			"type": "object",
@@ -151,42 +157,6 @@
 						}
 					]
 				},
-				"$itemConditionId": {
-					"oneOf": [
-						{
-							"type": "string"
-						},
-						{
-							"type": "null"
-						}
-					]
-					// "oneOf": [
-					// 	{
-					// 		"type": "null"
-					// 	},
-					// 	{
-					// 		"type": "object",
-					// 		"properties": {
-					// 			"$conditionId": {
-					// 				"type": "string"
-					// 			}
-					// 		},
-					// 		"required": [
-					// 			"$conditionId"
-					// 		],
-					// 		"maxProperties": 1
-					// 	},
-					// 	{
-					// 		"$ref": "#/definitions/$validationMemberCondition"
-					// 	},
-					// 	{
-					// 		"$ref": "#/definitions/$validationOrCondition"
-					// 	},
-					// 	{
-					// 		"$ref": "#/definitions/$validationAndCondition"
-					// 	}
-					// ]
-				},
 				"$itemRules": {
 					"type": "array",
 					"items": {
@@ -198,7 +168,6 @@
 			"required": [
 				"$itemMember",
 				"$itemType",
-				"$itemConditionId",
 				"$itemRules"
 			]
 		},

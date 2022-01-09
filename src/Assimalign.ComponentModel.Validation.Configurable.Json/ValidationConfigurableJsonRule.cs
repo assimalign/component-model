@@ -12,19 +12,19 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
 
-internal class ValidationConfigurableJsonRule<T> : IValidationRule
+internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 {
-    private ValidationConfigurableJsonRuleName name;
+    private RuleType ruleType;
 
     [JsonPropertyName("$rule")]
     public string Name
     {
-        get => this.Name.ToString();
+        get => this.name.ToString();
         set
         {
-            if (Enum.TryParse(typeof(ValidationConfigurableJsonRuleName), value, true, out var enumValue))
+            if (Enum.TryParse<RuleType>(value, true, out var enumValue))
             {
-                name = (ValidationConfigurableJsonRuleName)enumValue;
+                name = enumValue;
             }
             else
             {
@@ -32,84 +32,86 @@ internal class ValidationConfigurableJsonRule<T> : IValidationRule
             }
         }
     }
- 
-    [JsonPropertyName("$lower")]
-    [JsonConverter(typeof(ObjectConverter))]
-    public object Lower { get; set; }
 
-    [JsonPropertyName("$upper")]
-    [JsonConverter(typeof(ObjectConverter))]
-    public object Upper { get; set; }
+    [JsonExtensionData]
+    public IDictionary<string, JsonElement> Parameters { get; set; }
 
-    [JsonPropertyName("$value")]
-    [JsonConverter(typeof(ObjectConverter))]
-    public object Value { get; set; }
+    //[JsonPropertyName("$lower")]
+    //[JsonConverter(typeof(ObjectConverter))]
+    //public object Lower { get; set; }
+
+    //[JsonPropertyName("$upper")]
+    //[JsonConverter(typeof(ObjectConverter))]
+    //public object Upper { get; set; }
+
+    //[JsonPropertyName("$value")]
+    //[JsonConverter(typeof(ObjectConverter))]
+    //public object Value { get; set; }
 
     [JsonPropertyName("$error")]
     public ValidationConfigurableJsonError Error { get; set; }
 
+   // [JsonPropertyName("$validationItems")]
+    //public IList<ValidationConfigurableJsonItem<object>> ValidationItems { get; set; }
+
     public bool TryValidate(object value, out IValidationContext context)
     {
-        return this.name switch
+        return this.ruleType switch
         {
-            ValidationConfigurableJsonRuleName.EqualTo => TryValidateEqualTo(value, out context),
-            ValidationConfigurableJsonRuleName.NotEqualTo => TryValidateNotEqualTo(value, out context),
-            ValidationConfigurableJsonRuleName.Empty => TryValidateEmpty(value, out context),
-            ValidationConfigurableJsonRuleName.NotEmpty => TryValidateNotEmpty(value, out context),
-            ValidationConfigurableJsonRuleName.Between => TryValidateBetween(value, out context),
-            ValidationConfigurableJsonRuleName.BetweenOrEqualTo => TryValidateBetweenOrEqualTo(value, out context),
-            ValidationConfigurableJsonRuleName.GreaterThan => TryValidateGreaterThan(value, out context),
-            ValidationConfigurableJsonRuleName.GreaterThanOrEqualTo => TryValidateGreaterThanOrEqualTo(value, out context),
-            ValidationConfigurableJsonRuleName.LessThan => TryValidateLessThan(value, out context),
-            ValidationConfigurableJsonRuleName.LessThanOrEqualTo => TryValidateLessThanOrEqualTo(value, out context),
-            ValidationConfigurableJsonRuleName.EmailAddress => TryValidateEmailAddress(value, out context),
-            ValidationConfigurableJsonRuleName.Null => TryValidateNull(value, out context),
-            ValidationConfigurableJsonRuleName.NotNull => TryValidateNotNull(value, out context),
-            ValidationConfigurableJsonRuleName.Length => TryValidateLength(value, out context),
-            ValidationConfigurableJsonRuleName.LengthBetween => TryValidateLengthBetween(value, out context),
-            ValidationConfigurableJsonRuleName.LengthMax => TryValidateLengthMax(value, out context),
-            ValidationConfigurableJsonRuleName.LengthMin => TryValidateLengthMin(value, out context),
-            ValidationConfigurableJsonRuleName.Child => TryValidateChild(value, out context),
-            ValidationConfigurableJsonRuleName.Matches => TryValidateMatches(value, out context),
+            RuleType.EqualTo => TryValidateEqualTo(value, out context),
+            RuleType.NotEqualTo => TryValidateNotEqualTo(value, out context),
+            RuleType.Empty => TryValidateEmpty(value, out context),
+            RuleType.NotEmpty => TryValidateNotEmpty(value, out context),
+            RuleType.Between => TryValidateBetween(value, out context),
+            RuleType.BetweenOrEqualTo => TryValidateBetweenOrEqualTo(value, out context),
+            RuleType.GreaterThan => TryValidateGreaterThan(value, out context),
+            RuleType.GreaterThanOrEqualTo => TryValidateGreaterThanOrEqualTo(value, out context),
+            RuleType.LessThan => TryValidateLessThan(value, out context),
+            RuleType.LessThanOrEqualTo => TryValidateLessThanOrEqualTo(value, out context),
+            RuleType.EmailAddress => TryValidateEmailAddress(value, out context),
+            RuleType.Null => TryValidateNull(value, out context),
+            RuleType.NotNull => TryValidateNotNull(value, out context),
+            RuleType.Length => TryValidateLength(value, out context),
+            RuleType.LengthBetween => TryValidateLengthBetween(value, out context),
+            RuleType.LengthMax => TryValidateLengthMax(value, out context),
+            RuleType.LengthMin => TryValidateLengthMin(value, out context),
+            RuleType.Child => TryValidateChild(value, out context),
+            RuleType.Matches => TryValidateMatches(value, out context),
             _ => throw new Exception()
         };
     }
-
     private bool TryValidateEqualTo(object value, out IValidationContext context)
     {
-        this.Error ??= new ValidationConfigurableJsonError()
-        {
+        //this.Error ??= new ValidationConfigurableJsonError()
+        //{
 
-        };
+        //};
 
-        if (value is null && this.Value is null)
-        {
-            context = new ValidationContext<object>(value);
-            return true;
-        }
-        else if (!value.Equals(this.Value))
-        {
-            context = new ValidationContext<object>(value);
-            context.AddFailure(this.Error);
-            return true;
-        }
+        //if (value is null && this.Value is null)
+        //{
+        //    context = new ValidationContext<object>(value);
+        //    return true;
+        //}
+        //else if (!value.Equals(this.Value))
+        //{
+        //    context = new ValidationContext<object>(value);
+        //    context.AddFailure(this.Error);
+        //    return true;
+        //}
 
 
 
         context = null;
         return false;
     }
-
     private bool TryValidateNotEqualTo(object value, out IValidationContext context)
     {
         throw new NotImplementedException();
     }
-
     private bool TryValidateEmpty(object value, out IValidationContext context)
     {
         throw new NotImplementedException();
     }
-
     private bool TryValidateNotEmpty(object value, out IValidationContext context)
     {
         Error ??= new ValidationConfigurableJsonError()
@@ -159,7 +161,6 @@ internal class ValidationConfigurableJsonRule<T> : IValidationRule
             
         };
     }
-
     private bool TryValidateBetween(object value, out IValidationContext context)
     {
         throw new NotImplementedException();
@@ -168,7 +169,6 @@ internal class ValidationConfigurableJsonRule<T> : IValidationRule
     {
         throw new NotImplementedException();
     }
-
     private bool TryValidateGreaterThan(object value, out IValidationContext context)
     {
         throw new NotImplementedException();
@@ -220,5 +220,17 @@ internal class ValidationConfigurableJsonRule<T> : IValidationRule
     private bool TryValidateMatches(object value, out IValidationContext context)
     {
         throw new NotImplementedException();
+    }
+
+
+    internal void SetReferenceType(Type type)
+    {
+        if (ruleType == RuleType.Child)
+        {
+            if (this.Parameters.TryGetValue("$value", out var element))
+            {
+                var item = typeof(ValidationConfigurableJsonItem<>).MakeGenericType(type);
+            }
+        }
     }
 }

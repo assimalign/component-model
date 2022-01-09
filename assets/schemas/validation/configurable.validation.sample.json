@@ -4,11 +4,10 @@
   "$validationMode": "",
   "$validationConditions": [ // Reusable conditions for
     {
-      "$conditionId": "01226486",
-      "$conditions": {
+      "$condition": {
         "$and": [
           {
-            "$member": "Profile.Gender",
+            "$member": "Gender",
             "$operator": "eq",
             "$value": "Female"
           }
@@ -16,7 +15,21 @@
       },
       "$validationItems": [
         {
-
+          "$itemMember": "Age",
+          "$itemType": "inline",
+          "$itemRules": [
+            {
+              "$rule": "Length",
+              "$exact": 0,
+              "$error": {
+                "$message": ""
+              }
+            },
+            {
+              "$rule": "NotEqualTo",
+              "$value": 5
+            }
+          ]
         }
       ]
     }
@@ -25,7 +38,6 @@
     {
       "$itemMember": "Age",
       "$itemType": "inline",
-      "$itemConditionId": "01226486",
       "$itemRules": [
         {
           "$rule": "Length",
@@ -42,7 +54,6 @@
     },
     {
       "$itemMember": "Addresses",
-      "$itemConditionId": "01226486",
       "$itemType": "recursive",
       "$itemRules": [
         {
@@ -61,7 +72,7 @@
           ]
         },
         {
-          "$rule":  "Between",
+          "$rule": "Between",
           "$lower": "",
           "$upper": ""
         }

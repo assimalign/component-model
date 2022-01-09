@@ -9,7 +9,7 @@ public enum ValidationMode
     /// <summary>
     /// Tells the validator to continue validation through all failures.
     /// </summary>
-    Continue = 0,
+    Cascade = 0,
 
     /// <summary>
     /// Tells the validator to stop validation after first failure.

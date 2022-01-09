@@ -12,8 +12,17 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-public static class ValidationConfigJsonExtensions
+public static class ValidationConfigurableJsonExtensions
 {
+    private static JsonSerializerOptions GetDefaultJsonSerializationOptions()
+    {
+        return new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
+            ReadCommentHandling = JsonCommentHandling.Skip
+        };
+    }
     /// <summary>
     /// 
     /// </summary>
@@ -26,10 +35,7 @@ public static class ValidationConfigJsonExtensions
     {
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
-            options ??= new JsonSerializerOptions();
-            //options.Converters.Add(new ValidationConfigurableJsonRuleConverter<T>());
-            //options.Converters.Add(new ValidationConfigurableJsonItemConverter<T>());
-            //options.Converters.Add(new ValidationConfigurableJsonConditionConverter<T>());
+            options ??= GetDefaultJsonSerializationOptions();
             return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
         }));
     }
@@ -48,7 +54,7 @@ public static class ValidationConfigJsonExtensions
             using (var reader = new StreamReader(stream))
             {
                 var json = reader.ReadToEnd();
-
+                options ??= GetDefaultJsonSerializationOptions();
                 return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
             }
         }));

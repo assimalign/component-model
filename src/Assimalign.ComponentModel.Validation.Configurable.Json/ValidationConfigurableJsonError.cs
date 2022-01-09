@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal class ValidationConfigurableJsonError : IValidationError
+internal sealed class ValidationConfigurableJsonError : IValidationError
 {
     [JsonPropertyName("$code")]
     public string Code { get; set; }
@@ -17,4 +17,12 @@ internal class ValidationConfigurableJsonError : IValidationError
 
     [JsonPropertyName("$source")]
     public string Source { get; set; }
+
+
+
+    public override string ToString()
+    {
+        return $"Error {Code}: {Message} {Environment.NewLine} └─> Source: {Source}";
+    }
+
 }

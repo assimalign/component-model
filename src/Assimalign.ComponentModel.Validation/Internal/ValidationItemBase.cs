@@ -7,9 +7,9 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValue>
 {
+    private string expressionBody;
     private Func<T, TValue> expressionCompiled;
     private Expression<Func<T, TValue>> expression;
-    private string expressionBody;
 
     public ValidationItemBase()
     {
@@ -54,7 +54,6 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
             return default(TValue);
         }
     }
-
 
     public override string ToString() => this.expressionBody;
 }

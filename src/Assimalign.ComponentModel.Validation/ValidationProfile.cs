@@ -38,7 +38,7 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     /// <summary>
     /// A flag indicating whether to cascade through all validation rules after first failure.
     /// </summary>
-    public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
+    public ValidationMode ValidationMode { get; set; } = ValidationMode.Cascade;
 
     /// <summary>
     /// 
@@ -85,7 +85,7 @@ public abstract class ValidationProfile : IValidationProfile
     /// <summary>
     /// A flag indicating whether to cascade through all validation rules after first failure.
     /// </summary>
-    public ValidationMode ValidationMode { get; set; } = ValidationMode.Continue;
+    public ValidationMode ValidationMode { get; set; } = ValidationMode.Cascade;
 
     /// <summary>
     /// 

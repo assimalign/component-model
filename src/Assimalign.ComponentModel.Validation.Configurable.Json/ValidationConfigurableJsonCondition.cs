@@ -10,7 +10,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-internal class ValidationConfigurableJsonCondition<T> : IValidationCondition
+internal sealed class ValidationConfigurableJsonCondition<T> : IValidationCondition
 {
    
     [JsonPropertyName("$and")]
@@ -32,16 +32,12 @@ internal class ValidationConfigurableJsonCondition<T> : IValidationCondition
     [JsonPropertyName("$validationItems")]
     public IList<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
 
-
-
     [JsonIgnore]
     IEnumerable<IValidationItem> IValidationCondition.ValidationItems => this.ValidationItems;
 
-    [JsonIgnore]
-    public Expression<Func<T, bool>> Condition { get; set; }
 
 
-    public Expression<Func<T, bool>> GetCondition()
+    internal Expression<Func<T, bool>> GetCondition()
     {
         return default;
     }

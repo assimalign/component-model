@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal class ValidationConfigurableJsonProfile<T> : IValidationProfile
+internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 {
     [JsonConstructor]
     public ValidationConfigurableJsonProfile()
@@ -17,25 +17,25 @@ internal class ValidationConfigurableJsonProfile<T> : IValidationProfile
         this.ValidationItems ??= new List<ValidationConfigurableJsonItem<T>>();
     }
 
-    
-
-    [JsonPropertyName("$validationMode")]
-    public ValidationMode ValidationMode { get; set; }
-
+    /// <summary>
+    /// A informational summary of the validation profile 
+    /// for <see cref="ValidationConfigurableJsonProfile{T}"/>.
+    /// </summary>
     [JsonPropertyName("$description")]
     public string Description { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonPropertyName("$validationMode")]
+    public ValidationMode ValidationMode { get; set; }
     
     [JsonPropertyName("$validationItems")]
     public IList<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
 
-    [JsonIgnore]
     [JsonPropertyName("$validationConditions")]
     public IList<ValidationConfigurableJsonCondition<T>> ValidationConditions { get; set; }
     
-    
-   
-
-
     [JsonIgnore]
     public Type ValidationType { get; }
 
@@ -60,15 +60,15 @@ internal class ValidationConfigurableJsonProfile<T> : IValidationProfile
     }
 
 
+
     public void Configure()
     {
-        var parameterExpression = Expression.Parameter(ValidationType, ValidationType.Name);
+        ConfigureValidationItems();
+        ConfigureValidationConditions();    
+    }
 
-        foreach (var validationItem in this.ValidationItems)
-        {
-
-        }
-
+    private void ConfigureValidationConditions()
+    {
         // Need to push the conditional validation items into the current validation stack
         foreach (var validationCondition in this.ValidationConditions)
         {
@@ -76,21 +76,21 @@ internal class ValidationConfigurableJsonProfile<T> : IValidationProfile
 
             foreach (var validationItem in validationCondition.ValidationItems)
             {
-                var memberPaths = validationItem.ItemMember.Split('.');
-                var memberExpression = (Expression)parameterExpression;
-
-                for (int i = 0; i < memberPaths.Length; i++)
-                {
-                    memberExpression = Expression.Property(memberExpression, memberPaths[i]);
-                }
-
-                var lambdaExpression = Expression.Lambda<Func<T, object>>(memberExpression, parameterExpression);
-
-                validationItem.ItemCondition = condition;
-                validationItem.ItemExpression = lambdaExpression;
-
-                this.ValidationItems.Add(validationItem);
+                validationItem.SetItemValidationMode(this.ValidationMode);
+                validationItem.SetItemValidationCondition(condition);
+                validationItem.SetItemValidationErrorDefaults();
+                validationItem.SetItemValidationRuleConversion();
             }
+        }
+    }
+
+    private void ConfigureValidationItems()
+    {
+        foreach (var validationItem in this.ValidationItems)
+        {
+            validationItem.SetItemValidationMode(this.ValidationMode);
+            validationItem.SetItemValidationErrorDefaults();
+            validationItem.SetItemValidationRuleConversion();
         }
     }
 }
