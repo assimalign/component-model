@@ -19,6 +19,7 @@ public class RuleChildMemberTests
     {
         this.validator = Validator.Create(configure =>
         {
+            configure.ContinueThroughValidationChain = true;
             configure.AddProfile(new PersonValidationProfile());
         });
     }
@@ -118,13 +119,12 @@ public class RuleChildMemberTests
         {
             PrimaryAddress = new PersonAddresses()
             {
-                StreetOne = "Test street",
                 ZipCode = "casdf"
             }
         };
 
         var results = this.validator.Validate(person);
-        Assert.Equal(3, results.Errors.Count());
+        Assert.Equal(4, results.Errors.Count());
     }
 
     [Fact]

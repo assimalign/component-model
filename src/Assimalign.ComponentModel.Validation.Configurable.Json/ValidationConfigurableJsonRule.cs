@@ -16,15 +16,15 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 {
     private RuleType ruleType;
 
-    [JsonPropertyName("$rule")]
+    [JsonPropertyName(ValidationJsonProperty.ValidationRule)]
     public string Name
     {
-        get => this.name.ToString();
+        get => this.ruleType.ToString();
         set
         {
             if (Enum.TryParse<RuleType>(value, true, out var enumValue))
             {
-                name = enumValue;
+                this.ruleType = enumValue;
             }
             else
             {
@@ -33,26 +33,14 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
         }
     }
 
-    [JsonExtensionData]
-    public IDictionary<string, JsonElement> Parameters { get; set; }
-
-    //[JsonPropertyName("$lower")]
-    //[JsonConverter(typeof(ObjectConverter))]
-    //public object Lower { get; set; }
-
-    //[JsonPropertyName("$upper")]
-    //[JsonConverter(typeof(ObjectConverter))]
-    //public object Upper { get; set; }
-
-    //[JsonPropertyName("$value")]
-    //[JsonConverter(typeof(ObjectConverter))]
-    //public object Value { get; set; }
-
-    [JsonPropertyName("$error")]
+    [JsonPropertyName(ValidationJsonProperty.ValidationError)]
     public ValidationConfigurableJsonError Error { get; set; }
 
-   // [JsonPropertyName("$validationItems")]
-    //public IList<ValidationConfigurableJsonItem<object>> ValidationItems { get; set; }
+    // This will store our parameter values used to run the validation rules.
+    // We will need to do some conversion either at method call 'Configure()' or at executions 
+    // time (Let's avoid executions time if we can, RIGHT! By order of the Peaky Blinders)
+    [JsonExtensionData] 
+    public IDictionary<string, object> Parameters { get; set; }
 
     public bool TryValidate(object value, out IValidationContext context)
     {
@@ -171,7 +159,30 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     }
     private bool TryValidateGreaterThan(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        var compare = this.Parameters["$value"];
+
+        if (value is null)
+        {
+            context = new ValidationContext<object>(value);
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is IComparable comparable)
+        {
+            context = new ValidationContext<object>(value);
+            
+            if (comparable.CompareTo(compare) <= 0)
+            {
+                context = new ValidationContext<object>(value);
+                context.AddFailure(this.Error);
+            }
+            return true;
+        }
+        else
+        {
+            context = null;
+            return false;
+        }
     }
     private bool TryValidateGreaterThanOrEqualTo(object value, out IValidationContext context)
     {
@@ -219,17 +230,45 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     }
     private bool TryValidateMatches(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        if (value is null)
+        {
+
+        }
+
+
+        context = null;
+        return false;
     }
 
 
-    internal void SetReferenceType(Type type)
+    internal void SetRuleConversion(Type type)
     {
+        foreach(var kv in this.Parameters)
+        {
+          
+        }
         if (ruleType == RuleType.Child)
         {
             if (this.Parameters.TryGetValue("$value", out var element))
             {
                 var item = typeof(ValidationConfigurableJsonItem<>).MakeGenericType(type);
+            }
+        }
+        if (ruleType == RuleType.GreaterThan)
+        {
+            if (type.IsValueType && type.GetInterface("IComparable") is null)
+            {
+                // TODO: Throw Exception
+            }
+
+            
+
+            var parameter = (JsonElement)this.Parameters["$value"];
+
+            if (parameter.ValueKind == JsonValueKind.Number)
+            {
+                if (type == typeof(short))
+                    this.Parameters["$value"] = parameter.GetInt16();
             }
         }
     }

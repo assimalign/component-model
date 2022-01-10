@@ -3,6 +3,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Validation;
 
@@ -13,8 +14,9 @@ namespace Assimalign.ComponentModel.Validation;
 public partial class Validator : IValidator
 {
     private readonly ValidationOptions options;
+    private readonly IDictionary<string, object> contextOptions;
 
-    internal Validator() { }
+    private Validator() { }
 
     /// <summary>
     /// 
@@ -23,6 +25,11 @@ public partial class Validator : IValidator
     public Validator(ValidationOptions options)
     {
         this.options = options;
+        this.contextOptions = new Dictionary<string, object>()
+        {
+            { "ThrowExceptionOnFailure", options.ThrowExceptionOnFailure },
+            { "ContinueThroughValidationChain", options.ContinueThroughValidationChain }
+        };
     }
 
     /// <summary>
@@ -45,7 +52,10 @@ public partial class Validator : IValidator
     /// <returns></returns>
     public ValidationResult Validate<T>(T instance)
     {
-        return Validate(new ValidationContext<T>(instance, true) as IValidationContext);
+        return Validate(new ValidationContext<T>(instance, true) 
+        { 
+            Options = this.contextOptions
+        } as IValidationContext);
     }
 
     /// <summary>
@@ -62,9 +72,11 @@ public partial class Validator : IValidator
         {
             if (profile.ValidationType == context.InstanceType)
             {
+                var isModeStop = profile.ValidationMode == ValidationMode.Stop;
+
                 foreach (var item in profile.ValidationItems)
                 {
-                    if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                    if (isModeStop && context.Errors.Any())
                     {
                         break;
                     }
@@ -92,7 +104,10 @@ public partial class Validator : IValidator
     /// <returns></returns>
     public Task<ValidationResult> ValidateAsync<T>(T instance, CancellationToken cancellationToken = default)
     {
-        return ValidateAsync(new ValidationContext<T>(instance, true) as IValidationContext, cancellationToken);
+        return ValidateAsync(new ValidationContext<T>(instance, true)
+        {
+            Options = this.contextOptions
+        } as IValidationContext, cancellationToken);
     }
 
     /// <summary>
@@ -114,6 +129,7 @@ public partial class Validator : IValidator
             {
                 if (profile.ValidationType == context.InstanceType)
                 {
+                    var isModeStop = profile.ValidationMode == ValidationMode.Stop;
                     var tokenSource = cancellationToken == default ?
                         new CancellationTokenSource() :
                         CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -124,7 +140,7 @@ public partial class Validator : IValidator
                         {
                             return default;
                         }
-                        if (profile.ValidationMode == ValidationMode.Stop && context.Errors.Any())
+                        if (isModeStop && context.Errors.Any())
                         {
                             break;
                         }

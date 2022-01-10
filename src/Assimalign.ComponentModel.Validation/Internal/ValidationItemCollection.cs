@@ -22,6 +22,10 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
 
     public override void Evaluate(IValidationContext context)
     {
+        var isUseEntireChain = context.Options.TryGetValue("ContinueThroughValidationChain", out var results) ?
+            (bool)results :
+            false;
+
         if (context.Instance is T instance)
         {
             if (this.ValidationCondition is not null && !this.ValidationCondition.Invoke(instance))
@@ -34,12 +38,12 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
 
             foreach (var rule in this.ItemRuleStack)
             {
-                if (this.ItemValidationMode == ValidationMode.Stop && context.Errors.Any())
+                if (!isUseEntireChain && context.Errors.Any())
                 {
                     break;
                 }
 
-                stopwatch.Start();
+                stopwatch.Restart();
 
                 if (value is not null && value is IEnumerable<TValue> enumerable)
                 {
@@ -70,8 +74,6 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
                         InvocationErrorMessage = $"The following enumerable expression: '{this.ItemExpression}' returned null for instance '{this.paramType.Name}'."
                     });
                 }
-
-                stopwatch.Reset();
             }
         }
     }

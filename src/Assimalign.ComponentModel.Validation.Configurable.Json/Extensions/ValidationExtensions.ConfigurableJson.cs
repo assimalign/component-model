@@ -12,17 +12,8 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-public static class ValidationConfigurableJsonExtensions
+public static class ValidationExtensions
 {
-    private static JsonSerializerOptions GetDefaultJsonSerializationOptions()
-    {
-        return new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true,
-            AllowTrailingCommas = true,
-            ReadCommentHandling = JsonCommentHandling.Skip
-        };
-    }
     /// <summary>
     /// 
     /// </summary>
@@ -36,6 +27,7 @@ public static class ValidationConfigurableJsonExtensions
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
             options ??= GetDefaultJsonSerializationOptions();
+            options.Converters.Add(new EnumConverter<ItemType>());
             return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
         }));
     }
@@ -51,13 +43,22 @@ public static class ValidationConfigurableJsonExtensions
     {
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
-            using (var reader = new StreamReader(stream))
-            {
-                var json = reader.ReadToEnd();
-                options ??= GetDefaultJsonSerializationOptions();
-                return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
-            }
+            options ??= GetDefaultJsonSerializationOptions();
+            options.Converters.Add(new EnumConverter<ItemType>());
+            return JsonSerializer.DeserializeAsync<ValidationConfigurableJsonProfile<T>>(stream, options)
+                .GetAwaiter()
+                .GetResult();
         }));
+    }
+
+    private static JsonSerializerOptions GetDefaultJsonSerializationOptions()
+    {
+        return new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
+            ReadCommentHandling = JsonCommentHandling.Skip
+        };
     }
 
     private static void WriteObject<T>(ValidationProfile<T> profile)
@@ -77,9 +78,9 @@ public static class ValidationConfigurableJsonExtensions
                 foreach (var item in profile.ValidationItems)
                 {
 
-                    
+
                 }
-              
+
                 writer.WriteEndArray();
 
                 // End writing JSON Validation Schema

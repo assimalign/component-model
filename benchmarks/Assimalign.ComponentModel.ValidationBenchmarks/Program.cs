@@ -1,4 +1,4 @@
-﻿
+﻿using static System.Console;
 
 
 var validatorBenchmarkRunTime = DateTime.Now.AddSeconds(20);
@@ -13,14 +13,17 @@ while (DateTime.Now < validatorBenchmarkRunTime)
 {
     var validation = validator.Validate(validatorTestObject);
 
-    Console.SetCursorPosition(0, Console.WindowTop);
-    Console.Write($"Elapsed Ticks: {validation.ValidationElapsedTicks}");
+    SetCursorPosition(0, WindowTop);
+    Write($"Elapsed Ticks: {validation.ValidationElapsedTicks}");
 
-    Console.SetCursorPosition(0, Console.WindowTop + 1);
-    Console.Write($"Elapsed (ms):  {validation.ValidationElapsedMilliseconds}");
+    SetCursorPosition(0, WindowTop + 1);
+    Write($"Elapsed (sec): {validation.ValidationElapsedSeconds}");
 
-    Console.SetCursorPosition(0, Console.WindowTop + 2);
-    Console.Write($"Elapsed (sec): {validation.ValidationElapsedSeconds}");
+    SetCursorPosition(0, WindowTop + 2);
+    Write($"Elapsed (ms):  {validation.ValidationElapsedMilliseconds}");
+
+    SetCursorPosition(0, WindowTop + 3);
+    Write($"Elapsed (ns):  {validation.ValidationElapsedMilliseconds * 1000000}");
 
     double average = 0;
 
@@ -30,24 +33,24 @@ while (DateTime.Now < validatorBenchmarkRunTime)
     }
 
 
-    Console.SetCursorPosition(0, Console.WindowTop + 4);
-    Console.Write($"Current AVG (MS): {average / (double)TimeSpan.TicksPerMillisecond}");
+    SetCursorPosition(0, WindowTop + 4);
+    Write($"Current AVG (MS): {average / (double)TimeSpan.TicksPerMillisecond}");
 }
 
-Console.SetCursorPosition(0, Console.WindowTop + 6);
-Console.Write($"Current AVG (MS):   {validatorElapsedTimerAverager.CurrentAvg}");
+SetCursorPosition(0, WindowTop + 6);
+Write($"Current AVG (MS):   {validatorElapsedTimerAverager.CurrentAvg}");
 
-Console.SetCursorPosition(0, Console.WindowTop + 8);
-Console.Write($"Highest AVG (MS):   {validatorElapsedTimerAverager.HighestAvg}");
+SetCursorPosition(0, WindowTop + 8);
+Write($"Highest AVG (MS):   {validatorElapsedTimerAverager.HighestAvg}");
 
-Console.SetCursorPosition(0, Console.WindowTop + 9);
-Console.Write($"Lowest AVG (MS):    {validatorElapsedTimerAverager.LowestAvg}");
+SetCursorPosition(0, WindowTop + 9);
+Write($"Lowest AVG (MS):    {validatorElapsedTimerAverager.LowestAvg}");
 
-Console.SetCursorPosition(0, Console.WindowTop + 11);
-Console.Write($"Highest Entry (MS): {validatorElapsedTimerAverager.HighestEntry} at {validatorElapsedTimerAverager.HighestEntryOccurance}");
+SetCursorPosition(0, WindowTop + 11);
+Write($"Highest Entry (MS): {validatorElapsedTimerAverager.HighestEntry} at {validatorElapsedTimerAverager.HighestEntryOccurance}");
 
-Console.SetCursorPosition(0, Console.WindowTop + 12);
-Console.Write($"Lowest Entry (MS):  {validatorElapsedTimerAverager.LowestEntry} at {validatorElapsedTimerAverager.LowestEntryOccurance}");
+SetCursorPosition(0, WindowTop + 12);
+Write($"Lowest Entry (MS):  {validatorElapsedTimerAverager.LowestEntry} at {validatorElapsedTimerAverager.LowestEntryOccurance}");
 
-Console.SetCursorPosition(0, Console.WindowTop + 14);
-Console.Write($"Total Entries:  {validatorElapsedTimerAverager.TotalEntries}");
+SetCursorPosition(0, WindowTop + 14);
+Write($"Total Entries:  {validatorElapsedTimerAverager.TotalEntries}");

@@ -15,8 +15,6 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
         this.validationItems = new List<IValidationItem>();
     }
 
-    public ValidationMode ValidationMode { get; set; }
-
     public IEnumerable<IValidationItem> ValidationItems
     {
         get => this.validationItems;
@@ -47,7 +45,6 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
         {
             ValidationItems = new List<IValidationItem>(),
             ValidationCondition = condition.Compile(),
-            ValidationMode = this.ValidationMode
         };
 
         configure.Invoke(descriptor);

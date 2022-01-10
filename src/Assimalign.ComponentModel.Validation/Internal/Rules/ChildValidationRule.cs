@@ -18,7 +18,10 @@ internal sealed class ChildValidationRule<TValue> : ValidationRuleBase<TValue>
     {
         if (value is null) // No need to validate an object that is null
         {
-            context = new ValidationContext<TValue>(default(TValue));
+            context = new ValidationContext<TValue>(default(TValue))
+            {
+                Options = new Dictionary<string, object>()
+            };
             return true;
         }
         else if (value is TValue tv)
@@ -36,7 +39,10 @@ internal sealed class ChildValidationRule<TValue> : ValidationRuleBase<TValue>
     {
         try
         {
-            context = new ValidationContext<TValue>(value);
+            context = new ValidationContext<TValue>(value)
+            {
+                Options = new Dictionary<string, object>()
+            };
 
             foreach (var item in this.ValidationItems)
             {
@@ -45,7 +51,17 @@ internal sealed class ChildValidationRule<TValue> : ValidationRuleBase<TValue>
                     break;
                 }
 
-                item.Evaluate(context);
+                var childContext = new ValidationContext<TValue>(value)
+                {
+                    Options = new Dictionary<string, object>()
+                };
+
+                item.Evaluate(childContext);
+
+                foreach (var error in childContext.Errors)
+                {
+                    context.AddFailure(error);
+                }
             }
 
             return true;

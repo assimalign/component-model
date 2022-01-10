@@ -9,8 +9,6 @@ using Assimalign.ComponentModel.Validation.Internal.Exceptions;
 
 internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
 {
-    public ValidationMode ValidationMode { get; set; }
-
     public IList<IValidationItem> ValidationItems { get; set; }
 
     public Func<T, bool> ValidationCondition { get; set; }
@@ -38,7 +36,6 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         var item = new ValidationItem<T, TValue>()
         {
             ItemExpression = expression,
-            ItemValidationMode = this.ValidationMode,
             ValidationCondition = this.ValidationCondition
         };
 
@@ -69,7 +66,6 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         var item = new ValidationItemCollection<T, TValue>()
         {
             ItemExpression = expression,
-            ItemValidationMode = this.ValidationMode,
             ValidationCondition = this.ValidationCondition
         };
 
@@ -91,14 +87,12 @@ internal sealed class ValidationRuleDescriptor<T> : IValidationRuleDescriptor<T>
         {
             Condition = condition,
             ValidationItems = this.ValidationItems,
-            ValidationMode = this.ValidationMode
         };
 
         var descriptor = new ValidationRuleDescriptor<T>()
         {
             ValidationItems = new List<IValidationItem>(),
-            ValidationCondition = condition.Compile(),
-            ValidationMode = this.ValidationMode
+            ValidationCondition = condition.Compile()
         };
         
         configure.Invoke(descriptor);

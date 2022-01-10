@@ -29,6 +29,11 @@ public interface IValidationContext
     IEnumerable<IValidationError> Errors { get; }
 
     /// <summary>
+    /// Validation Options passed as a dictionary.
+    /// </summary>
+    IDictionary<string, object> Options { get; set; }
+
+    /// <summary>
     /// Adds a generic validation failure to <see cref="IValidationContext.Errors"/>
     /// </summary>
     /// <param name="message"></param>

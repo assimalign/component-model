@@ -9,6 +9,8 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 
 internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 {
+    private bool isConfigured;
+
     [JsonConstructor]
     public ValidationConfigurableJsonProfile()
     {
@@ -17,25 +19,20 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
         this.ValidationItems ??= new List<ValidationConfigurableJsonItem<T>>();
     }
 
-    /// <summary>
-    /// A informational summary of the validation profile 
-    /// for <see cref="ValidationConfigurableJsonProfile{T}"/>.
-    /// </summary>
     [JsonPropertyName("$description")]
     public string Description { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
     [JsonPropertyName("$validationMode")]
     public ValidationMode ValidationMode { get; set; }
     
     [JsonPropertyName("$validationItems")]
-    public IList<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
+    public IEnumerable<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
 
     [JsonPropertyName("$validationConditions")]
-    public IList<ValidationConfigurableJsonCondition<T>> ValidationConditions { get; set; }
+    public IEnumerable<ValidationConfigurableJsonCondition<T>> ValidationConditions { get; set; }
     
+
+
     [JsonIgnore]
     public Type ValidationType { get; }
 
@@ -63,8 +60,15 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 
     public void Configure()
     {
+        if (isConfigured)
+        {
+            return;
+        }
+
         ConfigureValidationItems();
-        ConfigureValidationConditions();    
+        ConfigureValidationConditions();
+
+        isConfigured = true; // Let's set this so some idiot doesn't try to call this more than once
     }
 
     private void ConfigureValidationConditions()
@@ -76,10 +80,11 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 
             foreach (var validationItem in validationCondition.ValidationItems)
             {
-                validationItem.SetItemValidationMode(this.ValidationMode);
-                validationItem.SetItemValidationCondition(condition);
-                validationItem.SetItemValidationErrorDefaults();
-                validationItem.SetItemValidationRuleConversion();
+                validationItem.ConfigureItemMember();
+                validationItem.ConfigureItemCondition(condition);
+                validationItem.ConfigureItemValidationMode(this.ValidationMode);
+                validationItem.ConfigureErrorDefaults();
+                validationItem.ConfigureRuleValueTypeConversion();
             }
         }
     }
@@ -88,9 +93,10 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     {
         foreach (var validationItem in this.ValidationItems)
         {
-            validationItem.SetItemValidationMode(this.ValidationMode);
-            validationItem.SetItemValidationErrorDefaults();
-            validationItem.SetItemValidationRuleConversion();
+            validationItem.ConfigureItemMember();
+            validationItem.ConfigureItemValidationMode(this.ValidationMode);
+            validationItem.ConfigureErrorDefaults();
+            validationItem.ConfigureRuleValueTypeConversion();
         }
     }
 }

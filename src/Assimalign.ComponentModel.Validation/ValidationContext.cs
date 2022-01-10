@@ -72,6 +72,11 @@ public sealed class ValidationContext<T> : IValidationContext
     /// <summary>
     /// 
     /// </summary>
+    public IDictionary<string, object> Options { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="error"></param>
     public void AddFailure(IValidationError error) => this.errors.Push(new ValidationError(error));
 

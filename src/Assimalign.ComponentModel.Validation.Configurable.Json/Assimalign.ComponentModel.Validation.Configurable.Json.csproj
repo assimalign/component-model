@@ -15,6 +15,7 @@
 		<ProjectReference Include="..\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
 	</ItemGroup>
 
+
 	<ItemGroup>
 		<Folder Include="Utilities\" />
 	</ItemGroup>
