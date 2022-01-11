@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal enum OperatorType 
+public enum OperatorType 
 {
     None = 0,
     EQ = 1,

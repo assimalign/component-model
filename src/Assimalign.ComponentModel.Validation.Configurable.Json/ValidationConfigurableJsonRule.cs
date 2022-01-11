@@ -12,36 +12,37 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
 
-internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
+public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 {
     private RuleType ruleType;
 
-    [JsonPropertyName(ValidationJsonProperty.ValidationRule)]
-    public string Name
-    {
-        get => this.ruleType.ToString();
-        set
-        {
-            if (Enum.TryParse<RuleType>(value, true, out var enumValue))
-            {
-                this.ruleType = enumValue;
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonPropertyName("$rule")]
+    public string Name { get; set; }
 
-    [JsonPropertyName(ValidationJsonProperty.ValidationError)]
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonPropertyName("$error")]
     public ValidationConfigurableJsonError Error { get; set; }
 
-    // This will store our parameter values used to run the validation rules.
-    // We will need to do some conversion either at method call 'Configure()' or at executions 
-    // time (Let's avoid executions time if we can, RIGHT! By order of the Peaky Blinders)
+    /// <summary>
+    /// This will store our parameter values used to run the validation rules.
+    /// We will need to do some conversion either at method call 'Configure()' or at executions 
+    /// time (Let's avoid executions time if we can, RIGHT! By order of the Peaky Blinders)
+    /// </summary>
     [JsonExtensionData] 
     public IDictionary<string, object> Parameters { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public bool TryValidate(object value, out IValidationContext context)
     {
         return this.ruleType switch

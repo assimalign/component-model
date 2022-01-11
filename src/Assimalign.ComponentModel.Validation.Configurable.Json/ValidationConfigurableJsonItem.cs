@@ -13,54 +13,58 @@ using Assimalign.ComponentModel.Validation.Internal.Extensions;
 using Assimalign.ComponentModel.Validation.Properties;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-
-internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
 {
-    private Func<T, bool> condition;
-    private Func<T, object> member;
-    private Expression<Func<T, object>> expression;
+    private Func<T, bool> itemCondition;
+    private Func<T, object> itemMember;
+    private Expression<Func<T, object>> itemMemberExpression;
     private ValidationMode validationMode;
 
 
-
-
-    [JsonPropertyName(ValidationJsonProperty.ValidationItemMember)]
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonPropertyName("$itemMember")]
     public string ItemMember { get; set; }
 
-    [JsonPropertyName(ValidationJsonProperty.ValidationItemType)]
-    public ItemType ItemType { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonPropertyName("$itemType")]
+    public ValidationConfigurableItemType ItemType { get; set; }
 
-    [JsonPropertyName(ValidationJsonProperty.ValidationItemRules)]
-    public IEnumerable<ValidationConfigurableJsonRule<T>> ItemRuleStack { get; set; }
-    
-    [JsonIgnore]
-    IValidationRuleStack IValidationItem.ItemRuleStack
-    {
-        get
-        {
-            return new ValidationRuleStack(this.ItemRuleStack);
-        }
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonPropertyName("$itemRules")]
+    public Stack<ValidationConfigurableJsonRule<T>> ItemRuleStack { get; set; }
+    IValidationRuleStack IValidationItem.ItemRuleStack => new ValidationRuleStack(this.ItemRuleStack);
 
 
-
-
-    public void Evaluate(IValidationContext context)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    public  void Evaluate(IValidationContext context)
     {
         if (context.Instance is T instance)
         {
             // 1. Lets check if there is a condition and if so let's see.
             //    if this validation item can be evaluated
-            if (this.condition is not null && !this.condition.Invoke(instance))
+            if (this.itemCondition is not null && !this.itemCondition.Invoke(instance))
             {
                 return;
             }
-            if (this.ItemType == ItemType.Inline)
+            if (this.ItemType == ValidationConfigurableItemType.Inline)
             {
                 EvaluateInline(instance, context);
                 return;
             }
-            if (this.ItemType == ItemType.Recursive)
+            if (this.ItemType == ValidationConfigurableItemType.Recursive)
             {
                 EvaluateRecursive(instance, context);
                 return;
@@ -128,7 +132,7 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
     {
         try
         {
-            return this.member.Invoke(instance);
+            return this.itemMember.Invoke(instance);
         }
         catch
         {
@@ -139,9 +143,10 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
     #region Methods for Configuring Validation Item from Validation Profile (AKA. Though efficient ABSOLUTE TRASH Implementation [Need to check this before I wreck this])
 
     // Sets the Member Expression on Deserialization of JSON Validation Rules
-    internal Expression<Func<T, object>> GetMemberExpression()
+
+    internal void ConfigureItemMember()
     {
-        if (this.expression is null)
+        if (this.itemMemberExpression is null)
         {
             var parameterExpression = Expression.Parameter(typeof(T));
             var memberPaths = this.ItemMember.Split('.');
@@ -150,17 +155,10 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
             {
                 memberExpression = Expression.Property(memberExpression, memberPaths[i]);
             }
-            return Expression.Lambda<Func<T, object>>(memberExpression, parameterExpression);
+
+            this.itemMemberExpression = Expression.Lambda<Func<T, object>>(memberExpression, parameterExpression);
+            this.itemMember = itemMemberExpression.Compile();
         }
-        else
-        {
-            return this.expression;
-        }
-    }
-    internal void ConfigureItemMember()
-    {
-        this.expression = GetMemberExpression();
-        this.member = expression.Compile();
     }
     internal void ConfigureItemValidationMode(ValidationMode validationMode)
     {
@@ -168,7 +166,7 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
     }
     internal void ConfigureItemCondition(Expression<Func<T, bool>> itemCondition)
     {
-        this.condition = itemCondition.Compile();
+        this.itemCondition = itemCondition.Compile();
     }
     internal void ConfigureErrorDefaults()
     {
@@ -177,15 +175,15 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
             rule.Error ??= new ValidationConfigurableJsonError()
             {
                 Message = "",
-                Source = this.expression.ToString()
+                Source = this.itemMemberExpression.ToString()
             };
         }
     }
     internal void ConfigureRuleValueTypeConversion()
     {
-        var returnType = expression.Body.Type.IsEnumerableType(out var enumerableType) ? 
+        var returnType = itemMemberExpression.Body.Type.IsEnumerableType(out var enumerableType) ? 
             enumerableType : 
-            expression.Body.Type; 
+            itemMemberExpression.Body.Type; 
 
         foreach(var rule in this.ItemRuleStack)
         {

@@ -7,36 +7,52 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 {
     private bool isConfigured;
+    private IList<ValidationConfigurableJsonItem<T>> items;
+    private IList<ValidationConfigurableJsonCondition<T>> conditions;
 
+    /// <summary>
+    /// The default constructor for Validation Configurable JSON.
+    /// </summary>
     [JsonConstructor]
     public ValidationConfigurableJsonProfile()
     {
-        this.ValidationType = typeof(T);
         this.ValidationConditions ??= new List<ValidationConfigurableJsonCondition<T>>();
         this.ValidationItems ??= new List<ValidationConfigurableJsonItem<T>>();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [JsonPropertyName("$description")]
     public string Description { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [JsonPropertyName("$validationMode")]
     public ValidationMode ValidationMode { get; set; }
     
+    /// <summary>
+    /// 
+    /// </summary>
     [JsonPropertyName("$validationItems")]
     public IEnumerable<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [JsonPropertyName("$validationConditions")]
     public IEnumerable<ValidationConfigurableJsonCondition<T>> ValidationConditions { get; set; }
-    
 
 
-    [JsonIgnore]
-    public Type ValidationType { get; }
-
-    [JsonIgnore]
+    Type IValidationProfile.ValidationType => typeof(T);
     IEnumerable<IValidationItem> IValidationProfile.ValidationItems
     {
         get
@@ -48,7 +64,7 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 
             foreach (var condition in this.ValidationConditions)
             {
-                foreach(var item in condition.ValidationItems)
+                foreach (var item in condition.ValidationItems)
                 {
                     yield return item;
                 }
@@ -58,6 +74,9 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void Configure()
     {
         if (isConfigured)
@@ -70,7 +89,6 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 
         isConfigured = true; // Let's set this so some idiot doesn't try to call this more than once
     }
-
     private void ConfigureValidationConditions()
     {
         // Need to push the conditional validation items into the current validation stack
@@ -88,7 +106,6 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
             }
         }
     }
-
     private void ConfigureValidationItems()
     {
         foreach (var validationItem in this.ValidationItems)

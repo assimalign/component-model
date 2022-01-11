@@ -10,7 +10,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-internal sealed class ValidationConfigurableJsonCondition<T> : IValidationCondition
+public sealed class ValidationConfigurableJsonCondition<T> : IValidationCondition
 {
    
     [JsonPropertyName("$and")]

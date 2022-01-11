@@ -27,7 +27,8 @@ public static class ValidationExtensions
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
             options ??= GetDefaultJsonSerializationOptions();
-            options.Converters.Add(new EnumConverter<ItemType>());
+            options.Converters.Add(new EnumConverter<ValidationConfigurableItemType>());
+            options.Converters.Add(new EnumConverter<ValidationMode>());
             return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
         }));
     }
@@ -44,7 +45,7 @@ public static class ValidationExtensions
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
             options ??= GetDefaultJsonSerializationOptions();
-            options.Converters.Add(new EnumConverter<ItemType>());
+            options.Converters.Add(new EnumConverter<ValidationConfigurableItemType>());
             return JsonSerializer.DeserializeAsync<ValidationConfigurableJsonProfile<T>>(stream, options)
                 .GetAwaiter()
                 .GetResult();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-internal sealed class ValidationConfigurableJsonProvider<T> : IValidationConfigurableProvider
+public sealed class ValidationConfigurableJsonProvider<T> : IValidationConfigurableProvider
 {
     private readonly ValidationConfigurableJsonProfile<T> profile;
 
@@ -22,7 +22,7 @@ internal sealed class ValidationConfigurableJsonProvider<T> : IValidationConfigu
 
     public bool TryGetProfile(Type type, out IValidationProfile profile)
     {
-        if (this.profile.ValidationType == type)
+        if ((IValidationProfile)this.profile == type)
         {
             profile = this.profile;
             return true;

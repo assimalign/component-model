@@ -16,7 +16,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
             var validator = ValidationConfigurableBuilder.Create()
                 .AddJsonSource<Person>(@"
                 {
-                    ""$description"": """",
+                    ""$description"": ""This is a test"",
                     ""$validationItems"": [
                         {
                             ""$itemMember"": ""firstName"",
@@ -45,10 +45,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
                             ]
                         }
                     ]
-                }", new System.Text.Json.JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true,
-                })
+                }")
                 .Build()
                 .ToValidator();
 
