@@ -45,6 +45,8 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     /// <exception cref="Exception"></exception>
     public bool TryValidate(object value, out IValidationContext context)
     {
+        context = null;
+
         return this.ruleType switch
         {
             RuleType.EqualTo => TryValidateEqualTo(value, out context),
@@ -66,7 +68,7 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
             RuleType.LengthMin => TryValidateLengthMin(value, out context),
             RuleType.Child => TryValidateChild(value, out context),
             RuleType.Matches => TryValidateMatches(value, out context),
-            _ => throw new Exception()
+            _ => false
         };
     }
     private bool TryValidateEqualTo(object value, out IValidationContext context)
@@ -244,33 +246,38 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 
     internal void SetRuleConversion(Type type)
     {
-        foreach(var kv in this.Parameters)
+        if (this.Parameters.TryGetValue("$value", out var value))
         {
-          
+
         }
-        if (ruleType == RuleType.Child)
+        if (this.Parameters.TryGetValue("$lower", out var lower))
         {
-            if (this.Parameters.TryGetValue("$value", out var element))
+            if (type.GetInterface("IConvertable") is not null)
             {
-                var item = typeof(ValidationConfigurableJsonItem<>).MakeGenericType(type);
+                var cnvertible = Activator.CreateInstance(type) as IConvertible;
+
+                cnvertible.ToType(type, default);
             }
         }
-        if (ruleType == RuleType.GreaterThan)
+        if (this.Parameters.TryGetValue("$upper", out var upper))
         {
-            if (type.IsValueType && type.GetInterface("IComparable") is null)
-            {
-                // TODO: Throw Exception
-            }
 
-            
+        }
+        if (this.Parameters.TryGetValue("$min", out var min))
+        {
 
-            var parameter = (JsonElement)this.Parameters["$value"];
+        }
+        if (this.Parameters.TryGetValue("$max", out var max))
+        {
 
-            if (parameter.ValueKind == JsonValueKind.Number)
-            {
-                if (type == typeof(short))
-                    this.Parameters["$value"] = parameter.GetInt16();
-            }
+        }
+        if (this.Parameters.TryGetValue("$exact", out var exact))
+        {
+
+        }
+        if (this.Parameters.TryGetValue("$pattern", out var pattern))
+        {
+            this.Parameters["$pattern"] = ((JsonElement)pattern).GetString();
         }
     }
 }

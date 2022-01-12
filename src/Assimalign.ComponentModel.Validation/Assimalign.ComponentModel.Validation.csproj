@@ -8,7 +8,8 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Description>
-			The following library offers an extensive set of fluent APIs for object validation built on .NET.
+			The following library offers an extensive set of fluent APIs for object validation built on
+			the unified .NET. Any .NET framework below version 5 is not supported.
 		</Description>
 
 		<!--Company Branding Information-->

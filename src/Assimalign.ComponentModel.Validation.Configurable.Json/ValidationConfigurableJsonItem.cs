@@ -125,10 +125,7 @@ public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
             }
         }
     }
-
-
-    // Let's safely get the member value encase of null reference exception
-    private object GetMemberValue(T instance)
+    private object GetMemberValue(T instance) // Let's safely get the member value encase of null reference exception
     {
         try
         {
