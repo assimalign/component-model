@@ -15,7 +15,7 @@ using Assimalign.ComponentModel.Validation.Configurable.Properties;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
+public sealed class ValidationConfigurableXmlProfile<T> : IValidationProfile
 {
     private bool isConfigured;
     Type IValidationProfile.ValidationType => typeof(T);
@@ -42,10 +42,10 @@ public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     /// The default constructor for Validation Configurable JSON.
     /// </summary>
     [JsonConstructor]
-    public ValidationConfigurableJsonProfile()
+    public ValidationConfigurableXmlProfile()
     {
-        this.ValidationConditions ??= new List<ValidationConfigurableJsonCondition<T>>();
-        this.ValidationItems ??= new List<ValidationConfigurableJsonItem<T>>();
+        this.ValidationConditions ??= new List<ValidationConfigurableXmlCondition<T>>();
+        this.ValidationItems ??= new List<ValidationConfigurableXmlItem<T>>();
     }
 
     /// <summary>
@@ -64,13 +64,13 @@ public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     /// 
     /// </summary>
     [JsonPropertyName("$validationItems")]
-    public IEnumerable<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
+    public IEnumerable<ValidationConfigurableXmlItem<T>> ValidationItems { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("$validationConditions")]
-    public IEnumerable<ValidationConfigurableJsonCondition<T>> ValidationConditions { get; set; }
+    public IEnumerable<ValidationConfigurableXmlCondition<T>> ValidationConditions { get; set; }
 
     /// <summary>
     /// 

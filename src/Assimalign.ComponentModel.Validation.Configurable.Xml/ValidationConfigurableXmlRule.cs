@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
@@ -26,7 +26,7 @@ internal delegate bool Validate(object value, out IValidationContext context);
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
+public sealed class ValidationConfigurableXmlRule<T> : IValidationRule
 {
     private Validate Validate;
 
@@ -34,21 +34,21 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     /// <summary>
     /// The name of the validation rule to apply to <typeparamref name="T"/>.
     /// </summary>
-    [JsonPropertyName("$rule")]
+    [XmlElement("$rule")]
     public string Name { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    [JsonPropertyName("$error")]
-    public ValidationConfigurableJsonError Error { get; set; }
+    [XmlElement("$error")]
+    public ValidationConfigurableXmlError Error { get; set; }
 
     /// <summary>
     /// This will store the parameter values used to run the validation rules.
     /// We will need to do some conversion either at method call 'Configure()' or at executions 
     /// time (Let's avoid executions time if we can, RIGHT! By order of the Peaky Blinders)
     /// </summary>
-    [JsonExtensionData]
+    [XmlExtensionData]
     public IDictionary<string, object> Parameters { get; set; }
 
     /// <summary>
@@ -379,7 +379,7 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
         }
         if (this.Parameters.TryGetValue("$exact", out var parameter))
         {
-            var element = (JsonElement)parameter;
+            var element = (XmlElement)parameter;
             var exact = element.GetInt32();
             context = new ValidationContext<object>(value);
 
@@ -455,10 +455,10 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 {
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableXmlMissingParameterException("");
                     }
-                    this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
-                    this.Error ??= new ValidationConfigurableJsonError()
+                    this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], type);
+                    this.Error ??= new ValidationConfigurableXmlError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
                         Message = string.Format(Resources.DefaultValidationMessageEqualToRule, expression, this.Parameters["$value"]),
@@ -472,10 +472,10 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 {
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableXmlMissingParameterException("");
                     }
-                    this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
-                    this.Error ??= new ValidationConfigurableJsonError()
+                    this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], type);
+                    this.Error ??= new ValidationConfigurableXmlError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
                         Message = string.Format(Resources.DefaultValidationMessageNotEqualToRule, expression, this.Parameters["$value"]),
@@ -495,14 +495,14 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 {
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                        throw new ValidationConfigurableXmlInvalidEvaluationException("", "Between");
                     }
                     if (!this.Parameters.ContainsKey("$lower") || !this.Parameters.ContainsKey("$upper"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableXmlMissingParameterException("");
                     }
-                    this.Parameters["$lower"] = this.GetJsonElementValue((JsonElement)this.Parameters["$lower"], type);
-                    this.Parameters["$upper"] = this.GetJsonElementValue((JsonElement)this.Parameters["$upper"], type);
+                    this.Parameters["$lower"] = this.GetXmlElementValue((XmlElement)this.Parameters["$lower"], type);
+                    this.Parameters["$upper"] = this.GetXmlElementValue((XmlElement)this.Parameters["$upper"], type);
                     this.Validate = TryValidateBetween;
                     break;
                 }
@@ -510,14 +510,14 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 {
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "BetweenOrEqualTo");
+                        throw new ValidationConfigurableXmlInvalidEvaluationException("", "BetweenOrEqualTo");
                     }
                     if (!this.Parameters.ContainsKey("$lower") || !this.Parameters.ContainsKey("$upper"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableXmlMissingParameterException("");
                     }
-                    this.Parameters["$lower"] = this.GetJsonElementValue((JsonElement)this.Parameters["$lower"], type);
-                    this.Parameters["$upper"] = this.GetJsonElementValue((JsonElement)this.Parameters["$upper"], type);
+                    this.Parameters["$lower"] = this.GetXmlElementValue((XmlElement)this.Parameters["$lower"], type);
+                    this.Parameters["$upper"] = this.GetXmlElementValue((XmlElement)this.Parameters["$upper"], type);
                     this.Validate = TryValidateBetweenOrEqualTo;
                     break;
                 }
@@ -525,13 +525,13 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 {
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "GreaterThan");
+                        throw new ValidationConfigurableXmlInvalidEvaluationException("", "GreaterThan");
                     }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableXmlMissingParameterException("");
                     }
-                    this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], type);
                     this.Validate = TryValidateGreaterThan;
                     break;
                 }
@@ -539,23 +539,23 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 {
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                        throw new ValidationConfigurableXmlInvalidEvaluationException("", "Between");
                     }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableXmlMissingParameterException("");
                     }
-                    this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], type);
                     this.Validate = TryValidateGreaterThanOrEqualTo;
                     break;
                 }
 
             case "LessThan":
-                this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], type);
                 this.Validate = TryValidateLessThan;
                 break;
             case "LessThanOrEqualTo":
-                this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], type);
                 this.Validate = TryValidateLessThanOrEqualTo;
                 break;
             case "EmailAddress":
@@ -568,7 +568,7 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 this.Validate = TryValidateNotNull;
                 break;
             case "Length":
-                this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], typeof(int));
+                this.Parameters["$value"] = this.GetXmlElementValue((XmlElement)this.Parameters["$value"], typeof(int));
                 this.Validate = TryValidateLength;
                 break;
             case "LengthBetween":
@@ -588,7 +588,7 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 break;
         };
     }
-    private object GetJsonElementValue(JsonElement element, Type type)
+    private object GetXmlElementValue(XmlElement element, Type type)
     {
         return type.Name switch
         {

@@ -41,7 +41,7 @@ internal sealed class ValidationRuleBuilder<T, TValue> : IValidationRuleBuilder<
             var validationExpression = this.ValidationItem.ToString();
 
             configure.Code = Resources.DefaultValidationErrorCode;
-            configure.Message = string.Format(Resources.DefaultValidationMessageEqualToRule, validationExpression, typeof(TValue).IsSystemType(false) ? value : typeof(TValue).Name);
+            configure.Message = string.Format(Resources.DefaultValidationMessageEqualToRule, validationExpression, typeof(TValue).IsSystemValueType(false) ? value : typeof(TValue).Name);
             configure.Source = validationExpression;
         });
     }

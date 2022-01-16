@@ -12,7 +12,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
-public static class ValidationExtensions
+public static class ValidationConfigurableJsonExtensions
 {
     /// <summary>
     /// 

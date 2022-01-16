@@ -17,7 +17,7 @@ using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
+public sealed class ValidationConfigurableXmlItem<T> : IValidationItem
 {
     private Func<T, bool> itemCondition;
     private Func<T, object> itemMember;

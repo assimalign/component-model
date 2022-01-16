@@ -15,12 +15,6 @@
 		<ProjectReference Include="..\Assimalign.ComponentModel.Validation.Configurable\Assimalign.ComponentModel.Validation.Configurable.csproj" />
 	</ItemGroup>
 
-
-	<ItemGroup>
-		<Folder Include="Exceptions\" />
-		<Folder Include="Utilities\" />
-	</ItemGroup>
-
 	<ItemGroup>
 	  <Compile Update="Properties\Resources.Designer.cs">
 	    <DesignTime>True</DesignTime>

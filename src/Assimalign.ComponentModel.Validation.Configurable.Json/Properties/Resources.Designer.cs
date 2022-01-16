@@ -59,5 +59,13 @@ namespace Assimalign.ComponentModel.Validation.Configurable.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static object configurable_validation_schema 
+        {
+            get => ResourceManager.GetObject("configurable_validation_schema", resourceCulture);
+        }
     }
 }

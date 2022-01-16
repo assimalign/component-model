@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using System;
 using Assimalign.ComponentModel.Validation;
 using Assimalign.ComponentModel.Validation.Configurable;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
         [Fact]
         public void Test()
         {
+
+
             var validator = ValidationConfigurableBuilder.Create()
                 .AddJsonSource<Person>(@"
                 {
