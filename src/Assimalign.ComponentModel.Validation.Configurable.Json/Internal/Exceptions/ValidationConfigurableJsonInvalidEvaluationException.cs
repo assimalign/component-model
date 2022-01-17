@@ -13,13 +13,13 @@ internal sealed class ValidationConfigurableJsonInvalidEvaluationException : Val
     private const string message = "The following expression: '{0}' cannot be evaluated with rule: '{1}'.";
 
     public ValidationConfigurableJsonInvalidEvaluationException(string expression, string rule) 
-        : base(string.Format(expression, rule))
+        : base(string.Format(message, expression, rule))
     {
     }
 
 
     public ValidationConfigurableJsonInvalidEvaluationException(LambdaExpression expression, string rule)
-        : base(string.Format(expression.ToString(), rule))
+        : base(string.Format(message, expression.ToString(), rule))
     {
         this.Source = expression.Body.ToString();
     }

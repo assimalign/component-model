@@ -10,8 +10,9 @@ public sealed class ValidationConfigurableJsonProvider<T> : IValidationConfigura
 {
     private readonly ValidationConfigurableJsonProfile<T> profile;
 
+    private ValidationConfigurableJsonProvider() { }
 
-    public ValidationConfigurableJsonProvider(ValidationConfigurableJsonProfile<T> profile)
+    internal ValidationConfigurableJsonProvider(ValidationConfigurableJsonProfile<T> profile)
     {
         this.profile = profile;
     }

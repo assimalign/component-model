@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -12,7 +13,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 using Assimalign.ComponentModel.Validation.Properties;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 using Assimalign.ComponentModel.Validation.Configurable.Internal.Exceptions;
-using System.Linq.Expressions;
+
 
 /// <summary>
 /// 
@@ -26,7 +27,7 @@ internal delegate bool Validate(object value, out IValidationContext context);
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
+internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 {
     private Validate Validate;
 
@@ -486,16 +487,32 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 
                 }
             case "Empty":
-                this.Validate = TryValidateEmpty;
-                break;
+                {
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageEmptyRule, expression),
+                        Source = expression.Body.ToString()
+                    };
+                    this.Validate = TryValidateEmpty;
+                    break;
+                }
             case "NotEmpty":
-                this.Validate = TryValidateNotEmpty;
-                break;
+                {
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageNotEmptyRule, expression),
+                        Source = expression.Body.ToString()
+                    };
+                    this.Validate = TryValidateNotEmpty;
+                    break;
+                }
             case "Between":
                 {
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(expression, "Between");
                     }
                     if (!this.Parameters.ContainsKey("$lower") || !this.Parameters.ContainsKey("$upper"))
                     {
@@ -503,6 +520,12 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                     }
                     this.Parameters["$lower"] = this.GetJsonElementValue((JsonElement)this.Parameters["$lower"], type);
                     this.Parameters["$upper"] = this.GetJsonElementValue((JsonElement)this.Parameters["$upper"], type);
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageBetweenRule, expression, this.Parameters["$lower"], this.Parameters["$upper"]),
+                        Source = expression.Body.ToString()
+                    };
                     this.Validate = TryValidateBetween;
                     break;
                 }
@@ -518,6 +541,12 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                     }
                     this.Parameters["$lower"] = this.GetJsonElementValue((JsonElement)this.Parameters["$lower"], type);
                     this.Parameters["$upper"] = this.GetJsonElementValue((JsonElement)this.Parameters["$upper"], type);
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageBetweenOrEqualToRule, expression, this.Parameters["$lower"], this.Parameters["$upper"]),
+                        Source = expression.Body.ToString()
+                    };
                     this.Validate = TryValidateBetweenOrEqualTo;
                     break;
                 }
@@ -551,13 +580,33 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 }
 
             case "LessThan":
-                this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
-                this.Validate = TryValidateLessThan;
-                break;
+                {
+                    if (type.GetInterface("IComparable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                    }
+                    if (!this.Parameters.ContainsKey("$value"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("");
+                    }
+                    this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Validate = TryValidateLessThan;
+                    break;
+                }
             case "LessThanOrEqualTo":
-                this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
-                this.Validate = TryValidateLessThanOrEqualTo;
-                break;
+                {
+                    if (type.GetInterface("IComparable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                    }
+                    if (!this.Parameters.ContainsKey("$value"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("");
+                    }
+                    this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Validate = TryValidateLessThanOrEqualTo;
+                    break;
+                }
             case "EmailAddress":
                 this.Validate = TryValidateEmailAddress;
                 break;
@@ -603,7 +652,9 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
             "Double" => element.GetDouble(),
             "Decimal" => element.GetDecimal(),
             "DateTime" => element.GetDateTime(),
+            "DateTimeOffset" => element.GetDateTimeOffset(),
             "TimeSpan" => TimeSpan.Parse(element.GetString()),
+            //"Char" => element.GetByte(),
 #if NET6_0_OR_GREATER
             "DateOnly" => DateOnly.Parse(element.GetString()),
             "TimeOnly" => DateOnly.Parse(element.GetString()),

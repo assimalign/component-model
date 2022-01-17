@@ -15,7 +15,7 @@ using Assimalign.ComponentModel.Validation.Configurable.Properties;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
+internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
 {
     private bool isConfigured;
     Type IValidationProfile.ValidationType => typeof(T);

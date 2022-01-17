@@ -17,7 +17,7 @@ using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
+internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
 {
     private Func<T, bool> itemCondition;
     private Func<T, object> itemMember;
@@ -174,7 +174,7 @@ public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
                     rule.Configure(valueType, itemMemberExpression);
                 }
             }
-            if (this.itemMemberExpression.Body.Type.IsEnumerableType(out var enumerableType))
+            else if (this.itemMemberExpression.Body.Type.IsEnumerableType(out var enumerableType))
             {
                 foreach (var rule in this.ItemRuleStack)
                 {

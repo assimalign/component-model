@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-public sealed class ValidationConfigurableJsonError : IValidationError
+internal sealed class ValidationConfigurableJsonError : IValidationError
 {
     /// <summary>
     /// 

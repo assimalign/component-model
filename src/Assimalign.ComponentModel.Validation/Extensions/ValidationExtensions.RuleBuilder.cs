@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation;
@@ -11,7 +12,7 @@ using Assimalign.ComponentModel.Validation.Properties;
 using Assimalign.ComponentModel.Validation.Internal;
 using Assimalign.ComponentModel.Validation.Internal.Rules;
 using Assimalign.ComponentModel.Validation.Internal.Exceptions;
-using System.Text.RegularExpressions;
+
 
 /// <summary>
 /// 

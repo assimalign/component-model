@@ -15,4 +15,3 @@ public enum ValidationConfigurableItemType
     /// </summary>
     Inline = 1
 }
-
