@@ -43,6 +43,51 @@ internal static partial class ValidationInternalExtensions
 		return false;
 	}
 
+	public static Type GetEnumerableType(this Type type)
+    {
+		if (type.IsGenericType)
+		{
+			var arguments = type.GetGenericArguments();
+			if (type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+			{
+				return arguments[0];
+			}
+			else
+            {
+				var interfaces = type.GetInterfaces();
+
+				foreach (var argument in arguments)
+				{
+					var enumerableType = typeof(IEnumerable<>).MakeGenericType(argument);
+
+					if (interfaces.Contains(enumerableType))
+					{
+						return argument;
+					}
+				}
+			}
+		}
+
+		throw new Exception("");
+		//else
+		//{
+		//	var hasIntefaces = type.GetInterfaces().Length > 0;
+
+		//	if (hasIntefaces)
+		//	{
+		//		var other = type.FindInterfaces((filter, criteria) => IsEnumerableType(filter), null).First();
+
+		//		if (null != other)
+		//		{
+		//			implementation = other.GetGenericArguments().First();
+		//			return true;
+		//		}
+		//	}
+		//}
+
+		//return false;
+	}
+
 	/// <summary>
 	/// Identifies whether type implements the IEnumerable interface and returns interface implementation type.
 	/// </summary>

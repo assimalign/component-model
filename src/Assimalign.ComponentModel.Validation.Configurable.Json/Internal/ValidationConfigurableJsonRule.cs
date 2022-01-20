@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
 using Assimalign.ComponentModel.Validation.Properties;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 using Assimalign.ComponentModel.Validation.Configurable.Internal.Exceptions;
+using Assimalign.ComponentModel.Validation.Configurable.Internal.Extensions;
 
 
 /// <summary>
@@ -343,7 +345,29 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     }
     private bool TryValidateEmailAddress(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        const string pattern = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$"; ;
+
+        context = new ValidationContext<object>(value);
+
+        if (value is null)
+        {
+            context.AddFailure(this.Error);
+            return true;
+        }
+        else if (value is string stringValue)
+        {
+            if (!Regex.IsMatch(stringValue, pattern))
+            {
+                context.AddFailure(this.Error);
+            }
+
+            return true;
+        }
+        else
+        {
+            context = null;
+            return false;
+        }
     }
     private bool TryValidateNull(object value, out IValidationContext context)
     {
@@ -446,24 +470,36 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 
     internal void Configure(params object[] parameters)
     {
-        var type = parameters.FirstOrDefault(x => x is Type) as Type;
-        var expression = parameters.FirstOrDefault(x => x is Expression<Func<T, object>>) as Expression<Func<T, object>>;
+        //var type = parameters.FirstOrDefault(x => x is Type) as Type;
+        var itemType = (ValidationConfigurableItemType)parameters.FirstOrDefault(x => x is ValidationConfigurableItemType);
+        var itemExpression = parameters.FirstOrDefault(x => x is Expression<Func<T, object>>) as Expression<Func<T, object>>;
+
         this.Parameters ??= new Dictionary<string, object>();
 
         switch (this.Name)
         {
             case "EqualTo":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("EqualTo", "$value", itemExpression);
                     }
                     this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
                     this.Error ??= new ValidationConfigurableJsonError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
-                        Message = string.Format(Resources.DefaultValidationMessageEqualToRule, expression, this.Parameters["$value"]),
-                        Source = expression.Body.ToString()
+                        Message = string.Format(Resources.DefaultValidationMessageEqualToRule, itemExpression, this.Parameters["$value"]),
+                        Source = itemExpression.Body.ToString()
                     };
                     this.Validate = TryValidateEqualTo;
                     break;
@@ -471,16 +507,26 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 }
             case "NotEqualTo":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("NotEqualTo", $"value", itemExpression);
                     }
                     this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
                     this.Error ??= new ValidationConfigurableJsonError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
-                        Message = string.Format(Resources.DefaultValidationMessageNotEqualToRule, expression, this.Parameters["$value"]),
-                        Source = expression.Body.ToString()
+                        Message = string.Format(Resources.DefaultValidationMessageNotEqualToRule, itemExpression, this.Parameters["$value"]),
+                        Source = itemExpression.Body.ToString()
                     };
                     this.Validate = TryValidateNotEqualTo;
                     break;
@@ -488,150 +534,416 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                 }
             case "Empty":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type.GetInterface("IEnumerable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "Empty");
+                    }
                     this.Error ??= new ValidationConfigurableJsonError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
-                        Message = string.Format(Resources.DefaultValidationMessageEmptyRule, expression),
-                        Source = expression.Body.ToString()
+                        Message = string.Format(Resources.DefaultValidationMessageEmptyRule, itemExpression),
+                        Source = itemExpression.Body.ToString()
                     };
                     this.Validate = TryValidateEmpty;
                     break;
                 }
             case "NotEmpty":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type.GetInterface("IEnumerable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "NotEmpty");
+                    }
                     this.Error ??= new ValidationConfigurableJsonError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
-                        Message = string.Format(Resources.DefaultValidationMessageNotEmptyRule, expression),
-                        Source = expression.Body.ToString()
+                        Message = string.Format(Resources.DefaultValidationMessageNotEmptyRule, itemExpression),
+                        Source = itemExpression.Body.ToString()
                     };
                     this.Validate = TryValidateNotEmpty;
                     break;
                 }
             case "Between":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException(expression, "Between");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "Between");
                     }
                     if (!this.Parameters.ContainsKey("$lower") || !this.Parameters.ContainsKey("$upper"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("BetweenOrEqualTo", "$lower", "$upper", itemExpression);
                     }
                     this.Parameters["$lower"] = this.GetJsonElementValue((JsonElement)this.Parameters["$lower"], type);
                     this.Parameters["$upper"] = this.GetJsonElementValue((JsonElement)this.Parameters["$upper"], type);
                     this.Error ??= new ValidationConfigurableJsonError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
-                        Message = string.Format(Resources.DefaultValidationMessageBetweenRule, expression, this.Parameters["$lower"], this.Parameters["$upper"]),
-                        Source = expression.Body.ToString()
+                        Message = string.Format(Resources.DefaultValidationMessageBetweenRule, itemExpression, this.Parameters["$lower"], this.Parameters["$upper"]),
+                        Source = itemExpression.Body.ToString()
                     };
                     this.Validate = TryValidateBetween;
                     break;
                 }
             case "BetweenOrEqualTo":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "BetweenOrEqualTo");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "BetweenOrEqualTo");
                     }
                     if (!this.Parameters.ContainsKey("$lower") || !this.Parameters.ContainsKey("$upper"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("BetweenOrEqualTo", "$lower", "$upper", itemExpression);
                     }
                     this.Parameters["$lower"] = this.GetJsonElementValue((JsonElement)this.Parameters["$lower"], type);
                     this.Parameters["$upper"] = this.GetJsonElementValue((JsonElement)this.Parameters["$upper"], type);
                     this.Error ??= new ValidationConfigurableJsonError()
                     {
                         Code = Resources.DefaultValidationErrorCode,
-                        Message = string.Format(Resources.DefaultValidationMessageBetweenOrEqualToRule, expression, this.Parameters["$lower"], this.Parameters["$upper"]),
-                        Source = expression.Body.ToString()
+                        Message = string.Format(Resources.DefaultValidationMessageBetweenOrEqualToRule, itemExpression, this.Parameters["$lower"], this.Parameters["$upper"]),
+                        Source = itemExpression.Body.ToString()
                     };
                     this.Validate = TryValidateBetweenOrEqualTo;
                     break;
                 }
             case "GreaterThan":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "GreaterThan");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "GreaterThan");
                     }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("GreaterThan", "$value", itemExpression);
                     }
                     this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageGreaterThanRule, itemExpression, this.Parameters["$value"]),
+                        Source = itemExpression.Body.ToString()
+                    };
                     this.Validate = TryValidateGreaterThan;
                     break;
                 }
             case "GreaterThanOrEqualTo":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "GreaterThanOrEqualTo");
                     }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("GreaterThanOrEqualTo", "$value", itemExpression);
                     }
                     this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageGreaterThanOrEqualToRule, itemExpression, this.Parameters["$value"]),
+                        Source = itemExpression.Body.ToString()
+                    };
                     this.Validate = TryValidateGreaterThanOrEqualTo;
                     break;
                 }
-
             case "LessThan":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "LessThan");
                     }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("LessThan", "$value", itemExpression);
                     }
                     this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageLessThanRule, itemExpression, this.Parameters["$value"]),
+                        Source = itemExpression.Body.ToString()
+                    };
                     this.Validate = TryValidateLessThan;
                     break;
                 }
             case "LessThanOrEqualTo":
                 {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
                     if (type.GetInterface("IComparable") is null)
                     {
-                        throw new ValidationConfigurableJsonInvalidEvaluationException("", "Between");
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "LessThanOrEqualTo");
                     }
                     if (!this.Parameters.ContainsKey("$value"))
                     {
-                        throw new ValidationConfigurableJsonMissingParameterException("");
+                        throw new ValidationConfigurableJsonMissingParameterException("LessThanOrEqualTo", "$value", itemExpression);
                     }
                     this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], type);
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageLessThanOrEqualToRule, itemExpression, this.Parameters["$value"]),
+                        Source = itemExpression.Body.ToString()
+                    };
                     this.Validate = TryValidateLessThanOrEqualTo;
                     break;
                 }
             case "EmailAddress":
-                this.Validate = TryValidateEmailAddress;
-                break;
+                {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type != typeof(string))
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "EmailAddress");
+                    }
+                    if (!this.Parameters.ContainsKey("$value"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("EmailAddress", "$value", itemExpression);
+                    }
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageEmailAddressRule, itemExpression),
+                        Source = itemExpression.Body.ToString()
+                    };
+                    this.Validate = TryValidateEmailAddress;
+                    break;
+                }
             case "Null":
-                this.Validate = TryValidateNull;
-                break;
+                {
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageNullRule, itemExpression),
+                        Source = itemExpression.Body.ToString()
+                    };
+                    this.Validate = TryValidateNull;
+                    break;
+                }
             case "NotNull":
-                this.Validate = TryValidateNotNull;
-                break;
+                {
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageNotNullRule, itemExpression),
+                        Source = itemExpression.Body.ToString()
+                    };
+                    this.Validate = TryValidateNotNull;
+                    break;
+                }
             case "Length":
-                this.Parameters["$value"] = this.GetJsonElementValue((JsonElement)this.Parameters["$value"], typeof(int));
-                this.Validate = TryValidateLength;
-                break;
+                {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type.GetInterface("IEnumerable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "Length");
+                    }
+                    if (!this.Parameters.ContainsKey("$exact"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("Length", "$exact", itemExpression);
+                    }
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageLengthRule, itemExpression),
+                        Source = itemExpression.Body.ToString()
+                    };
+                    this.Parameters["$exact"] = this.GetJsonElementValue((JsonElement)this.Parameters["$exact"], typeof(int));
+                    this.Validate = TryValidateLength;
+                    break;
+                }
             case "LengthBetween":
-                this.Validate = TryValidateLengthBetween;
-                break;
+                {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type.GetInterface("IEnumerable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "LengthBetween");
+                    }
+                    if (!this.Parameters.ContainsKey("$min") || !this.Parameters.ContainsKey("$max"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("LengthBetween", "$min", "$max", itemExpression);
+                    }
+                    this.Parameters["$max"] = this.GetJsonElementValue((JsonElement)this.Parameters["$max"], typeof(int));
+                    this.Parameters["$min"] = this.GetJsonElementValue((JsonElement)this.Parameters["$min"], typeof(int));
+                    this.Validate = TryValidateLengthBetween;
+                    break;
+                }
             case "LengthMax":
-                this.Validate = TryValidateLengthMax;
-                break;
+                {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type.GetInterface("IEnumerable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "LengthMax");
+                    }
+                    if (!this.Parameters.ContainsKey("$max"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("LengthMax", "$max", itemExpression);
+                    }
+                    this.Parameters["$max"] = this.GetJsonElementValue((JsonElement)this.Parameters["$max"], typeof(int));
+                    this.Validate = TryValidateLengthMax;
+                    break;
+                }
             case "LengthMin":
-                this.Validate = TryValidateLengthMin;
-                break;
+                {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (type.GetInterface("IEnumerable") is null)
+                    {
+                        throw new ValidationConfigurableJsonInvalidEvaluationException(itemExpression, "LengthMin");
+                    }
+                    if (!this.Parameters.ContainsKey("$min"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("LengthMin", "$min", itemExpression);
+                    }
+                    this.Parameters["$min"] = this.GetJsonElementValue((JsonElement)this.Parameters["$min"], typeof(int));
+                    this.Validate = TryValidateLengthMin;
+                    break;
+                }
             case "Child":
-                this.Validate = TryValidateChild;
-                break;
+                {
+                    Type type = null;
+
+                    if (itemType == ValidationConfigurableItemType.Recursive)
+                    {
+                        type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+                    }
+                    else if (itemType == ValidationConfigurableItemType.Inline)
+                    {
+                        type = itemExpression.Body.Type.UnwrapNullableType();
+                    }
+                    if (!this.Parameters.ContainsKey("$validationItems"))
+                    {
+                        throw new ValidationConfigurableJsonMissingParameterException("Child", "$validationItems", itemExpression);
+                    }
+                    var element = (JsonElement)this.Parameters["$validationItems"];
+                    var generic = typeof(ValidationConfigurableJsonItem<>).MakeGenericType(type);
+                    var content = element.GetRawText();
+
+                    var item = JsonSerializer.Deserialize(content, generic);
+
+
+                    this.Validate = TryValidateChild;
+                    break;
+                }
             case "Matches":
                 this.Validate = TryValidateMatches;
                 break;

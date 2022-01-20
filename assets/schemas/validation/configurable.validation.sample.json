@@ -58,6 +58,7 @@
       "$itemRules": [
         {
           "$rule": "Child",
+
           "$validationItems": [
             {
               "$itemMember": "StreetOne",

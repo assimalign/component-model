@@ -40,10 +40,14 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
                         },
                         {
                             ""$itemMember"": ""Addresses"",
-                            ""$itemType"": ""Recursive"",
+                            ""$itemType"": ""Inline"",
                             ""$itemRules"": [
                                 {
                                     ""$rule"": ""NotEmpty""
+                                },
+                                {
+                                    ""$rule"": ""LengthMax"",
+                                    ""$max"": 25 
                                 }
                             ]
                         }

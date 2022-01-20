@@ -167,20 +167,30 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
             this.itemMemberExpression = Expression.Lambda<Func<T, object>>(memberExpression, parameterExpression);
             this.itemMember = itemMemberExpression.Compile();
 
-            if (this.itemMemberExpression.Body.Type.IsSystemValueType(out var valueType))
+
+            foreach (var rule in this.ItemRuleStack)
             {
-                foreach (var rule in this.ItemRuleStack)
-                {
-                    rule.Configure(valueType, itemMemberExpression);
-                }
+                rule.Configure(itemMemberExpression, ItemType);
             }
-            else if (this.itemMemberExpression.Body.Type.IsEnumerableType(out var enumerableType))
-            {
-                foreach (var rule in this.ItemRuleStack)
-                {
-                    rule.Configure(enumerableType, itemMemberExpression);
-                }
-            }
+
+            //if (this.itemMemberExpression.Body.Type.IsSystemValueType(out var valueType))
+            //{
+            //    foreach (var rule in this.ItemRuleStack)
+            //    {
+            //        rule.Configure(valueType, itemMemberExpression);
+            //    }
+            //}
+            //else if (this.itemMemberExpression.Body.Type.IsEnumerableType(out var enumerableType))
+            //{
+            //    foreach (var rule in this.ItemRuleStack)
+            //    {
+            //        rule.Configure(enumerableType, itemMemberExpression);
+            //    }
+            //}
+            //else
+            //{
+                
+            //}
         }
     }
 }

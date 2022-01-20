@@ -23,4 +23,18 @@ public static class ValidationConfigurableExtensions
             }
         });
     }
+
+
+
+    public static IValidator ToValidator(this IValidationConfigurable configurable, Action<ValidationOptions> configure)
+    {
+        return Validator.Create(options =>
+        {
+            configure.Invoke(options);
+            foreach (var profile in configurable.GetProfiles())
+            {
+                options.AddProfile(profile);
+            }
+        });
+    }
 }
