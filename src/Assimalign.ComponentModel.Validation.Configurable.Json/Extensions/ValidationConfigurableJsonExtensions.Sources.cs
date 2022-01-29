@@ -38,6 +38,7 @@ public static class ValidationConfigurableJsonExtensions
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="stream"></param>
+    /// <param name="options"></param>
     /// <returns></returns>
     public static IValidationConfigurableBuilder AddJsonSource<T>(this IValidationConfigurableBuilder builder, Stream stream, JsonSerializerOptions options = null)
         where T : class

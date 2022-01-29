@@ -20,6 +20,30 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
                 .AddJsonSource<Person>(@"
                 {
                     ""$description"": ""This is a test"",
+                    ""$validationConditions"": [
+                        {
+                            ""$condition"": {
+                                ""$member"": ""Age"",
+                                ""$operator"": ""eq"",
+                                ""$value"": 20
+                            },
+                            ""$validationItems"": [
+                                 {
+                                    ""$itemMember"": ""Addresses"",
+                                    ""$itemType"": ""Inline"",
+                                    ""$itemRules"": [
+                                        {
+                                            ""$rule"": ""NotEmpty""
+                                        },
+                                        {
+                                            ""$rule"": ""LengthMax"",
+                                            ""$max"": 25 
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
                     ""$validationItems"": [
                         {
                             ""$itemMember"": ""firstName"",
@@ -80,7 +104,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
 
             var results = validator.Validate(new Person()
             {
-                FirstName = "",
+                FirstName = "Crawford",
                 Addresses = new PersonAddress[]
                 {
                     new PersonAddress()
@@ -97,6 +121,7 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public int? Age { get; set; }
             public IEnumerable<PersonAddress> Addresses { get; set; }
         }
 

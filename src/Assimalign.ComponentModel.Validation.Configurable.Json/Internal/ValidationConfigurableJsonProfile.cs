@@ -44,7 +44,7 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     [JsonConstructor]
     public ValidationConfigurableJsonProfile()
     {
-        this.ValidationConditions ??= new List<ValidationConfigurableJsonCondition<T>>();
+        this.ValidationConditions ??= new List<ValidationConfigurableJsonConditionItem<T>>();
         this.ValidationItems ??= new List<ValidationConfigurableJsonItem<T>>();
     }
 
@@ -70,7 +70,7 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     /// 
     /// </summary>
     [JsonPropertyName("$validationConditions")]
-    public IEnumerable<ValidationConfigurableJsonCondition<T>> ValidationConditions { get; set; }
+    public IEnumerable<ValidationConfigurableJsonConditionItem<T>> ValidationConditions { get; set; }
 
     /// <summary>
     /// 

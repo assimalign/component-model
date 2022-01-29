@@ -586,6 +586,7 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     private bool TryValidateChild(object value, out IValidationContext context)
     {
         var items = (IEnumerable<IValidationItem>)this.Parameters["$validationItems"];
+
         context = new ValidationContext<object>(value)
         {
             Options = new Dictionary<string, object>()

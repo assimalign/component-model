@@ -10,6 +10,20 @@
             "$member": "Gender",
             "$operator": "eq",
             "$value": "Female"
+          },
+          {
+            "$or": [
+              {
+                "$member": "",
+                "$operator": "eq",
+                "$value": ""
+              }, 
+              {
+                "$member": "",
+                "$operator": "eq",
+                "$value": ""
+              }
+            ]
           }
         ]
       },

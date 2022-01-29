@@ -77,7 +77,8 @@
 								"$ref": "#/definitions/$validationAndCondition"
 							}
 						]
-					}
+					},
+					"minItems": 2
 				}
 			},
 			"maxProperties": 1,
@@ -102,7 +103,8 @@
 								"$ref": "#/definitions/$validationAndCondition"
 							}
 						]
-					}
+					},
+					"minItems": 2
 				}
 			},
 			"maxProperties": 1,
