@@ -50,6 +50,27 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
                                     ""$max"": 25 
                                 }
                             ]
+                        },
+                        {
+                            ""$itemMember"": ""Addresses"",
+                            ""$itemType"": ""Recursive"",
+                            ""$itemRules"": [
+                                {
+                                    ""$rule"": ""Child"",
+                                    ""$validationItems"": [
+                                        {
+                                            ""$itemMember"": ""StreetOne"",
+                                            ""$itemConditionId"": null,
+                                            ""$itemType"": ""inline"",
+                                            ""$itemRules"": [
+                                                {
+                                                    ""$rule"": ""NotEmpty""
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }")
@@ -59,7 +80,14 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
 
             var results = validator.Validate(new Person()
             {
-                FirstName = ""
+                FirstName = "",
+                Addresses = new PersonAddress[]
+                {
+                    new PersonAddress()
+                    {
+
+                    }
+                }
             });
 
         }

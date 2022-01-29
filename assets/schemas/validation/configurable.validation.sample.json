@@ -58,11 +58,9 @@
       "$itemRules": [
         {
           "$rule": "Child",
-
           "$validationItems": [
             {
               "$itemMember": "StreetOne",
-              "$itemConditionId": null,
               "$itemType": "inline",
               "$itemRules": [
                 {

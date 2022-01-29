@@ -15,6 +15,7 @@ using Assimalign.ComponentModel.Validation.Properties;
 using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 using Assimalign.ComponentModel.Validation.Configurable.Internal.Exceptions;
 using Assimalign.ComponentModel.Validation.Configurable.Internal.Extensions;
+using System.Reflection;
 
 
 /// <summary>
@@ -396,6 +397,7 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     private bool TryValidateLength(object value, out IValidationContext context)
     {
         context = null;
+
         if (value is null)
         {
             context = new ValidationContext<object>(default);
@@ -406,34 +408,49 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
         {
             var element = (JsonElement)parameter;
             var exact = element.GetInt32();
+            
             context = new ValidationContext<object>(value);
 
             switch (value)
             {
-                case string stringValue when stringValue.Length != exact:
+                case string stringValue:
                     {
-                        context.AddFailure(this.Error);
+                        if (stringValue.Length != exact)
+                        {
+                            context.AddFailure(this.Error);
+                        }
                         return true;
                     } // May not need this since string is IEnumerable
-                case ICollection collection when collection.Count != exact:
+                case Array array:
                     {
-                        context.AddFailure(this.Error);
+                        if (array.Length != exact)
+                        {
+                            context.AddFailure(this.Error);
+                        }
                         return true;
                     }
-                case Array array when array.Length != exact:
+                case ICollection collection:
                     {
-                        context.AddFailure(this.Error);
+                        if (collection.Count != exact)
+                        {
+                            context.AddFailure(this.Error);
+                        }
                         return true;
                     }
-                case IEnumerable enumerable when enumerable.Cast<object>().Count() != exact:
+                case IEnumerable enumerable:
                     {
-                        context.AddFailure(this.Error);
+                        if (enumerable.Cast<object>().Count() != exact)
+                        {
+                            context.AddFailure(this.Error);
+                        }
                         return true;
+                    }
+                default:
+                    {
+                        context = null;
+                        return false;
                     }
             };
-
-            context = null;
-            return false;
         }
         else
         {
@@ -446,15 +463,152 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     }
     private bool TryValidateLengthMax(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        if (value is null)
+        {
+            context = new ValidationContext<object>(default);
+            context.AddFailure(this.Error);
+            return true;
+        }
+        if (this.Parameters.TryGetValue("$max", out var parameter))
+        {
+            var max = (int)parameter;
+            context = new ValidationContext<object>(value);
+
+            switch (value)
+            {
+                case string stringValue:
+                    {
+                        if (stringValue.Length > max)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    } // May not need this since string is IEnumerable
+                case Array array:
+                    {
+                        if (array.Length > max)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    }
+                case ICollection collection:
+                    {
+                        if (collection.Count > max)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    }
+                case IEnumerable enumerable:
+                    {
+                        if (enumerable.Cast<object>().Count() > max)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    }
+                default:
+                    {
+                        context = null;
+                        return false;
+                    }
+            };
+        }
+        else
+        {
+            return false;
+        }
     }
     private bool TryValidateLengthMin(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        context = null;
+
+        if (value is null)
+        {
+            context = new ValidationContext<object>(default);
+            context.AddFailure(this.Error);
+            return true;
+        }
+        if (this.Parameters.TryGetValue("$min", out var parameter))
+        {
+            var min = (int)parameter;
+            context = new ValidationContext<object>(value);
+
+            switch (value)
+            {
+                case string stringValue:
+                    {
+                        if (stringValue.Length < min)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    } // May not need this since string is IEnumerable
+                case Array array:
+                    {
+                        if (array.Length < min)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    }
+                case ICollection collection:
+                    {
+                        if (collection.Count < min)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    }
+                case IEnumerable enumerable:
+                    {
+                        if (enumerable.Cast<object>().Count() < min)
+                        {
+                            context.AddFailure(this.Error);
+                        }
+                        return true;
+                    }
+                default:
+                    {
+                        context = null;
+                        return false;
+                    }
+            };
+        }
+        else
+        {
+            return false;
+        }
     }
     private bool TryValidateChild(object value, out IValidationContext context)
     {
-        throw new NotImplementedException();
+        var items = (IEnumerable<IValidationItem>)this.Parameters["$validationItems"];
+        context = new ValidationContext<object>(value)
+        {
+            Options = new Dictionary<string, object>()
+        };
+
+        foreach (var item in items)
+        {
+            
+
+            var childContext = new ValidationContext<object>(value)
+            {
+                Options = new Dictionary<string, object>()
+            };
+
+            item.Evaluate(childContext);
+
+            foreach (var error in childContext.Errors)
+            {
+                context.AddFailure(error);
+            }
+        }
+
+        return true;
     }
     private bool TryValidateMatches(object value, out IValidationContext context)
     {
@@ -473,6 +627,7 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
         //var type = parameters.FirstOrDefault(x => x is Type) as Type;
         var itemType = (ValidationConfigurableItemType)parameters.FirstOrDefault(x => x is ValidationConfigurableItemType);
         var itemExpression = parameters.FirstOrDefault(x => x is Expression<Func<T, object>>) as Expression<Func<T, object>>;
+        var itemValidationMode = (ValidationMode)parameters.FirstOrDefault(x => x is ValidationMode);
 
         this.Parameters ??= new Dictionary<string, object>();
 
@@ -891,6 +1046,12 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                         throw new ValidationConfigurableJsonMissingParameterException("LengthMax", "$max", itemExpression);
                     }
                     this.Parameters["$max"] = this.GetJsonElementValue((JsonElement)this.Parameters["$max"], typeof(int));
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageMaxLengthRule, itemExpression, this.Parameters["$max"]),
+                        Source = itemExpression.Body.ToString()
+                    };
                     this.Validate = TryValidateLengthMax;
                     break;
                 }
@@ -915,6 +1076,12 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                         throw new ValidationConfigurableJsonMissingParameterException("LengthMin", "$min", itemExpression);
                     }
                     this.Parameters["$min"] = this.GetJsonElementValue((JsonElement)this.Parameters["$min"], typeof(int));
+                    this.Error ??= new ValidationConfigurableJsonError()
+                    {
+                        Code = Resources.DefaultValidationErrorCode,
+                        Message = string.Format(Resources.DefaultValidationMessageMinLengthRule, itemExpression, this.Parameters["$min"]),
+                        Source = itemExpression.Body.ToString()
+                    };
                     this.Validate = TryValidateLengthMin;
                     break;
                 }
@@ -935,12 +1102,31 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
                         throw new ValidationConfigurableJsonMissingParameterException("Child", "$validationItems", itemExpression);
                     }
                     var element = (JsonElement)this.Parameters["$validationItems"];
-                    var generic = typeof(ValidationConfigurableJsonItem<>).MakeGenericType(type);
+                    var generic = typeof(IEnumerable<>).MakeGenericType(
+                        typeof(ValidationConfigurableJsonItem<>
+                    ).MakeGenericType(type));
                     var content = element.GetRawText();
+                    var options = new JsonSerializerOptions();
 
-                    var item = JsonSerializer.Deserialize(content, generic);
+                    options.Converters.Add(new EnumConverter<ValidationConfigurableItemType>());
+                    options.Converters.Add(new EnumConverter<ValidationMode>());
 
+                    var item = JsonSerializer.Deserialize(content, generic, options);
 
+                    foreach (var value in (IEnumerable)item)
+                    {
+                        var method = value.GetType()
+                            .GetMethod("Configure", BindingFlags.Instance | BindingFlags.NonPublic)
+                            .Invoke(value, new object[]
+                            {
+                                new object[]
+                                {
+                                    itemValidationMode
+                                }
+                            });
+                    }
+
+                    this.Parameters["$validationItems"] = item;
                     this.Validate = TryValidateChild;
                     break;
                 }
@@ -953,7 +1139,7 @@ internal sealed class ValidationConfigurableJsonRule<T> : IValidationRule
     {
         return type.Name switch
         {
-            "Boolean" when this.Name != "" => element.GetBoolean(),
+            "Boolean" => element.GetBoolean(),
             "UInt16" => element.GetUInt16(),
             "UInt32" => element.GetUInt32(),
             "UInt64" => element.GetUInt64(),

@@ -112,15 +112,34 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
         {
             foreach (var item in enumerable)
             {
+                var stopwatch = new Stopwatch();
+
                 foreach (var rule in ItemRuleStack)
                 {
+                    if (this.validationMode == ValidationMode.Stop && context.Errors.Any())
+                    {
+                        return;
+                    }
+
+                    stopwatch.Start();
+
                     if (rule.TryValidate(item, out var validationContext))
                     {
                         foreach (var error in validationContext.Errors)
                         {
                             context.AddFailure(error);
                         }
+
+                        stopwatch.Stop();
+                        context.AddInvocation(new ValidationInvocation(rule.Name, true, stopwatch.ElapsedTicks));
                     }
+                    else
+                    {
+                        stopwatch.Stop();
+                        context.AddInvocation(new ValidationInvocation(rule.Name, false, stopwatch.ElapsedTicks));
+                    }
+
+                    stopwatch.Reset();
                 }
             }
         }
@@ -170,27 +189,8 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
 
             foreach (var rule in this.ItemRuleStack)
             {
-                rule.Configure(itemMemberExpression, ItemType);
+                rule.Configure(itemMemberExpression, ItemType, validationMode);
             }
-
-            //if (this.itemMemberExpression.Body.Type.IsSystemValueType(out var valueType))
-            //{
-            //    foreach (var rule in this.ItemRuleStack)
-            //    {
-            //        rule.Configure(valueType, itemMemberExpression);
-            //    }
-            //}
-            //else if (this.itemMemberExpression.Body.Type.IsEnumerableType(out var enumerableType))
-            //{
-            //    foreach (var rule in this.ItemRuleStack)
-            //    {
-            //        rule.Configure(enumerableType, itemMemberExpression);
-            //    }
-            //}
-            //else
-            //{
-                
-            //}
         }
     }
 }
