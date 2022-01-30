@@ -26,9 +26,9 @@ public sealed class ValidationOptions
     public bool ThrowExceptionOnFailure { get; set; }
 
     /// <summary>
-    /// By default when more then one rule is chained to a validation item
+    /// By default, when more then one rule is chained to a validation item
     /// the first failure will exit the chain. Set this property to true if 
-    /// the desired behavior is to iterate through all rules.
+    /// the desired behavior is to iterate through all rules in the validation chain.
     /// <br/>
     /// <br/>
     /// <example>

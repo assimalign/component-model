@@ -132,6 +132,9 @@
   <data name="DefaultValidationMessageEmptyRule" xml:space="preserve">
     <value>The following expression: '{0}' was not empty.</value>
   </data>
+  <data name="DefaultValidationMessageEndWithRule" xml:space="preserve">
+    <value>The following expression: '{0}' must end with '{1}'.</value>
+  </data>
   <data name="DefaultValidationMessageEqualToRule" xml:space="preserve">
     <value>The following expression: '{0}' must equal '{1}'.</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="DefaultValidationMessageNotEmptyRule" xml:space="preserve">
     <value>The following expression: '{0}' was empty.</value>
+  </data>
+  <data name="DefaultValidationMessageNotEndWithRule" xml:space="preserve">
+    <value>The following expression: '{0}' must not end with '{1}'.</value>
   </data>
   <data name="DefaultValidationMessageNotEqualToRule" xml:space="preserve">
     <value>The following expression: '{0}' must not equal '{1}'.</value>

@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Internal.Rules;
 
-internal sealed class MustNotStartWithValidationRule : ValidationRuleBase<string>
+
+internal sealed class MustNotEndWithValidationRule : ValidationRuleBase<string>
 {
     private readonly string value;
     private readonly StringComparison comparison;
 
-    public MustNotStartWithValidationRule(string value, StringComparison comparison = StringComparison.InvariantCulture)
+    public MustNotEndWithValidationRule(string value, StringComparison comparison = StringComparison.InvariantCulture)
     {
         this.value = value;
         this.comparison = comparison;
@@ -40,7 +45,7 @@ internal sealed class MustNotStartWithValidationRule : ValidationRuleBase<string
         {
             context = new ValidationContext<string>(value);
 
-            if (value.StartsWith(this.value, comparison))
+            if (value.EndsWith(this.value, comparison))
             {
                 context.AddFailure(this.Error);
             }

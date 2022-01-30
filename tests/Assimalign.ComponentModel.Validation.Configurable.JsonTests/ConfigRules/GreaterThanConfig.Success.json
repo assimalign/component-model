@@ -1,0 +1,51 @@
+{
+	"$schema":  "../../../assets/schemas/validation/configurable.validation.schema.json",
+	"$validationItems": [
+		{
+			"$itemMember": "IntProp",
+			"$itemType": "inline",
+			"$itemRules": [
+				{
+					"$rule": "GreaterThan",
+					"$value": -26
+				},
+				{
+					"$rule": "LessThan",
+					"$value": 0
+				},
+				{
+					"$rule": "Between",
+					"$lower": -26,
+					"$upper": 0
+				},
+				{
+					"$rule": "EqualTo",
+					"$value": -25
+				}
+			]
+		},
+		{
+			"$itemMember": "ShortProp",
+			"$itemType": "inline",
+			"$itemRules": [
+				{
+					"$rule": "GreaterThan",
+					"$value": -26
+				},
+				{
+					"$rule": "LessThan",
+					"$value": 0
+				},
+				{
+					"$rule": "Between",
+					"$lower": -26,
+					"$upper": 0
+				},
+				{
+					"$rule": "EqualTo",
+					"$value": -5
+				}
+			]
+		}
+	]
+}

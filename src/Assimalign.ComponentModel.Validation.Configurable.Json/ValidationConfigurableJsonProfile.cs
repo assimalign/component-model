@@ -58,7 +58,6 @@ public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     /// 
     /// </summary>
     [JsonPropertyName("$validationMode")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ValidationMode ValidationMode { get; set; }
     
     /// <summary>

@@ -179,9 +179,15 @@ public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
                 memberExpression = Expression.Property(memberExpression, memberPaths[i]);
             }
 
+            // When it comes to structs we need to explicitly
+            // convert to object before building lambda
+            if (memberExpression.Type.IsValueType)
+            {
+                memberExpression = Expression.Convert(memberExpression, typeof(object));
+            }
+
             this.itemMemberExpression = Expression.Lambda<Func<T, object>>(memberExpression, parameterExpression);
             this.itemMember = itemMemberExpression.Compile();
-
 
             foreach (var rule in this.ItemRuleStack)
             {

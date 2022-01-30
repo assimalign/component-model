@@ -702,13 +702,22 @@ public sealed class ValidationConfigurableJsonRule<T> : IValidationRule
 
         Type type = null;
 
+        if (itemExpression.Body is UnaryExpression unary)
+        {
+            type = unary.Operand.Type;
+        }
+        else
+        {
+            type = itemExpression.Body.Type;
+        }
+
         if (itemType == ValidationConfigurableItemType.Recursive)
         {
-            type = itemExpression.Body.Type.GetEnumerableType().UnwrapNullableType();
+            type = type.GetEnumerableType().UnwrapNullableType();
         }
         else if (itemType == ValidationConfigurableItemType.Inline)
         {
-            type = itemExpression.Body.Type.UnwrapNullableType();
+            type = type.UnwrapNullableType();
         }
 
         switch (this.Name)

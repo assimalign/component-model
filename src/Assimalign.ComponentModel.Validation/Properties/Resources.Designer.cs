@@ -106,6 +106,15 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must end with &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageEndWithRule {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageEndWithRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must equal &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageEqualToRule {
@@ -219,6 +228,15 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         internal static string DefaultValidationMessageNotEmptyRule {
             get {
                 return ResourceManager.GetString("DefaultValidationMessageNotEmptyRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must not end with &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageNotEndWithRule {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageNotEndWithRule", resourceCulture);
             }
         }
         

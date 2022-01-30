@@ -52,6 +52,8 @@ public static partial class ValidationExtensions
         return builder;
     }
 
+    #region Email Address Validation Rule Extensions
+
     /// <summary>
     /// Creates a rule specifying that the member must be in the format of an email address.
     /// </summary>
@@ -102,6 +104,10 @@ public static partial class ValidationExtensions
 
         return builder;
     }
+
+    #endregion
+
+    #region Length Validation Rule Extensions
 
     /// <summary>
     /// Creates a rule specifying the required minimum and maximum length of an <see cref="IEnumerable"/>.
@@ -418,6 +424,10 @@ public static partial class ValidationExtensions
         return builder;
     }
 
+    #endregion
+
+    #region Empty Validation Rule Extensions
+
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must not be empty.
     /// </summary>
@@ -524,6 +534,10 @@ public static partial class ValidationExtensions
 
         return builder;
     }
+
+    #endregion
+
+    #region Between Validation Rule Extensions
 
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must be between <paramref name="lowerBound"/> and <paramref name="upperBound"/>.
@@ -787,6 +801,10 @@ public static partial class ValidationExtensions
         return builder;
     }
 
+    #endregion
+
+    #region Greater Than Validation Rule Extensions
+
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must be greater than <paramref name="value"/>.
     /// </summary>
@@ -1007,6 +1025,10 @@ public static partial class ValidationExtensions
         return builder;
     }
 
+    #endregion
+
+    #region Less Than Validation Rule Extensions
+
     /// <summary>
     /// Creates a rule specifying that <typeparamref name="TValue"/> must be less than <paramref name="value"/>.
     /// </summary>
@@ -1225,8 +1247,12 @@ public static partial class ValidationExtensions
         return builder;
     }
 
+    #endregion
+
+    #region Matches Validation Rule Extensions
+
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must match the input <paramref name="pattern"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="pattern"></param>
@@ -1254,11 +1280,11 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must match the input <paramref name="pattern"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="pattern"></param>
-    /// <param name="configure"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IValidationRuleBuilder<string> Matches(this IValidationRuleBuilder<string> builder, string pattern, Action<IValidationError> configure)
@@ -1295,7 +1321,7 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must match the input <paramref name="pattern"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="pattern"></param>
@@ -1323,12 +1349,12 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must match the input <paramref name="pattern"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="pattern"></param>
     /// <param name="options"></param>
-    /// <param name="configure"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IValidationRuleBuilder<string> Matches(this IValidationRuleBuilder<string> builder, string pattern, RegexOptions options, Action<IValidationError> configure)
@@ -1364,7 +1390,7 @@ public static partial class ValidationExtensions
         return builder;
     }
 
-
+    #endregion
 
     #region Contains Validation Rule Extensions
 
@@ -1486,9 +1512,10 @@ public static partial class ValidationExtensions
 
     #endregion
 
+    #region Starts With Validation Rule Extensions
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
@@ -1506,7 +1533,7 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
@@ -1525,11 +1552,11 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
-    /// <param name="configure"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IValidationRuleBuilder<string> StartWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)
@@ -1555,12 +1582,12 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
     /// <param name="comparison"></param>
-    /// <param name="configure"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IValidationRuleBuilder<string> StartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)
@@ -1588,10 +1615,12 @@ public static partial class ValidationExtensions
         return builder;
     }
 
+    #endregion
 
+    #region Not Start With Validation Rule Extensions
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must not start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
@@ -1609,7 +1638,26 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates a rule specifying that the input string value must not start with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> NotStartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison)
+    {
+        return builder.NotStartWith(value, comparison, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageNotStartWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    ///  Creates a rule specifying that the input string value must not start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
@@ -1639,7 +1687,7 @@ public static partial class ValidationExtensions
     }
 
     /// <summary>
-    /// 
+    ///  Creates a rule specifying that the input string value must not start with the required <paramref name="value"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="value"></param>
@@ -1663,7 +1711,7 @@ public static partial class ValidationExtensions
 
         configure.Invoke(error);
 
-        builder.ValidationItem.ItemRuleStack.Push(new MustStartWithValidationRule(value, comparison)
+        builder.ValidationItem.ItemRuleStack.Push(new MustNotStartWithValidationRule(value, comparison)
         {
             Error = error,
             Name = $"Validate {builder.ValidationItem} must not start with {value}"
@@ -1672,13 +1720,215 @@ public static partial class ValidationExtensions
         return builder;
     }
 
-    public static IValidationRuleBuilder<string> EndWith(this IValidationRuleBuilder<string> builder)
+    #endregion
+
+    #region End With Validation Rule Extensions
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> EndWith(this IValidationRuleBuilder<string> builder, string value)
     {
+        return builder.EndWith(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageEndWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> EndWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison)
+    {
+        return builder.EndWith(value, comparison, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageEndWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> EndWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: EndWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).EndWith({value}, {configure})"
+            };
+        }
+
+        return builder.EndWith(value, StringComparison.InvariantCulture, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageEndWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> EndWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: EndWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).EndWith({value}, {comparison}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MustEndWithValidationRule(value, comparison)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} must end with {value}"
+        });
+
         return builder;
     }
 
-    public static IValidationRuleBuilder<string> NotEndWith(this IValidationRuleBuilder<string> builder)
+    #endregion
+
+    #region Not End With Validation Rule Extensions
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must not end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> NotEndWith(this IValidationRuleBuilder<string> builder, string value)
     {
+        return builder.NotEndWith(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageNotEndWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must not end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> NotEndWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison)
+    {
+        return builder.NotEndWith(value, comparison, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageNotEndWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must not end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> NotEndWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: NotEndWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).NotEndWith({value}, {configure})"
+            };
+        }
+
+        return builder.NotEndWith(value, StringComparison.InvariantCulture, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageNotEndWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that the input string value must not end with the required <paramref name="value"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> NotEndWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: NotEndWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).NotEndWith({value}, {comparison}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MustNotEndWithValidationRule(value, comparison)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} must not end with {value}"
+        });
+
         return builder;
     }
+
+    #endregion
 }

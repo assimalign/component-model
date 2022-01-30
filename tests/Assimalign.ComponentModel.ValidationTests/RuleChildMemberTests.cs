@@ -29,9 +29,6 @@ public class RuleChildMemberTests
     {
         public override void Configure(IValidationRuleDescriptor<Person> descriptor)
         {
-            descriptor.RuleFor(p => p.FirstName)
-                .Contain('o')
-                .StartWith("", StringComparison.InvariantCultureIgnoreCase)
 
             descriptor.RuleFor(p => p.PrimaryAddress)
                 

@@ -1,11 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
@@ -27,6 +22,7 @@ public static class ValidationConfigurableJsonExtensions
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
             options ??= GetDefaultJsonSerializationOptions();
+            options.Converters.Add(new EnumConverter<OperatorType>());
             options.Converters.Add(new EnumConverter<ValidationConfigurableItemType>());
             options.Converters.Add(new EnumConverter<ValidationMode>());
             return JsonSerializer.Deserialize<ValidationConfigurableJsonProfile<T>>(json, options);
@@ -46,7 +42,9 @@ public static class ValidationConfigurableJsonExtensions
         return builder.Add(new ValidationConfigurableJsonSource<T>(() =>
         {
             options ??= GetDefaultJsonSerializationOptions();
+            options.Converters.Add(new EnumConverter<OperatorType>());
             options.Converters.Add(new EnumConverter<ValidationConfigurableItemType>());
+            options.Converters.Add(new EnumConverter<ValidationMode>());
             return JsonSerializer.DeserializeAsync<ValidationConfigurableJsonProfile<T>>(stream, options)
                 .GetAwaiter()
                 .GetResult();

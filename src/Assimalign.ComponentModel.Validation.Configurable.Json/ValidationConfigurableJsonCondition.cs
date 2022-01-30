@@ -35,7 +35,6 @@ public sealed class ValidationConfigurableJsonCondition<T>
     /// 
     /// </summary>
     [JsonPropertyName("$operator")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OperatorType Operator { get; set; }
 
     /// <summary>

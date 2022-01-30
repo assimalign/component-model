@@ -3,9 +3,9 @@
 namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests;
 
 
-public abstract class RuleBaseTest
+public abstract class RuleConfigurableJsonBaseTest
 {
-    public TestObject MyProperty => new TestObject();
+    public TestObject TestProp => new TestObject();
     public partial class TestObject
     {
         public uint UIntProp { get; set; } = 5;
