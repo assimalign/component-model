@@ -15,6 +15,9 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
         public void Test()
         {
 
+            var profile = new ValidationConfigurableJsonProfile<Person>();
+
+
 
             var validator = ValidationConfigurableBuilder.Create()
                 .AddJsonSource<Person>(@"
@@ -64,19 +67,6 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
                         },
                         {
                             ""$itemMember"": ""Addresses"",
-                            ""$itemType"": ""Inline"",
-                            ""$itemRules"": [
-                                {
-                                    ""$rule"": ""NotEmpty""
-                                },
-                                {
-                                    ""$rule"": ""LengthMax"",
-                                    ""$max"": 25 
-                                }
-                            ]
-                        },
-                        {
-                            ""$itemMember"": ""Addresses"",
                             ""$itemType"": ""Recursive"",
                             ""$itemRules"": [
                                 {
@@ -105,13 +95,8 @@ namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests
             var results = validator.Validate(new Person()
             {
                 FirstName = "Crawford",
-                Addresses = new PersonAddress[]
-                {
-                    new PersonAddress()
-                    {
-
-                    }
-                }
+                Age = 20,
+               
             });
 
         }

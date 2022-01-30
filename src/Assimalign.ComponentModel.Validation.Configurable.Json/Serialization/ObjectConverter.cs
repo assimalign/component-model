@@ -21,13 +21,10 @@ internal sealed class ObjectConverter : JsonConverter<object>
     /// <returns></returns>
     public override object Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.True ||
-            reader.TokenType == JsonTokenType.False)
+        if (reader.TokenType == JsonTokenType.True || reader.TokenType == JsonTokenType.False)
         {
             return reader.GetBoolean();
         }
-
-
         if (reader.TokenType == JsonTokenType.Number)
         {
             var numberValue = Encoding.UTF8.GetString(reader.ValueSpan);
@@ -57,7 +54,11 @@ internal sealed class ObjectConverter : JsonConverter<object>
         }
         if (reader.TokenType == JsonTokenType.StartObject)
         {
-            throw new JsonException("Object Types are not supported value parameters for queries");
+            throw new JsonException("Object Types are not supported value parameters for '$value' parameter.");
+        }
+        if (reader.TokenType == JsonTokenType.StartArray)
+        {
+            throw new JsonException("Array Types are not supported value parameters for '$value' parameter.");
         }
 
         return null;

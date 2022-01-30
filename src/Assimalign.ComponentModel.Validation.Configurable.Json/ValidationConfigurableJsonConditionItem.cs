@@ -1,31 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 using Assimalign.ComponentModel.Validation.Configurable.Internal.Extensions;
 
-internal sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCondition
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCondition
+    where T : class
 {
-
-    [JsonPropertyName("$condition")]
-    public ValidationConfigurableJsonCondition<T> Condition { get; set; }
-
-    [JsonPropertyName("$validationItems")]
-    public IEnumerable<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
-
-    [JsonIgnore]
     IEnumerable<IValidationItem> IValidationCondition.ValidationItems => this.ValidationItems;
 
 
+    /// <summary>
+    /// Represents a set of Conditions to run against <typeparamref name="T"/>.
+    /// </summary>
+    [JsonPropertyName("$condition")]
+    public ValidationConfigurableJsonCondition<T> Condition { get; set; }
 
-    internal Expression<Func<T, bool>> GetCondition()
+    /// <summary>
+    /// The items to be validated if the condition is true.
+    /// </summary>
+    [JsonPropertyName("$validationItems")]
+    public IEnumerable<ValidationConfigurableJsonItem<T>> ValidationItems { get; set; }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public Expression<Func<T, bool>> GetCondition()
     {
         var parameter = Expression.Parameter(typeof(T));
         var body = GetLambdaExpressionBody(this, parameter);
@@ -37,20 +49,20 @@ internal sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCo
     /// <summary>
     /// Loops through all children building an expression tree on the fly.
     /// </summary>
-    /// <param name="instance"></param>
+    /// <param name="conditionItem"></param>
     /// <param name="parameter"></param>
     /// <returns></returns>
-    private Expression GetLambdaExpressionBody(ValidationConfigurableJsonConditionItem<T> instance, Expression parameter)
+    private Expression GetLambdaExpressionBody(ValidationConfigurableJsonConditionItem<T> conditionItem, Expression parameter)
     {
-        instance.Condition.And ??= new List<ValidationConfigurableJsonConditionItem<T>>();
-        instance.Condition.Or ??= new List<ValidationConfigurableJsonConditionItem<T>>();
+        conditionItem.Condition.And ??= new List<ValidationConfigurableJsonConditionItem<T>>();
+        conditionItem.Condition.Or ??= new List<ValidationConfigurableJsonConditionItem<T>>();
 
         // Represent a Parent expression to reference for any child expression
         Expression parent = null;
 
-        if (instance.Condition.And.Any())
+        if (conditionItem.Condition.And.Any())
         {
-            foreach (var where in instance.Condition.And)
+            foreach (var where in conditionItem.Condition.And)
             {
                 var isParent = parent != null;
                 // Check if only one filter was passed
@@ -75,9 +87,9 @@ internal sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCo
             return parent;
         }
 
-        if (instance.Condition.Or.Any())
+        if (conditionItem.Condition.Or.Any())
         {
-            foreach (var where in instance.Condition.Or)
+            foreach (var where in conditionItem.Condition.Or)
             {
                 var isParent = parent != null;
                 // Check if only one filter was passed
@@ -102,7 +114,7 @@ internal sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCo
             return parent;
         }
 
-        return BuildLambdaExpressionBody(instance, parameter);
+        return BuildLambdaExpressionBody(conditionItem, parameter);
     }
 
 

@@ -29,7 +29,12 @@ public class RuleChildMemberTests
     {
         public override void Configure(IValidationRuleDescriptor<Person> descriptor)
         {
+            descriptor.RuleFor(p => p.FirstName)
+                .Contain('o')
+                .StartWith("", StringComparison.InvariantCultureIgnoreCase)
+
             descriptor.RuleFor(p => p.PrimaryAddress)
+                
                  .ChildRules(configure =>
                  {
                      configure.RuleFor(p => p.StreetOne)
@@ -69,7 +74,11 @@ public class RuleChildMemberTests
 
     public class Person
     {
+        public string FirstName { get; set; }
         public PersonAddresses PrimaryAddress { get; set; }
+
+        public IEnumerable<PersonAddresses> Addresses { get; set; }
+        public long[] Ages { get; set; }
     }
 
     public class PersonAddresses

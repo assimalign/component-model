@@ -1,9 +1,9 @@
 ﻿using System;
 
-
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
 internal sealed class ValidationConfigurableJsonSource<T> : IValidationConfigurableSource
+    where T : class
 {
     private readonly Func<ValidationConfigurableJsonProfile<T>> configure;
 

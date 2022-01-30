@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-using Assimalign.ComponentModel.Validation.Configurable.Properties;
-
+using Assimalign.ComponentModel.Validation.Configurable.Internal.Exceptions;
 
 /// <summary>
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
+public sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
+    where T : class
 {
     private bool isConfigured;
     Type IValidationProfile.ValidationType => typeof(T);
@@ -44,8 +44,8 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     [JsonConstructor]
     public ValidationConfigurableJsonProfile()
     {
-        this.ValidationConditions ??= new List<ValidationConfigurableJsonConditionItem<T>>();
         this.ValidationItems ??= new List<ValidationConfigurableJsonItem<T>>();
+        this.ValidationConditions ??= new List<ValidationConfigurableJsonConditionItem<T>>();
     }
 
     /// <summary>
@@ -58,6 +58,7 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     /// 
     /// </summary>
     [JsonPropertyName("$validationMode")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ValidationMode ValidationMode { get; set; }
     
     /// <summary>
@@ -72,6 +73,7 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
     [JsonPropertyName("$validationConditions")]
     public IEnumerable<ValidationConfigurableJsonConditionItem<T>> ValidationConditions { get; set; }
 
+
     /// <summary>
     /// 
     /// </summary>
@@ -81,23 +83,30 @@ internal sealed class ValidationConfigurableJsonProfile<T> : IValidationProfile
         {
             return;
         }
-
-        // Need to push the conditional validation items into the current validation stack
-        foreach (var validationCondition in this.ValidationConditions)
+        try
         {
-            var condition = validationCondition.GetCondition();
-
-            foreach (var validationItem in validationCondition.ValidationItems)
+            foreach (var validationCondition in this.ValidationConditions)
             {
-                validationItem.Configure(condition, this.ValidationMode);
+                var condition = validationCondition.GetCondition();
+
+                foreach (var validationItem in validationCondition.ValidationItems)
+                {
+                    validationItem.Configure(condition, this.ValidationMode);
+                }
             }
-        }
 
-        foreach (var validationItem in this.ValidationItems)
+            foreach (var validationItem in this.ValidationItems)
+            {
+                validationItem.Configure(this.ValidationMode);
+            }
+
+            isConfigured = true; // Let's set this so some idiot doesn't try to call this more than once
+        }
+        catch (Exception exception) when (exception is not ValidationConfigurableException)
         {
-            validationItem.Configure(this.ValidationMode);
-        }
-
-        isConfigured = true; // Let's set this so some idiot doesn't try to call this more than once
+            throw ValidationConfigurableJsonInternalException.FromException(
+                message: $"An un-handled exception was thrown while configuring {nameof(ValidationConfigurableJsonProfile<T>)}.", 
+                exception: exception);
+        }        
     }
 }

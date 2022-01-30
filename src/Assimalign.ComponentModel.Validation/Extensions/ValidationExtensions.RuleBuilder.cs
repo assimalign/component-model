@@ -97,7 +97,7 @@ public static partial class ValidationExtensions
         builder.ValidationItem.ItemRuleStack.Push(new EmailValidationRule<string>()
         {
             Error = error,
-            Name= $"Validate {builder.ValidationItem} is valid email format"
+            Name = $"Validate {builder.ValidationItem} is valid email format"
         });
 
         return builder;
@@ -1366,33 +1366,318 @@ public static partial class ValidationExtensions
 
 
 
+    #region Contains Validation Rule Extensions
 
-    public static IValidationRuleBuilder<TValue> MustContain<TValue>(this IValidationRuleBuilder<TValue> builder)
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must contain <typeparamref name="TContains"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <typeparam name="TContains"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="contains"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<TValue> Contain<TValue, TContains>(this IValidationRuleBuilder<TValue> builder, TContains contains)
+        where TValue : IEnumerable, IEnumerable<TContains>
+        where TContains : notnull, IEquatable<TContains>
+    {
+        return builder.Contain<TValue, TContains>(contains, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageMustContains, validationExpression, contains);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must contain <typeparamref name="TContains"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <typeparam name="TContains"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="contains"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> Contain<TValue, TContains>(this IValidationRuleBuilder<TValue> builder, TContains contains, Action<IValidationError> configure)
+        where TValue : IEnumerable, IEnumerable<TContains>
+        where TContains : notnull, IEquatable<TContains>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: Contain<TValue, TContains>(this IValidationRuleBuilder<TValue> builder, TContains contains, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).Contain<{typeof(TValue).Name}, {typeof(TContains).Name}>({contains}, {configure})"
+            };
+        }
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MustContainValidationRule<TValue, TContains>(contains)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} does not contain {contains}"
+        });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must not contain <typeparamref name="TContains"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <typeparam name="TContains"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="contains"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<TValue> NotContain<TValue, TContains>(this IValidationRuleBuilder<TValue> builder, TContains contains)
+        where TValue : IEnumerable<TContains>
+        where TContains : notnull, IEquatable<TContains>
+    {
+        return builder.NotContain<TValue, TContains>(contains, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageMustNotContains, validationExpression, contains);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// Creates a rule specifying that <typeparamref name="TValue"/> must not contain <typeparamref name="TContains"/>.
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    /// <typeparam name="TContains"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="contains"></param>
+    /// <param name="configure">A delegate to configure a custom validation error.</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<TValue> NotContain<TValue, TContains>(this IValidationRuleBuilder<TValue> builder, TContains contains, Action<IValidationError> configure)
+        where TValue : IEnumerable<TContains>
+        where TContains : notnull, IEquatable<TContains>
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: NotContain<TValue, TContains>(this IValidationRuleBuilder<TValue> builder, TContains contains, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).NotContain<{typeof(TValue).Name}, {typeof(TContains).Name}>({contains}, {configure})"
+            };
+        }
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MustNotContainValidationRule<TValue, TContains>(contains)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} contains {contains}"
+        });
+
+        return builder;
+    }
+
+    #endregion
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> StartWith(this IValidationRuleBuilder<string> builder, string value)
+    {
+        return builder.StartWith(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageStartWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> StartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison)
+    {
+        return builder.StartWith(value, comparison, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageStartWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> StartWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: StartWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).StartWith({value}, {configure})"
+            };
+        }
+
+        return builder.StartWith(value, StringComparison.InvariantCulture, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageStartWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> StartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: StartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).StartWith({value}, {comparison}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MustStartWithValidationRule(value, comparison)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} must start with {value}"
+        });
+
+        return builder;
+    }
+
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static IValidationRuleBuilder<string> NotStartWith(this IValidationRuleBuilder<string> builder, string value)
+    {
+        return builder.NotStartWith(value, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageNotStartWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> NotStartWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: NotStartWith(this IValidationRuleBuilder<string> builder, string value, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).NotStartWith({value}, {configure})"
+            };
+        }
+
+        return builder.NotStartWith(value, StringComparison.InvariantCulture, error =>
+        {
+            var validationExpression = builder.ValidationItem.ToString();
+
+            error.Code = Resources.DefaultValidationErrorCode;
+            error.Message = String.Format(Resources.DefaultValidationMessageNotStartWithRule, validationExpression, value);
+            error.Source = validationExpression;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="value"></param>
+    /// <param name="comparison"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IValidationRuleBuilder<string> NotStartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(
+                paramName: nameof(configure),
+                message: "The 'configure' parameter cannot be null in: NotStartWith(this IValidationRuleBuilder<string> builder, string value, StringComparison comparison, Action<IValidationError> configure)")
+            {
+                Source = $"RuleFor[Each]({builder.ValidationItem}).NotStartWith({value}, {comparison}, {configure})"
+            };
+        }
+
+        var error = new ValidationError();
+
+        configure.Invoke(error);
+
+        builder.ValidationItem.ItemRuleStack.Push(new MustStartWithValidationRule(value, comparison)
+        {
+            Error = error,
+            Name = $"Validate {builder.ValidationItem} must not start with {value}"
+        });
+
+        return builder;
+    }
+
+    public static IValidationRuleBuilder<string> EndWith(this IValidationRuleBuilder<string> builder)
     {
         return builder;
     }
 
-    public static IValidationRuleBuilder<TValue> MustNotContain<TValue>(this IValidationRuleBuilder<TValue> builder)
-    {
-        return builder;
-    }
-
-    public static IValidationRuleBuilder<string> MustStartWith(this IValidationRuleBuilder<string> builder)
-    {
-        return builder;
-    }
-
-    public static IValidationRuleBuilder<string> MustNotStartWith(this IValidationRuleBuilder<string> builder)
-    {
-        return builder;
-    }
-
-    public static IValidationRuleBuilder<string> MustEndWith(this IValidationRuleBuilder<string> builder)
-    {
-        return builder;
-    }
-
-    public static IValidationRuleBuilder<string> MustNotEndWith(this IValidationRuleBuilder<string> builder)
+    public static IValidationRuleBuilder<string> NotEndWith(this IValidationRuleBuilder<string> builder)
     {
         return builder;
     }

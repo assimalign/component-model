@@ -70,7 +70,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} is outside the bounds of &apos;{1}&apos; and &apos;{2}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; is outside the bounds of &apos;{1}&apos; and &apos;{2}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageBetweenOrEqualToRule {
             get {
@@ -79,7 +79,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} is outside the bounds of &apos;{1}&apos; and &apos;{2}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; is outside the bounds of &apos;{1}&apos; and &apos;{2}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageBetweenRule {
             get {
@@ -88,7 +88,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must be in the format of an email address..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must be in the format of an email address..
         /// </summary>
         internal static string DefaultValidationMessageEmailAddressRule {
             get {
@@ -97,7 +97,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} was not empty..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; was not empty..
         /// </summary>
         internal static string DefaultValidationMessageEmptyRule {
             get {
@@ -106,7 +106,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must equal &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must equal &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageEqualToRule {
             get {
@@ -115,7 +115,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must be greater than or equal to &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must be greater than or equal to &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageGreaterThanOrEqualToRule {
             get {
@@ -124,7 +124,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must be greater than &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must be greater than &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageGreaterThanRule {
             get {
@@ -133,7 +133,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} is not within the required length of &apos;{1}&apos; and &apos;{2}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; is not within the required length of &apos;{1}&apos; and &apos;{2}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageLengthBetweenRule {
             get {
@@ -142,7 +142,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} requires an exact length of &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; requires an exact length of &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageLengthRule {
             get {
@@ -151,7 +151,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must be less than or equal to &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must be less than or equal to &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageLessThanOrEqualToRule {
             get {
@@ -160,7 +160,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must be less than &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must be less than &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageLessThanRule {
             get {
@@ -169,7 +169,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must match this pattern &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must match this pattern &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageMatchesRule {
             get {
@@ -178,7 +178,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} requires a maximum length of &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; requires a maximum length of &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageMaxLengthRule {
             get {
@@ -187,7 +187,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} requires a minimum length of &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; requires a minimum length of &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageMinLengthRule {
             get {
@@ -196,7 +196,25 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} was empty..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must contain &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageMustContains {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageMustContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must not contain &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageMustNotContains {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageMustNotContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; was empty..
         /// </summary>
         internal static string DefaultValidationMessageNotEmptyRule {
             get {
@@ -205,7 +223,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must not equal &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must not equal &apos;{1}&apos;..
         /// </summary>
         internal static string DefaultValidationMessageNotEqualToRule {
             get {
@@ -214,7 +232,7 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must not be null..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must not be null..
         /// </summary>
         internal static string DefaultValidationMessageNotNullRule {
             get {
@@ -223,11 +241,29 @@ namespace Assimalign.ComponentModel.Validation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following expression: {0} must be null..
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must not start with &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageNotStartWithRule {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageNotStartWithRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must be null..
         /// </summary>
         internal static string DefaultValidationMessageNullRule {
             get {
                 return ResourceManager.GetString("DefaultValidationMessageNullRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following expression: &apos;{0}&apos; must start with &apos;{1}&apos;..
+        /// </summary>
+        internal static string DefaultValidationMessageStartWithRule {
+            get {
+                return ResourceManager.GetString("DefaultValidationMessageStartWithRule", resourceCulture);
             }
         }
     }

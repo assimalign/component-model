@@ -1,7 +1,7 @@
 {
-  "$schema": "./configurable.validation.schema.json",
+  //"$schema": "./configurable.validation.schema.json",
   "$description": "",
-  "$validationMode": "",
+  "$validationMode": "cascade",
   "$validationConditions": [ // Reusable conditions for
     {
       "$condition": {
@@ -15,6 +15,10 @@
             "$or": [
               {
                 "$member": "",
+                "$function": "",
+                "$parameters": {
+
+                },
                 "$operator": "eq",
                 "$value": ""
               }, 

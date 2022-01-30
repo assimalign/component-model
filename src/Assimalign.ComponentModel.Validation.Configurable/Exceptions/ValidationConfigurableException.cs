@@ -12,8 +12,20 @@ namespace Assimalign.ComponentModel.Validation.Configurable;
 public abstract class ValidationConfigurableException : Exception
 {
 
-    public ValidationConfigurableException(string message) : base(message)
+    public ValidationConfigurableException(string message) : base(message) { }
+    public ValidationConfigurableException(string message, string source) : base(message)
+    {
+        this.Source = source;
+    }
+
+    public ValidationConfigurableException(string message, Exception innerException) : base(message, innerException)
     {
 
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public override string Source { get; set; }
+
 }

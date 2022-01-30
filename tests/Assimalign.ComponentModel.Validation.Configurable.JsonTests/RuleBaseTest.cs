@@ -1,8 +1,34 @@
-﻿namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests;
+﻿using System;
+
+namespace Assimalign.ComponentModel.Validation.Configurable.JsonTests;
 
 
-public abstract class RuleBaseTest 
+public abstract class RuleBaseTest
 {
+    public TestObject MyProperty => new TestObject();
+    public partial class TestObject
+    {
+        public uint UIntProp { get; set; } = 5;
+        public ushort UShortProp { get; set; } = 5;
+        public ulong ULongProp { get; set; } = 500000000;
+        public int IntProp { get; set; } = -25;
+        public short ShortProp { get; set; } = -5;
+        public long LongProp { get; set; } = 5000000;
+        public float FloatProp { get; set; } = 0.5f;
+        public double DoubleProp { get; set; } = 5.4;
+        public decimal DecimalProp { get; set; } = 0.50m;
+        public DateTime DateTimeProp { get; set; } = DateTime.Now;
+        public DateTimeOffset DateTimeOffsetProp { get; set; } = DateTimeOffset.Now;
+        public TimeSpan TimeSpanProp { get; set; } = TimeSpan.FromTicks(DateTime.Now.Ticks);
+#if NET6_0_OR_GREATER
+        public DateOnly DateProp { get; set; }
+        public TimeOnly TimeProp { get; set; }
+#endif
+        public string StringProp { get; set; }
+        public Guid GuidProp { get; set; }
+        public bool BooleanProp { get; set; }
+
+    }
     public abstract void Int16SuccessTest();
     public abstract void Int16FailureTest();
     public abstract void Int32SuccessTest();

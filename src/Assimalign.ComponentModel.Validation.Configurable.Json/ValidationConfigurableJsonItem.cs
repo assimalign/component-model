@@ -9,20 +9,19 @@ using System.Text.Json.Serialization;
 
 namespace Assimalign.ComponentModel.Validation.Configurable;
 
-using Assimalign.ComponentModel.Validation.Internal.Extensions;
-using Assimalign.ComponentModel.Validation.Properties;
-using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 
 /// <summary>
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
+public sealed class ValidationConfigurableJsonItem<T> : IValidationItem
+    where T : class
 {
+    private ValidationMode validationMode;
     private Func<T, bool> itemCondition;
     private Func<T, object> itemMember;
     private Expression<Func<T, object>> itemMemberExpression;
-    private ValidationMode validationMode;
+    IValidationRuleStack IValidationItem.ItemRuleStack => new ValidationRuleStack(this.ItemRuleStack);
 
 
     /// <summary>
@@ -42,7 +41,7 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
     /// </summary>
     [JsonPropertyName("$itemRules")]
     public Stack<ValidationConfigurableJsonRule<T>> ItemRuleStack { get; set; }
-    IValidationRuleStack IValidationItem.ItemRuleStack => new ValidationRuleStack(this.ItemRuleStack);
+   
 
 
     /// <summary>
@@ -155,9 +154,6 @@ internal sealed class ValidationConfigurableJsonItem<T> : IValidationItem
             return null;
         }
     }
-
-
-
     internal void Configure(params object[] parameters)
     {
         foreach (var parameter in parameters)
