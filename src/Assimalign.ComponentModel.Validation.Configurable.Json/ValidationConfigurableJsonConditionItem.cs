@@ -23,8 +23,8 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
     /// <summary>
     /// Represents a set of Conditions to run against <typeparamref name="T"/>.
     /// </summary>
-    [JsonPropertyName("$condition")]
-    public ValidationConfigurableJsonCondition<T> Condition { get; set; }
+    [JsonPropertyName("$predicate")]
+    public ValidationConfigurableJsonPredicate<T> Predicate { get; set; }
 
     /// <summary>
     /// The items to be validated if the condition is true.
@@ -37,7 +37,7 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
     /// 
     /// </summary>
     /// <returns></returns>
-    public Expression<Func<T, bool>> GetCondition()
+    internal Expression<Func<T, bool>> GetCondition()
     {
         var parameter = Expression.Parameter(typeof(T));
         var body = GetLambdaExpressionBody(this, parameter);
@@ -54,26 +54,26 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
     /// <returns></returns>
     private Expression GetLambdaExpressionBody(ValidationConfigurableJsonConditionItem<T> conditionItem, Expression parameter)
     {
-        conditionItem.Condition.And ??= new List<ValidationConfigurableJsonConditionItem<T>>();
-        conditionItem.Condition.Or ??= new List<ValidationConfigurableJsonConditionItem<T>>();
+        conditionItem.Predicate.And ??= new List<ValidationConfigurableJsonConditionItem<T>>();
+        conditionItem.Predicate.Or ??= new List<ValidationConfigurableJsonConditionItem<T>>();
 
         // Represent a Parent expression to reference for any child expression
         Expression parent = null;
 
-        if (conditionItem.Condition.And.Any())
+        if (conditionItem.Predicate.And.Any())
         {
-            foreach (var where in conditionItem.Condition.And)
+            foreach (var where in conditionItem.Predicate.And)
             {
                 var isParent = parent != null;
                 // Check if only one filter was passed
-                if (!isParent && !where.Condition.And.Any() && !where.Condition.Or.Any())
+                if (!isParent && !where.Predicate.And.Any() && !where.Predicate.Or.Any())
                 {
                     parent = BuildLambdaExpressionBody(where, parameter);
                 }
                 else if (isParent)
                 {
                     var child = GetLambdaExpressionBody(where, parameter);
-                    if (where.Condition.Or.Any())
+                    if (where.Predicate.Or.Any())
                     {
                         parent = Expression.AndAlso(parent, child);
                     }
@@ -87,20 +87,20 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
             return parent;
         }
 
-        if (conditionItem.Condition.Or.Any())
+        if (conditionItem.Predicate.Or.Any())
         {
-            foreach (var where in conditionItem.Condition.Or)
+            foreach (var where in conditionItem.Predicate.Or)
             {
                 var isParent = parent != null;
                 // Check if only one filter was passed
-                if (!isParent && !where.Condition.And.Any() && !where.Condition.Or.Any())
+                if (!isParent && !where.Predicate.And.Any() && !where.Predicate.Or.Any())
                 {
                     parent = BuildLambdaExpressionBody(where, parameter);
                 }
                 else if (isParent)
                 {
                     var child = GetLambdaExpressionBody(where, parameter);
-                    if (where.Condition.And.Any())
+                    if (where.Predicate.And.Any())
                     {
                         parent = Expression.OrElse(parent, child);
                     }
@@ -131,9 +131,9 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
         if (expression is ParameterExpression parameter)
         {
             // Get the member expression to apply the evaluation to.
-            if (condition.Condition.Member is not null)
+            if (condition.Predicate.Member is not null)
             {
-                var paths = condition.Condition.Member.Split('.');
+                var paths = condition.Predicate.Member.Split('.');
 
                 for (int i = 0; i < paths.Length; i++)
                 {
@@ -155,7 +155,7 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
             //    expression = methodchain;
             //}
             // Check if there is an evaluation to a property of the root of the queryable type
-            if (condition.Condition.Value is string stringValue)
+            if (condition.Predicate.Value is string stringValue)
             {
                 var paths = stringValue.Split('.');
 
@@ -184,7 +184,7 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
         }
 
         // Check if Value is of a $root property to compare to 
-        if (condition.Condition.Value is MemberExpression memberValue)
+        if (condition.Predicate.Value is MemberExpression memberValue)
         {
             Expression constant = memberValue;
 
@@ -201,7 +201,7 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
                 throw new Exception();// expression.Type.Name, member.Member.Name);
             }
 
-            switch (condition.Condition.Operator)
+            switch (condition.Predicate.Operator)
             {
                 case OperatorType.EQ:
                     return Expression.Equal(expression, constant);
@@ -287,22 +287,22 @@ public sealed class ValidationConfigurableJsonConditionItem<T> : IValidationCond
             {
                 var type = member.Type.IsNullableType(out var nullType) ? nullType : member.Type;
 
-                if (condition.Condition.Value.GetType() != type)
+                if (condition.Predicate.Value.GetType() != type)
                 {
-                    condition.Condition.Value = Convert.ChangeType(condition.Condition.Value, type);
+                    condition.Predicate.Value = Convert.ChangeType(condition.Predicate.Value, type);
                 }
             }
             else if (member.Type.IsEnum)
             {
-                condition.Condition.Value = condition.Condition.Value is string value ?
+                condition.Predicate.Value = condition.Predicate.Value is string value ?
                    Enum.Parse(member.Type, value, true) : 
                    throw new Exception();
             }
 
-            var constant = Expression.Constant(condition.Condition.Value, member.Type);
+            var constant = Expression.Constant(condition.Predicate.Value, member.Type);
 
             // Return an operator expression
-            switch (condition.Condition.Operator)
+            switch (condition.Predicate.Operator)
             {
                 case OperatorType.EQ:
                     return Expression.Equal(expression, constant);

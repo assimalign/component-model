@@ -24,7 +24,7 @@ public interface IMapperProfileSourceDescriptor<TTarget>
     /// <typeparam name="TMember"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IMapperProfileSourceDescriptor<TTarget> MapSource<TMember>(Expression<Func<TTarget, TMember>> expression);
+    void MapSource<TMember>(Expression<Func<TTarget, TMember>> expression);
 
     /// <summary>
     /// 
@@ -32,5 +32,5 @@ public interface IMapperProfileSourceDescriptor<TTarget>
     /// <param name="member"></param>
     /// <remarks>If chaining the path to members of child types then use '.' as a separator for each member name.</remarks>
     /// <returns></returns>
-    IMapperProfileSourceDescriptor<TTarget> MapSource(string member);
+    void MapSource(string member);
 }

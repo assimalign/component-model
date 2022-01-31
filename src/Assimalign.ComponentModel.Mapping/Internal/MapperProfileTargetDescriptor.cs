@@ -11,17 +11,12 @@ namespace Assimalign.ComponentModel.Mapping.Internal
     internal sealed class MapperProfileTargetDescriptor<TSource> :
         IMapperProfileTargetDescriptor<TSource>
     {
-        public IMapperProfileTargetDescriptor<TSourceMember> MapTarget<TSourceMember>(System.Linq.Expressions.Expression<Func<TSource, TSourceMember>> expression)
+        public void MapTarget<TSourceMember>(System.Linq.Expressions.Expression<Func<TSource, TSourceMember>> expression)
         {
             throw new NotImplementedException();
         }
 
-        public IMapperProfileTargetDescriptor<TSource> MapTarget(string member)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reverse()
+        public void MapTarget(string member)
         {
             throw new NotImplementedException();
         }

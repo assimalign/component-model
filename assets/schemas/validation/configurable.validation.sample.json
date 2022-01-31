@@ -1,10 +1,10 @@
 {
-  //"$schema": "./configurable.validation.schema.json",
+  "$schema": "./configurable.validation.schema.json",
   "$description": "",
   "$validationMode": "cascade",
   "$validationConditions": [ // Reusable conditions for
     {
-      "$condition": {
+      "$predicate": {
         "$and": [
           {
             "$member": "Gender",
@@ -16,12 +16,10 @@
               {
                 "$member": "",
                 "$function": "",
-                "$parameters": {
-
-                },
+                "$parameters": {},
                 "$operator": "eq",
                 "$value": ""
-              }, 
+              },
               {
                 "$member": "",
                 "$operator": "eq",

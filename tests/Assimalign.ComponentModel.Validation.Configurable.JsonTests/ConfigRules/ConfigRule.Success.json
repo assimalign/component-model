@@ -1,5 +1,7 @@
 {
 	"$schema":  "../../../assets/schemas/validation/configurable.validation.schema.json",
+	"$description": "",
+	"$validationMode": "cascade",
 	"$validationItems": [
 		{
 			"$itemMember": "IntProp",
@@ -10,8 +12,16 @@
 					"$value": -26
 				},
 				{
+					"$rule": "GreaterThanOrEqualTo",
+					"$value": -25
+				},
+				{
 					"$rule": "LessThan",
 					"$value": 0
+				},
+				{
+					"$rule": "LessThanOrEqualTo",
+					"$value": -25
 				},
 				{
 					"$rule": "Between",
@@ -44,6 +54,16 @@
 				{
 					"$rule": "EqualTo",
 					"$value": -5
+				}
+			]
+		},
+		{
+			"$itemMember": "GuidProp",
+			"$itemType": "inline",
+			"$itemRules": [
+				{
+					"$rule": "GreaterThan",
+					"$value": "557bf15a-1d82-ec11-b77c-000d3a19155f"
 				}
 			]
 		}

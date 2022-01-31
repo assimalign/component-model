@@ -11,7 +11,7 @@ namespace Assimalign.ComponentModel.Mapping
     /// <summary>
     /// 
     /// </summary>
-    public class MapperPaths : IDictionary<string, Type>
+    public sealed class MapperPaths : IDictionary<string, Type>
     {
         private int         count;
         private string[]    keys;

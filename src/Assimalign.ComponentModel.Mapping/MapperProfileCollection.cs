@@ -17,7 +17,6 @@ using Assimalign.ComponentModel.Mapping.Abstractions;
 public sealed class MapperProfileCollection : ICollection<IMapperProfile>
 {
     public int Count => throw new NotImplementedException();
-
     public bool IsReadOnly => throw new NotImplementedException();
 
     public void Add(IMapperProfile item)

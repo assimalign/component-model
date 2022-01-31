@@ -93,12 +93,8 @@ namespace Assimalign.ComponentModel.Mapping
         /// <exception cref="NotImplementedException"></exception>
         public object Map(object source, Type sourceType, Type targetType)
         {
-
-
+            var target = Activator.CreateInstance(targetType);
             var profile = this.profiles.FirstOrDefault(x => x.Context.SourceType == sourceType && x.Context.TargetType == targetType);
-
-
-
 
             foreach (var action in profile.Context.)
             {

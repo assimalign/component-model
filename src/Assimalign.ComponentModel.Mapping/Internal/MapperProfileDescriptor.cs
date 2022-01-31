@@ -110,7 +110,6 @@ namespace Assimalign.ComponentModel.Mapping.Internal
                     throw new InvalidCastException(
                         $"Cannot implicitly convert '{sourceMember.Type}' to '{targetMember.Type}'. This is a transformation in must be done in the 'ForTarget()' or 'ForSource()' APIs.");
                 }
-
                 if (targetMember.Member is PropertyInfo targetProperty && sourceMember.Member is PropertyInfo sourceProperty)
                 {
                     // Create the 'TSource' -> 'TTarget' Mapping
@@ -170,6 +169,12 @@ namespace Assimalign.ComponentModel.Mapping.Internal
         {
             var descriptor = new MapperProfileTargetDescriptor<TTarget>();
 
+            Action<TSource, TTarget> forwardMapperAction = (sourceInstance, targetInstance) =>
+            {
+                var sourceValue = sourceFunc.Invoke(sourceInstance);
+
+                targetProperty.SetValue(targetInstance, sourceValue);
+            };
 
 
             return descriptor;
@@ -214,5 +219,12 @@ namespace Assimalign.ComponentModel.Mapping.Internal
         {
             throw new NotImplementedException();
         }
+    }
+
+
+
+    public sealed class MapperReferences<T>
+    {
+
     }
 }

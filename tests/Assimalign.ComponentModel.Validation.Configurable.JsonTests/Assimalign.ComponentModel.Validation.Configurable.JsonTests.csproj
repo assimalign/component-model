@@ -11,11 +11,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="ConfigRules\GreaterThanConfig.Success.json" />
+		<None Remove="ConfigRules\ConfigRule.Failures.json" />
+		<None Remove="ConfigRules\ConfigRule.Success.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="ConfigRules\GreaterThanConfig.Success.json">
+		<Content Include="ConfigRules\ConfigRule.Failures.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="ConfigRules\ConfigRule.Success.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>

@@ -42,7 +42,6 @@ public abstract class MapperProfile<TSource, TTarget> :
     /// </summary>
     public int ProfileId => this.profileId;
 
-
     /// <summary>
     /// 
     /// </summary>
@@ -54,6 +53,9 @@ public abstract class MapperProfile<TSource, TTarget> :
     /// <param name="descriptor"></param>
     void IMapperProfile.Configure(IMapperProfileDescriptor descriptor)
     {
+        var forwardContext = new MapperProfileContext(typeof(TSource), typeof(TTarget));
+        var reverseContext = new MapperProfileContext(typeof(TTarget), typeof(TSource));
+
         if (descriptor is IMapperProfileDescriptor<TSource, TTarget> desc)
         {
             this.Configure(desc);

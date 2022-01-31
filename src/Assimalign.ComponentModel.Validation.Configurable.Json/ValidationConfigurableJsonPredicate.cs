@@ -10,7 +10,7 @@ using Assimalign.ComponentModel.Validation.Configurable.Serialization;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValidationConfigurableJsonCondition<T>
+public sealed class ValidationConfigurableJsonPredicate<T>
     where T : class
 {
     /// <summary>
