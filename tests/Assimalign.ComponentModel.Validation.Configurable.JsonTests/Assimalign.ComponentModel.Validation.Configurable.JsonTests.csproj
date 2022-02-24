@@ -41,6 +41,6 @@
 		<ProjectReference Include="..\..\src\Assimalign.ComponentModel.Validation.Configurable.Json\Assimalign.ComponentModel.Validation.Configurable.Json.csproj" />
 	</ItemGroup>
 
-	<ProjectExtensions><VisualStudio><UserProperties configrules_4greaterthanconfig_1json__JsonSchema="https://json.schemastore.org/omnisharp.json" /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

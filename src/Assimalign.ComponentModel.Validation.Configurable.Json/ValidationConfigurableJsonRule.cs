@@ -22,7 +22,7 @@ using Assimalign.ComponentModel.Validation.Configurable.Internal.Extensions;
 /// <param name="value"></param>
 /// <param name="context"></param>
 /// <returns></returns>
-public delegate bool ValidateCallback(object value, out IValidationContext context);
+internal delegate bool ValidateCallback(object value, out IValidationContext context);
 
 /// <summary>
 /// 

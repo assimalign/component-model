@@ -60,33 +60,4 @@ public static class ValidationConfigurableJsonExtensions
             ReadCommentHandling = JsonCommentHandling.Skip
         };
     }
-
-    private static void WriteObject<T>(ValidationProfile<T> profile)
-    {
-        using (MemoryStream stream = new MemoryStream())
-        {
-            using (Utf8JsonWriter writer = new Utf8JsonWriter(stream))
-            {
-                // Begin writing JSON Validation Schema
-                writer.WriteStartObject();
-
-
-                // Begin Writing Validation Items
-                writer.WritePropertyName("$validationItems");
-                writer.WriteStartArray();
-
-                foreach (var item in profile.ValidationItems)
-                {
-
-
-                }
-
-                writer.WriteEndArray();
-
-                // End writing JSON Validation Schema
-                writer.WriteEndObject();
-            }
-        }
-    }
 }
-
