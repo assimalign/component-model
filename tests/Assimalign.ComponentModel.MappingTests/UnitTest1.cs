@@ -64,6 +64,7 @@ namespace Assimalign.ComponentModel.MappingTests
                         source.Details ??= new EmployeeDetails();
                     });
 
+                
 
                 descriptor
                     .ForTarget(target => target.FirstName)
@@ -74,7 +75,7 @@ namespace Assimalign.ComponentModel.MappingTests
                     .MapTarget(target => target.FirstName.ToUpper());
 
                 descriptor
-                    .ForMember(source => source.Details.FirstName, target => target.FirstName.ToLower()) // this should cause an error
+                    .ForMember(source => int.Parse(source.Details.FirstName), target => int.Parse(target.FirstName)) // this should cause an error
                     .ForMember(source => source.Details.LastName, target => target.LastName);
             }
         }

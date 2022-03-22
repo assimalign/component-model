@@ -11,6 +11,10 @@
 		<PackageTags>Validation</PackageTags>
 		<!--Company Branding Information-->
 		<PackageIcon>.assimalign.logo.png</PackageIcon>
+		<Description>
+			A library base on Design by Contract programming for mapping object-to-object based on specified
+			conditions.
+		</Description>
 	</PropertyGroup>
 
 	<ItemGroup>

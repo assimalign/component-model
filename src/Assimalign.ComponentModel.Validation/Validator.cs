@@ -76,7 +76,7 @@ public partial class Validator : IValidator
 
                 foreach (var item in profile.ValidationItems)
                 {
-                    if (isModeStop && context.Errors.Any())
+                    if (isModeStop && context.Errors.TryGetNonEnumeratedCount(out var count) && count > 0)
                     {
                         break;
                     }

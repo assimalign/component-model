@@ -18,23 +18,23 @@ using Assimalign.ComponentModel.Mapping.Abstractions;
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="TSource"></typeparam>
-/// <typeparam name="TTarget"></typeparam>
-public abstract class MapperProfile<TSource, TTarget> :
-    IMapperProfile<TSource, TTarget>
+/// <typeparam name="TContract"></typeparam>
+/// <typeparam name="TBinding"></typeparam>
+public abstract class MapperProfile<TContract, TBinding> :
+    IMapperProfile<TContract, TBinding>
 {
     private readonly int profileId;
     private readonly IList<IMapperProfile> profiles = new List<IMapperProfile>();
-    private readonly IList<Action<TSource, TTarget>> after = new List<Action<TSource, TTarget>>();
-    private readonly IList<Action<TSource, TTarget>> before = new List<Action<TSource, TTarget>>();
+    private readonly IList<Action<TContract, TBinding>> after = new List<Action<TContract, TBinding>>();
+    private readonly IList<Action<TContract, TBinding>> before = new List<Action<TContract, TBinding>>();
 
     /// <summary>
     /// Temp
     /// </summary>
     public MapperProfile()
     {
-        this.profileId = HashCode.Combine(typeof(TSource), typeof(TTarget));
-        this.Context = MapperProfileContext.New<TSource, TTarget>();
+        this.profileId = HashCode.Combine(typeof(TContract), typeof(TBinding));
+        this.Context = MapperProfileContext.New<TContract, TBinding>();
     }
 
     /// <summary>
@@ -53,16 +53,16 @@ public abstract class MapperProfile<TSource, TTarget> :
     /// <param name="descriptor"></param>
     void IMapperProfile.Configure(IMapperProfileDescriptor descriptor)
     {
-        var forwardContext = new MapperProfileContext(typeof(TSource), typeof(TTarget));
-        var reverseContext = new MapperProfileContext(typeof(TTarget), typeof(TSource));
+        var forwardContext = new MapperProfileContext(typeof(TContract), typeof(TBinding));
+        var reverseContext = new MapperProfileContext(typeof(TBinding), typeof(TContract));
 
-        if (descriptor is IMapperProfileDescriptor<TSource, TTarget> desc)
+        if (descriptor is IMapperProfileDescriptor<TContract, TBinding> desc)
         {
             this.Configure(desc);
         }
         else
         {
-            this.Configure(new MapperProfileDescriptor<TSource, TTarget>(this.Context));
+            this.Configure(new MapperProfileDescriptor<TContract, TBinding>(this.Context));
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class MapperProfile<TSource, TTarget> :
     /// Invokes
     /// </summary>
     /// <param name="descriptor"></param>
-    public abstract void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
+    public abstract void Configure(IMapperProfileDescriptor<TContract, TBinding> descriptor);
 
 
     /// <summary>

@@ -33,14 +33,14 @@ public interface IMapperProfile
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="TSource"></typeparam>
-/// <typeparam name="TTarget"></typeparam>
-public interface IMapperProfile<TSource, TTarget> : IMapperProfile
+/// <typeparam name="TContract"></typeparam>
+/// <typeparam name="TBinding"></typeparam>
+public interface IMapperProfile<TContract, TBinding> : IMapperProfile
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="descriptor"></param>
-    void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
+    void Configure(IMapperProfileDescriptor<TContract, TBinding> descriptor);
 }
 

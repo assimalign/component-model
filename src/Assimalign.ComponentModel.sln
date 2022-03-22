@@ -59,6 +59,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.Configurable.JsonBenchmarks", "..\benchmarks\Assimalign.ComponentModel.Validation.Configurable.JsonBenchmarks\Assimalign.ComponentModel.Validation.Configurable.JsonBenchmarks.csproj", "{0E0779A7-FCE6-44C0-A504-BC94384FED9D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", "{DFE01D99-D4AB-49B0-A560-993BE72A4A8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure", "azure", "{B19B73DC-552F-4611-9CC6-BE741C69E892}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microsoft", "microsoft", "{239B77EF-88D7-4828-9BDA-B40A5B2DEC14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assimalign", "assimalign", "{AABED604-2ED8-413A-8249-EA4077BCEC6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation", "..\.azure\Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation\Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation.csproj", "{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.DependencyInjection.ComponentModel.Validation", "..\.microsoft\Assimalign.DependencyInjection.ComponentModel.Validation\Assimalign.DependencyInjection.ComponentModel.Validation.csproj", "{591C64DC-B3B0-4F8D-97BD-1F61AF933489}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +141,14 @@ Global
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{591C64DC-B3B0-4F8D-97BD-1F61AF933489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591C64DC-B3B0-4F8D-97BD-1F61AF933489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591C64DC-B3B0-4F8D-97BD-1F61AF933489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591C64DC-B3B0-4F8D-97BD-1F61AF933489}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,6 +173,11 @@ Global
 		{5E5D968E-A922-4A5D-91D8-07BD3B09A92E} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 		{2964BEE6-FEB9-477F-BED1-67511860868D} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D} = {E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}
+		{B19B73DC-552F-4611-9CC6-BE741C69E892} = {DFE01D99-D4AB-49B0-A560-993BE72A4A8B}
+		{239B77EF-88D7-4828-9BDA-B40A5B2DEC14} = {DFE01D99-D4AB-49B0-A560-993BE72A4A8B}
+		{AABED604-2ED8-413A-8249-EA4077BCEC6E} = {DFE01D99-D4AB-49B0-A560-993BE72A4A8B}
+		{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11} = {B19B73DC-552F-4611-9CC6-BE741C69E892}
+		{591C64DC-B3B0-4F8D-97BD-1F61AF933489} = {239B77EF-88D7-4828-9BDA-B40A5B2DEC14}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB64B35-D4BC-43E2-B8F1-A3DDAA061175}

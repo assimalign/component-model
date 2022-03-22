@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping.Abstractions;
 
@@ -23,7 +20,8 @@ public interface IMapperProfileDescriptor
 
 
 /// <summary>
-/// 
+/// A <see cref="IMapperProfileDescriptor{TSource, TTarget}"/> describes the mapping (or condition)
+/// that are contracted to the binding type.
 /// </summary>
 /// <typeparam name="TSource"></typeparam>
 /// <typeparam name="TTarget"></typeparam>
@@ -37,7 +35,9 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <param name="source"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target);
+    IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(
+        Expression<Func<TSource, IEnumerable<TSourceMember>>> source,
+        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target);
 
     /// <summary>
     /// Creates a Child Mapper Profile for the specified 'TSource' and 'TTarget' member.
@@ -47,7 +47,9 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <param name="source"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target);
+    IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(
+        Expression<Func<TSource, TSourceMember>> source, 
+        Expression<Func<TTarget, TTargetMember>> target);
 
     /// <summary>
     /// 
@@ -65,7 +67,10 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <param name="source"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> ForMember<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target);
+    IMapperProfileDescriptor<TSource, TTarget> ForMember<TSourceMember, TTargetMember>(
+        Expression<Func<TSource, TSourceMember>> source, 
+        Expression<Func<TTarget, TTargetMember>> target)
+        where TSourceMember : TTargetMember;
 
     /// <summary>
     /// 
@@ -111,11 +116,11 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// 
     /// </summary>
     /// <param name="action"></param>
-    void BeforeMap(Action<TSource, TTarget> action);
+    IMapperProfileDescriptor<TSource, TTarget> BeforeMap(Action<TSource, TTarget> action);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="action"></param>
-    void AfterMap(Action<TSource, TTarget> action);
+    IMapperProfileDescriptor<TSource, TTarget> AfterMap(Action<TSource, TTarget> action);
 }

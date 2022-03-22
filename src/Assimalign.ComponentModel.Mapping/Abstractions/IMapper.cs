@@ -11,31 +11,31 @@ public interface IMapper
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <param name="source"></param>
+    /// <typeparam name="TContract"></typeparam>
+    /// <typeparam name="TBinding"></typeparam>
+    /// <param name="contract"></param>
     /// <returns></returns>
-    TTarget Map<TSource, TTarget>(TSource source)
-        where TTarget : new();
+    TBinding Map<TContract, TBinding>(TContract contract)
+        where TBinding : new();
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
+    /// <typeparam name="TContract"></typeparam>
+    /// <typeparam name="TBinding"></typeparam>
+    /// <param name="contract"></param>
+    /// <param name="binding"></param>
     /// <returns></returns>
-    TTarget Map<TSource, TTarget>(TSource source, TTarget target);
+    TBinding Map<TContract, TBinding>(TContract contract, TBinding binding);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="source"></param>
-    /// <param name="sourceType"></param>
-    /// <param name="targetType"></param>
+    /// <param name="contract"></param>
+    /// <param name="contractType"></param>
+    /// <param name="bindingType"></param>
     /// <returns></returns>
-    object Map(object source, Type sourceType, Type targetType);
+    object Map(object contract, Type contractType, Type bindingType);
 
     /// <summary>
     /// 

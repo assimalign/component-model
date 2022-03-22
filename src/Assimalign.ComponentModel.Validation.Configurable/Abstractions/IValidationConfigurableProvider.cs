@@ -13,10 +13,9 @@ public interface IValidationConfigurableProvider
     /// <returns></returns>
     bool TryGetProfile(Type type, out IValidationProfile profile);
 
-
     /// <summary>
     /// 
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="IValidationProfile"/></returns>
     IValidationProfile GetProfile();
 }

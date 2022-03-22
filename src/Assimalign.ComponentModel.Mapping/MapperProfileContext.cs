@@ -34,6 +34,11 @@ public sealed class MapperProfileContext : IEquatable<MapperProfileContext>
         this.TargetType = targetType;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public IEnumerable<IMapperTargetItem> MapperItems { get; set; }
+
 
     /// <summary>
     /// 

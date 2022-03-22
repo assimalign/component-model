@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<!--<ProjectReference Include="..\Assimalign.ComponentModel.Mapping\Assimalign.ComponentModel.Mapping.csproj" />-->
+		<ProjectReference Include="..\Assimalign.ComponentModel.Mapping\Assimalign.ComponentModel.Mapping.csproj" />
 		<ProjectReference Include="..\Assimalign.ComponentModel.Validation\Assimalign.ComponentModel.Validation.csproj" />
 	</ItemGroup>
 	<ItemGroup>

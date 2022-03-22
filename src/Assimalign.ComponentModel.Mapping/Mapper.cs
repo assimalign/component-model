@@ -40,19 +40,19 @@ namespace Assimalign.ComponentModel.Mapping
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TTarget"></typeparam>
-        /// <param name="source"></param>
+        /// <typeparam name="TContract"></typeparam>
+        /// <typeparam name="TBinding"></typeparam>
+        /// <param name="contract"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public TTarget Map<TSource, TTarget>(TSource source)
-            where TTarget : new()
+        public TBinding Map<TContract, TBinding>(TContract contract)
+            where TBinding : new()
         {
-            var results = this.Map(source, typeof(TSource), typeof(TTarget));
+            var results = this.Map(contract, typeof(TContract), typeof(TBinding));
 
-            if (results is TTarget target)
+            if (results is TBinding binding)
             {
-                return target;
+                return binding;
             }
             else
             {

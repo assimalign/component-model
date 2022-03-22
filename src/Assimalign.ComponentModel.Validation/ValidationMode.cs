@@ -1,6 +1,5 @@
 ﻿namespace Assimalign.ComponentModel.Validation;
 
-
 /// <summary>
 /// Specifies whether the validator should continue or stop on a validation failure.
 /// <see cref="ValidationMode"/> is specific to an item being validate it 
