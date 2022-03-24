@@ -1,4 +1,4 @@
-using Assimalign.ComponentModel.Mapping.Abstractions;
+using Assimalign.ComponentModel.Mapping;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -13,7 +13,6 @@ namespace Assimalign.ComponentModel.MappingTests
             var mapper = Assimalign.ComponentModel.Mapping.Mapper.Create(configure =>
             {
                 configure
-                    .AddProfile(new MapperProfileTest())
                     .AddProfile(new MapperProfileTest());
             });
 
@@ -58,20 +57,23 @@ namespace Assimalign.ComponentModel.MappingTests
         {
             public override void Configure(IMapperProfileDescriptor<Employee1, Employee2> descriptor)
             {
-                descriptor
-                    .BeforeMap((source, target) =>
-                    {
-                        source.Details ??= new EmployeeDetails();
-                    });
+                //descriptor
+                //    .BeforeMap((source, target) =>
+                //    {
+                //        source.Details ??= new EmployeeDetails();
+                //    });
 
 
-
-                descriptor.ForTarget(target => target.FirstName).MapSource(source => source.Details.FirstName.ToLower());
-                descriptor.ForSource(source => source.Details.FirstName).MapTarget(target => target.FirstName.ToUpper());
 
                 descriptor
-                    .MapMembers(source => int.Parse(source.Details.FirstName), target => int.Parse(target.FirstName)) // this should cause an error
-                    .MapMembers(source => source.Details.LastName, target => target.LastName);
+                    //.ForTarget(target => target.FirstName).MapSource(source => source.Details.FirstName.ToLower())
+                    //.ForSource(source => source.Details.FirstName).MapTarget(target => target.FirstName.ToUpper())
+                    .MapMembers(source => source.Details.FirstName, target => target.FirstName); // this should cause an error
+                    //.MapMembers(source => source.Details.LastName, target => target.LastName)
+                    //.AddProfile(source => source.Details.PayrollTransactions, target => target.Transactions, configure =>
+                    //  {
+                    //      configure.MapMembers(source => source.Amount, target => target.Amount);
+                    //  });
             }
         }
 
@@ -84,8 +86,6 @@ namespace Assimalign.ComponentModel.MappingTests
             {
                 configure.AddProfile(new MapperProfileTest());
             });
-
-
 
             var employee = new Employee1()
             {

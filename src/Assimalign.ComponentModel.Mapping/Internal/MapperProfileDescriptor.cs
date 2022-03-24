@@ -9,19 +9,28 @@ namespace Assimalign.ComponentModel.Mapping.Internal;
 
 internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfileDescriptor<TSource, TTarget>
 {
+
+    public MapperProfileDescriptor()
+    {
+
+    }
+
+
     // Passing all added profiles from options as reference to be able to register nested profiles
-    public IList<IMapperProfile> Profiles { get; set; } 
+    public IList<IMapperProfile> Profiles { get; set; }
 
     public IMapperProfile Current { get; set; }
 
     public IMapperProfileDescriptor AddMapperAction(IMapperAction item)
     {
-        throw new NotImplementedException();
+
+        ((IList<IMapperAction>)Current.Actions).Add(item);
+        return this;
     }
 
     public IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
-        Expression<Func<TSource, IEnumerable<TSourceMember>>> source, 
-        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, 
+        Expression<Func<TSource, IEnumerable<TSourceMember>>> source,
+        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target,
         Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
             where TSourceMember : class
             where TTargetMember : class
@@ -47,7 +56,7 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
     }
 
     public IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
-        Expression<Func<TSource, TSourceMember>> source, 
+        Expression<Func<TSource, TSourceMember>> source,
         Expression<Func<TTarget, TTargetMember>> target,
         Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
             where TSourceMember : class
@@ -75,7 +84,7 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
 
     public IMapperProfileDescriptor<TSource, TTarget> AfterMap(Action<TSource, TTarget> action)
     {
-        
+
         throw new NotImplementedException();
     }
 
@@ -91,10 +100,15 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
 
     public IMapperProfileTargetDescriptor<TSource, TTarget> ForSource(string member)
     {
+        var parameter = Expression.Parameter(typeof(TSource));
+        var parameterMember = Expression.PropertyOrField(parameter, member);
+
+        //if (parameterMember)
+
         throw new NotImplementedException();
     }
 
-    public IMapperProfileTargetDescriptor<TSource, TTarget> ForSource<TSourceMember>(System.Linq.Expressions.Expression<Func<TSource, TSourceMember>> expression)
+    public IMapperProfileTargetDescriptor<TSource, TTarget> ForSource<TSourceMember>(Expression<Func<TSource, TSourceMember>> expression)
     {
         throw new NotImplementedException();
     }
@@ -104,18 +118,43 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
         throw new NotImplementedException();
     }
 
-    public IMapperProfileSourceDescriptor<TSource, TTarget> ForTarget<TTargetMember>(System.Linq.Expressions.Expression<Func<TTarget, TTargetMember>> expression)
+    public IMapperProfileSourceDescriptor<TSource, TTarget> ForTarget<TTargetMember>(Expression<Func<TTarget, TTargetMember>> expression)
     {
         throw new NotImplementedException();
     }
 
     public IMapperProfileDescriptor<TSource, TTarget> MapMembers(string source, string target)
     {
-        throw new NotImplementedException();
-    }
+        var sourceParameter = Expression.Parameter(typeof(TSource));
+        var targetParameter = Expression.Parameter(typeof(TTarget));
+        var sourceParameterMember = Expression.PropertyOrField(sourceParameter, source);
+        var targetParameterMember = Expression.PropertyOrField(targetParameter, target);
 
-    public IMapperProfileDescriptor<TSource, TTarget> MapMembers<TSourceMember, TTargetMember>(System.Linq.Expressions.Expression<Func<TSource, TSourceMember>> source, System.Linq.Expressions.Expression<Func<TTarget, TTargetMember>> target) where TSourceMember : TTargetMember
+        var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
+        var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
+
+        var mapperActionType = typeof(MapperAction<,,,>).MakeGenericType(
+            typeof(TSource), 
+            sourceParameterMember.Type, 
+            typeof(TTarget), 
+            targetParameterMember.Type);
+
+        var mapperAction = Activator.CreateInstance(mapperActionType, sourceLambda, targetLambda) as IMapperAction;
+        this.AddMapperAction(mapperAction);
+
+        return this;
+    }
+    public IMapperProfileDescriptor<TSource, TTarget> MapMembers<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target) where TSourceMember : TTargetMember
     {
-        throw new NotImplementedException();
+        var action = new MapperAction<TSource, TSourceMember, TTarget, TTargetMember>(source, target);
+
+        if (Current.Actions.Contains(action))
+        {
+            throw new Exception("There is a duplicate action");
+        }
+
+        this.AddMapperAction(action);
+
+        return this;
     }
 }

@@ -13,8 +13,6 @@ namespace Assimalign.ComponentModel.Mapping;
 
 using Assimalign.ComponentModel.Mapping.Internal;
 
-
-
 /// <summary>
 /// 
 /// </summary>
@@ -23,11 +21,22 @@ using Assimalign.ComponentModel.Mapping.Internal;
 public abstract class MapperProfile<TSource, TTarget> :
     IMapperProfile<TSource, TTarget>
 {
+
+    private readonly IList<IMapperAction> actions;
+
+    public MapperProfile()
+    {
+        this.actions = new List<IMapperAction>();
+    }
+
     /// <inheritdoc cref="IMapperProfile.SourceType"/>
     public Type SourceType => typeof(TSource);
     
     /// <inheritdoc cref="IMapperProfile.TargetType"/>
     public Type TargetType => typeof(TTarget);
+
+    /// <inheritdoc cref="IMapperProfile.Actions"/>
+    public IEnumerable<IMapperAction> Actions => this.actions;
 
     /// <inheritdoc cref="IMapperProfile{TSource, TTarget}.Configure(IMapperProfileDescriptor{TSource, TTarget})"/>
     public abstract void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
@@ -48,7 +57,7 @@ public abstract class MapperProfile<TSource, TTarget> :
     public bool Equals(IMapperProfile profile) => this.SourceType == profile.SourceType && this.TargetType == profile.TargetType;
     public bool Equals(IMapperProfile left, IMapperProfile right) => left.Equals(right);
     public override bool Equals(object obj) => obj is IMapperProfile profile ? Equals(profile) : false;
-    public int GetHashCode([DisallowNull] IMapperProfile profile) => this.GetHashCode();
+    public int GetHashCode([DisallowNull] IMapperProfile profile) => profile.GetHashCode();
     public override int GetHashCode() => HashCode.Combine(this.SourceType, this.TargetType);
 }
 

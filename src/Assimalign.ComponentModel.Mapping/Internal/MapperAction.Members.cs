@@ -8,8 +8,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.ComponentModel.Mapping.Internal;
 
+/* This Mapper Action 
+ */
 internal sealed class MapperAction<TSource, TSourceMember, TTarget, TTargetMember> : IMapperAction
+	where TSourceMember : TTargetMember
 {
+	private readonly string targetItem;
 	private readonly MemberInfo targetMember;
 	private readonly Func<TSource, TSourceMember> sourceMember;
 
@@ -32,7 +36,7 @@ internal sealed class MapperAction<TSource, TSourceMember, TTarget, TTargetMembe
 
 	public Type TargetType => typeof(TTarget);
 
-	public string TargetItem { get; }
+	public MemberInfo TargetMember => targetMember;
 
 
 	public void Invoke(MapperContext context)
@@ -64,7 +68,7 @@ internal sealed class MapperAction<TSource, TSourceMember, TTarget, TTargetMembe
 	public bool Equals(IMapperAction item)
 	{
 		return this.TargetType == item.TargetType &&
-			this.TargetItem == item.TargetItem;
+			this.TargetMember == item.TargetMember;
 	}
 	public override bool Equals(object? obj)
 	{
@@ -77,10 +81,7 @@ internal sealed class MapperAction<TSource, TSourceMember, TTarget, TTargetMembe
 			return false;
 		}
 	}
-	public override int GetHashCode()
-	{
-		return HashCode.Combine(TargetType, TargetItem);
-	}
+	public override int GetHashCode() => HashCode.Combine(TargetType, TargetMember);
 
     public bool Equals(IMapperAction x, IMapperAction y)
     {

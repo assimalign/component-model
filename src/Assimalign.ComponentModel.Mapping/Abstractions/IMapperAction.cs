@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Mapping;
@@ -14,7 +15,7 @@ public interface IMapperAction :
 	/// <summary>
 	/// 
 	/// </summary>
-	string TargetItem { get; }
+	MemberInfo TargetMember { get; }
 	/// <summary>
 	/// 
 	/// </summary>

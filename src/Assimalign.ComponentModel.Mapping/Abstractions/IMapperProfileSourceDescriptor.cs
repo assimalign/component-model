@@ -22,10 +22,10 @@ public interface IMapperProfileSourceDescriptor<TSource, TTarget>
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TMember"></typeparam>
+    /// <typeparam name="TTargetMember"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> MapSource<TMember>(Expression<Func<TTarget, TMember>> expression);
+    IMapperProfileDescriptor<TSource, TTarget> MapSource<TTargetMember>(Expression<Func<TSource, TTargetMember>> expression);
 
     /// <summary>
     /// 

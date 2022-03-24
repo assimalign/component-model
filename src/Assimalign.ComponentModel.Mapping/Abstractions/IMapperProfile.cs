@@ -19,6 +19,10 @@ public interface IMapperProfile :
     /// </summary>
     Type TargetType { get; }
     /// <summary>
+    /// 
+    /// </summary>
+    IEnumerable<IMapperAction> Actions { get; }
+    /// <summary>
     /// Invokes the Profile descriptor which creates the mapper profile
     /// </summary>
     /// <param name="descriptor"></param>

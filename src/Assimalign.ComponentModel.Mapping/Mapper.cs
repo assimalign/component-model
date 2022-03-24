@@ -5,137 +5,137 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping
+namespace Assimalign.ComponentModel.Mapping;
+
+using Assimalign.ComponentModel.Mapping.Internal;
+
+
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class Mapper : IMapper
 {
-    using Assimalign.ComponentModel.Mapping.Internal;
-    using Assimalign.ComponentModel.Mapping.Abstractions;
-    
+    private readonly MapperOptions options;
+    //private readonly IList<IMapperProfile> profiles;
+    //private readonly static ConcurrentDictionary<Type, MapperPaths> flattenedTypes;
+
 
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Mapper : IMapper
+    /// <param name="options"></param>
+    public Mapper(MapperOptions options)
     {
-        private readonly MapperOptions options;
-        private readonly IList<IMapperProfile> profiles;
-        private readonly static ConcurrentDictionary<Type, MapperPaths> flattenedTypes;
+        this.options = options;
+        // this.profiles = options.Profiles.ToList();
+    }
 
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="options"></param>
-        public Mapper(MapperOptions options)
+    /* Flow
+     * 1. Iterate through source properties
+     */
+
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TContract"></typeparam>
+    /// <typeparam name="TBinding"></typeparam>
+    /// <param name="contract"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public TBinding Map<TContract, TBinding>(TContract contract)
+        where TBinding : new()
+    {
+        var results = this.Map(contract, typeof(TContract), typeof(TBinding));
+
+        if (results is TBinding binding)
         {
-            this.options = options;
-            this.profiles = options.Profiles.ToList();
+            return binding;
         }
-
-        /* Flow
-         * 1. Iterate through source properties
-         */
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TContract"></typeparam>
-        /// <typeparam name="TBinding"></typeparam>
-        /// <param name="contract"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public TBinding Map<TContract, TBinding>(TContract contract)
-            where TBinding : new()
+        else
         {
-            var results = this.Map(contract, typeof(TContract), typeof(TBinding));
-
-            if (results is TBinding binding)
-            {
-                return binding;
-            }
-            else
-            {
-                throw new Exception("");
-            }
+            throw new Exception("");
         }
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TTarget"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
+    {
+        var results = this.Map(source, target, typeof(TSource), typeof(TTarget));
+
+        if (results is TTarget target1)
         {
-            var mapperResults = this.Map(source, target, typeof(TSource), typeof(TTarget));
-
-            if (mapperResults is TTarget target1)
-            {
-                return target1;
-            }
-            else
-            {
-                throw new Exception("");
-            }
+            return target1;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="sourceType"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object Map(object source, Type sourceType, Type targetType)
+        else
         {
-            var target = Activator.CreateInstance(targetType);
-            var profile = this.profiles.FirstOrDefault(x => x.Context.SourceType == sourceType && x.Context.TargetType == targetType);
+            throw new Exception("");
+        }
+    }
 
-            foreach (var action in profile.Context.)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="sourceType"></param>
+    /// <param name="targetType"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object Map(object source, Type sourceType, Type targetType)
+    {
+        var target = Activator.CreateInstance(targetType);
+        return this.Map(source, target, sourceType, targetType);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <param name="sourceType"></param>
+    /// <param name="targetType"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public object Map(object source, object target, Type sourceType, Type targetType)
+    {
+        var context = new MapperContext(source, target);
+
+        foreach (var profile in options.Profiles)
+        {
+            if (profile.SourceType == sourceType && profile.TargetType == targetType)
             {
-                
-                if (action is Action<TSource, TTarget> mapperAction)
+                foreach (var action in profile.Actions)
                 {
-                    mapperAction.Invoke(source, target);
+                    action.Invoke(context);
                 }
             }
-
-
-            return target;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        /// <param name="sourceType"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public object Map(object source, object target, Type sourceType, Type targetType)
-        {
-            throw new NotImplementedException();
-        }
+        return target;
+    }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public static IMapper Create(Action<MapperOptions> configure)
-        {
-            var options = new MapperOptions();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public static IMapper Create(Action<MapperOptions> configure)
+    {
+        var options = new MapperOptions();
 
-            configure.Invoke(options);
+        configure.Invoke(options);
 
-            return new Mapper(options);
-        }
+        return new Mapper(options);
     }
 }

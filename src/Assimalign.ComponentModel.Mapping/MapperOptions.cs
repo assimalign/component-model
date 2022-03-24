@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace Assimalign.ComponentModel.Mapping;
 
 using Assimalign.ComponentModel.Mapping.Internal;
-using Assimalign.ComponentModel.Mapping.Abstractions;
 
 /// <summary>
 /// 
@@ -40,6 +39,8 @@ public sealed partial class MapperOptions
         {
             throw new Exception("");
         }
+
+        profiles.Add(profile);
 
         var descriptor = new MapperProfileDescriptor<TSource, TTarget>()
         {
