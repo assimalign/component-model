@@ -34,64 +34,19 @@ public sealed partial class MapperOptions
 
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <param name="profile"></param>
-    /// <returns></returns>
-    public MapperOptions AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
-    {   
-        profile.Configure(new MapperProfileDescriptor<TSource, TTarget>(profile.Context));
-
-        //if (this.ContainsKey(hashcode))
-        //{
-        //    throw new Exception("Profile already exists");
-        //}
-
-        AddProfile(profile as IMapperProfile);
-        return this;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    public MapperOptions AddProfile<TSource, TTarget>(Func<IMapperProfile<TSource, TTarget>> configure)
+    public void AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
     {
-        var profile = configure.Invoke();
-        var context = new MapperProfileContext();
-        var descriptor = new MapperProfileDescriptor<TSource, TTarget>(context);
-
-        if (this.profiles.Contains(profile))
+        if (profiles.Contains(profile))
         {
-            throw new Exception("Profile already exists");
+            throw new Exception("");
         }
+
+        var descriptor = new MapperProfileDescriptor<TSource, TTarget>()
+        {
+            Profiles = profiles,
+            Current = profile
+        };
 
         profile.Configure(descriptor);
-        AddProfile(profile);
-        return this;
-    }
-
-
-    private void AddProfile(IMapperProfile profile)
-    {
-        this.profiles.Add(profile);
-
-        foreach (var child in profile.Context.Profiles)
-        {
-            if (child.Context.Profiles is not null && child.Context.Profiles.Any())
-            {
-                AddProfile(child);
-            }
-            else
-            {
-                this.profiles.Add(child);
-            }
-        }
     }
 }

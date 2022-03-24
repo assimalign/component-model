@@ -12,116 +12,75 @@ namespace Assimalign.ComponentModel.Mapping;
 
 
 using Assimalign.ComponentModel.Mapping.Internal;
-using Assimalign.ComponentModel.Mapping.Abstractions;
+
 
 
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="TContract"></typeparam>
-/// <typeparam name="TBinding"></typeparam>
-public abstract class MapperProfile<TContract, TBinding> :
-    IMapperProfile<TContract, TBinding>
+/// <typeparam name="TSource"></typeparam>
+/// <typeparam name="TTarget"></typeparam>
+public abstract class MapperProfile<TSource, TTarget> :
+    IMapperProfile<TSource, TTarget>
 {
-    private readonly int profileId;
-    private readonly IList<IMapperProfile> profiles = new List<IMapperProfile>();
-    private readonly IList<Action<TContract, TBinding>> after = new List<Action<TContract, TBinding>>();
-    private readonly IList<Action<TContract, TBinding>> before = new List<Action<TContract, TBinding>>();
+    /// <inheritdoc cref="IMapperProfile.SourceType"/>
+    public Type SourceType => typeof(TSource);
+    
+    /// <inheritdoc cref="IMapperProfile.TargetType"/>
+    public Type TargetType => typeof(TTarget);
 
-    /// <summary>
-    /// Temp
-    /// </summary>
-    public MapperProfile()
+    /// <inheritdoc cref="IMapperProfile{TSource, TTarget}.Configure(IMapperProfileDescriptor{TSource, TTarget})"/>
+    public abstract void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
+
+    /// <inheritdoc cref="IMapperProfile.Configure(IMapperProfileDescriptor)"/>
+    public void Configure(IMapperProfileDescriptor descriptor)
     {
-        this.profileId = HashCode.Combine(typeof(TContract), typeof(TBinding));
-        this.Context = MapperProfileContext.New<TContract, TBinding>();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public int ProfileId => this.profileId;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public MapperProfileContext Context { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="descriptor"></param>
-    void IMapperProfile.Configure(IMapperProfileDescriptor descriptor)
-    {
-        var forwardContext = new MapperProfileContext(typeof(TContract), typeof(TBinding));
-        var reverseContext = new MapperProfileContext(typeof(TBinding), typeof(TContract));
-
-        if (descriptor is IMapperProfileDescriptor<TContract, TBinding> desc)
+        if (descriptor is IMapperProfileDescriptor<TSource, TTarget> desc)
         {
             this.Configure(desc);
         }
         else
         {
-            this.Configure(new MapperProfileDescriptor<TContract, TBinding>(this.Context));
+            throw new ArithmeticException("");
         }
     }
 
-    /// <summary>
-    /// Invokes
-    /// </summary>
-    /// <param name="descriptor"></param>
-    public abstract void Configure(IMapperProfileDescriptor<TContract, TBinding> descriptor);
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    public static IMapperProfile<TSource, TTarget> Create<TSource, TTarget>(Action<IMapperProfile<TSource, TTarget>> configure)
-    {
-        var profile = new MapperProfileDefault<TSource, TTarget>();
-
-        configure.Invoke(profile);
-
-        return profile;
-    }
-
-
-    private IDictionary<string, Type> GetPaths(Type type)
-    {
-        var paths = new Dictionary<string, Type>();
-
-        foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
-        {
-            if (property.PropertyType.IsValueType())
-            {
-                paths.Add(property.Name, property.PropertyType);
-            }
-            else if (property.PropertyType.IsComplexType())
-            {
-                foreach (var child in GetPaths(property.PropertyType))
-                {
-                    paths.Add($"{property.Name}.{child.Key}", child.Value);
-                }
-            }
-            else if (property.PropertyType.IsEnumerableType(out var implementationType))
-            {
-
-                if (implementationType.IsComplexType())
-                {
-                    foreach (var child in GetPaths(implementationType))
-                    {
-                        paths.Add($"{property.Name}.[{child.Key}]", child.Value);
-                    }
-                }
-            }
-        }
-
-        return paths;
-    }
-
+    public bool Equals(IMapperProfile profile) => this.SourceType == profile.SourceType && this.TargetType == profile.TargetType;
+    public bool Equals(IMapperProfile left, IMapperProfile right) => left.Equals(right);
+    public override bool Equals(object obj) => obj is IMapperProfile profile ? Equals(profile) : false;
+    public int GetHashCode([DisallowNull] IMapperProfile profile) => this.GetHashCode();
+    public override int GetHashCode() => HashCode.Combine(this.SourceType, this.TargetType);
 }
 
+//private IDictionary<string, Type> GetPaths(Type type)
+//{
+//    var paths = new Dictionary<string, Type>();
+
+//    foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+//    {
+//        if (property.PropertyType.IsValueType())
+//        {
+//            paths.Add(property.Name, property.PropertyType);
+//        }
+//        else if (property.PropertyType.IsComplexType())
+//        {
+//            foreach (var child in GetPaths(property.PropertyType))
+//            {
+//                paths.Add($"{property.Name}.{child.Key}", child.Value);
+//            }
+//        }
+//        else if (property.PropertyType.IsEnumerableType(out var implementationType))
+//        {
+
+//            if (implementationType.IsComplexType())
+//            {
+//                foreach (var child in GetPaths(implementationType))
+//                {
+//                    paths.Add($"{property.Name}.[{child.Key}]", child.Value);
+//                }
+//            }
+//        }
+//    }
+
+//    return paths;
+//}

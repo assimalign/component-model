@@ -5,18 +5,19 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping.Abstractions;
+namespace Assimalign.ComponentModel.Mapping;
 
 /// <summary>
 /// 
 /// </summary>
+/// <typeparam name="TSource"></typeparam>
 /// <typeparam name="TTarget"></typeparam>
-public interface IMapperProfileSourceDescriptor<TTarget>
+public interface IMapperProfileSourceDescriptor<TSource, TTarget>
 {
     /// <summary>
     /// 
     /// </summary>
-    void Ingore();
+    IMapperProfileDescriptor<TSource, TTarget> Ingore();
 
     /// <summary>
     /// 
@@ -24,7 +25,7 @@ public interface IMapperProfileSourceDescriptor<TTarget>
     /// <typeparam name="TMember"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    void MapSource<TMember>(Expression<Func<TTarget, TMember>> expression);
+    IMapperProfileDescriptor<TSource, TTarget> MapSource<TMember>(Expression<Func<TTarget, TMember>> expression);
 
     /// <summary>
     /// 
@@ -32,5 +33,5 @@ public interface IMapperProfileSourceDescriptor<TTarget>
     /// <param name="member"></param>
     /// <remarks>If chaining the path to members of child types then use '.' as a separator for each member name.</remarks>
     /// <returns></returns>
-    void MapSource(string member);
+    IMapperProfileDescriptor<TSource, TTarget> MapSource(string member);
 }

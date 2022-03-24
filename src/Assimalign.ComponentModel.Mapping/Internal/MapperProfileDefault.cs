@@ -1,19 +1,19 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace Assimalign.ComponentModel.Mapping;
+namespace Assimalign.ComponentModel.Mapping.Internal;
 
-using Assimalign.ComponentModel.Mapping.Abstractions;
-
-internal sealed class MapperProfileDefault<TContract, TBinding> : MapperProfile<TContract, TBinding>
+internal sealed class MapperProfileDefault<TSource, TTarget> : MapperProfile<TSource, TTarget>
 {
+    private readonly Action<IMapperProfileDescriptor<TSource, TTarget>> configure;
 
-    public override void Configure(IMapperProfileDescriptor<TContract, TBinding> descriptor)
+    public MapperProfileDefault(Action<IMapperProfileDescriptor<TSource, TTarget>> configure)
     {
-        throw new NotImplementedException();
+        this.configure = configure;
+    }
+
+
+    public override void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor)
+    {
+        configure.Invoke(descriptor);
     }
 }

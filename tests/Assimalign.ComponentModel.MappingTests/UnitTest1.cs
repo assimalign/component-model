@@ -64,19 +64,14 @@ namespace Assimalign.ComponentModel.MappingTests
                         source.Details ??= new EmployeeDetails();
                     });
 
-                
+
+
+                descriptor.ForTarget(target => target.FirstName).MapSource(source => source.Details.FirstName.ToLower());
+                descriptor.ForSource(source => source.Details.FirstName).MapTarget(target => target.FirstName.ToUpper());
 
                 descriptor
-                    .ForTarget(target => target.FirstName)
-                    .MapSource(source => source.Details.FirstName.ToLower());
-
-                descriptor
-                    .ForSource(source => source.Details.FirstName)
-                    .MapTarget(target => target.FirstName.ToUpper());
-
-                descriptor
-                    .ForMember(source => int.Parse(source.Details.FirstName), target => int.Parse(target.FirstName)) // this should cause an error
-                    .ForMember(source => source.Details.LastName, target => target.LastName);
+                    .MapMembers(source => int.Parse(source.Details.FirstName), target => int.Parse(target.FirstName)) // this should cause an error
+                    .MapMembers(source => source.Details.LastName, target => target.LastName);
             }
         }
 

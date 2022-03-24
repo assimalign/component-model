@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
-namespace Assimalign.ComponentModel.Mapping.Abstractions;
+namespace Assimalign.ComponentModel.Mapping;
 
 /// <summary>
 /// 
@@ -12,12 +12,10 @@ public interface IMapperProfileDescriptor
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="item"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> Create<TSource, TTarget>();
+    IMapperProfileDescriptor AddMapperAction(IMapperAction item);
 }
-
 
 /// <summary>
 /// A <see cref="IMapperProfileDescriptor{TSource, TTarget}"/> describes the mapping (or condition)
@@ -28,36 +26,20 @@ public interface IMapperProfileDescriptor
 public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDescriptor
 {
     /// <summary>
-    /// Creates a Child Mapper Profile for the specified 'TSource' and 'TTarget' member that is of type IEnumerable.
+    /// 
     /// </summary>
     /// <typeparam name="TSourceMember"></typeparam>
     /// <typeparam name="TTargetMember"></typeparam>
     /// <param name="source"></param>
     /// <param name="target"></param>
+    /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(
+    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
         Expression<Func<TSource, IEnumerable<TSourceMember>>> source,
-        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target);
-
-    /// <summary>
-    /// Creates a Child Mapper Profile for the specified 'TSource' and 'TTarget' member.
-    /// </summary>
-    /// <typeparam name="TSourceMember"></typeparam>
-    /// <typeparam name="TTargetMember"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(
-        Expression<Func<TSource, TSourceMember>> source, 
-        Expression<Func<TTarget, TTargetMember>> target);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> ForMember(string source, string target);
+        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target,
+        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+            where TSourceMember : class
+            where TTargetMember : class;
 
     /// <summary>
     /// 
@@ -66,8 +48,32 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <typeparam name="TTargetMember"></typeparam>
     /// <param name="source"></param>
     /// <param name="target"></param>
+    /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> ForMember<TSourceMember, TTargetMember>(
+    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
+        Expression<Func<TSource, TSourceMember>> source,
+        Expression<Func<TTarget, TTargetMember>> target,
+        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+            where TSourceMember : class
+            where TTargetMember : class;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    IMapperProfileDescriptor<TSource, TTarget> MapMembers(string source, string target);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TSourceMember"></typeparam>
+    /// <typeparam name="TTargetMember"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    IMapperProfileDescriptor<TSource, TTarget> MapMembers<TSourceMember, TTargetMember>(
         Expression<Func<TSource, TSourceMember>> source, 
         Expression<Func<TTarget, TTargetMember>> target)
         where TSourceMember : TTargetMember;
@@ -81,7 +87,7 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// In some cases the target and source properties might differ in type, format, or require some 
     /// form of transformation. This method allows for mapping a specific 
     /// </remarks>
-    IMapperProfileTargetDescriptor<TTarget> ForSource(string member);
+    IMapperProfileTargetDescriptor<TSource, TTarget> ForSource(string member);
 
     /// <summary>
     /// 
@@ -89,14 +95,14 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <typeparam name="TSourceMember"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IMapperProfileTargetDescriptor<TTarget> ForSource<TSourceMember>(Expression<Func<TSource, TSourceMember>> expression);
+    IMapperProfileTargetDescriptor<TSource, TTarget> ForSource<TSourceMember>(Expression<Func<TSource, TSourceMember>> expression);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="member"></param>
     /// <returns></returns>
-    IMapperProfileSourceDescriptor<TSource> ForTarget(string member);
+    IMapperProfileSourceDescriptor<TSource, TTarget> ForTarget(string member);
 
     /// <summary>
     /// 
@@ -104,7 +110,7 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <typeparam name="TTargetMember"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IMapperProfileSourceDescriptor<TSource> ForTarget<TTargetMember>(Expression<Func<TTarget, TTargetMember>> expression);
+    IMapperProfileSourceDescriptor<TSource, TTarget> ForTarget<TTargetMember>(Expression<Func<TTarget, TTargetMember>> expression);
 
     /// <summary>
     /// This will disable default mapping of the 'Target' and 'Source' on compiling the profile.

@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping.Abstractions;
+namespace Assimalign.ComponentModel.Mapping;
 
 /// <summary>
 /// 
 /// </summary>
-public interface IMapperProfile
+public interface IMapperProfile : 
+    IEquatable<IMapperProfile>,
+    IEqualityComparer<IMapperProfile>
 {
     /// <summary>
     /// 
     /// </summary>
-    int ProfileId { get; }
-
+    Type SourceType { get; }
     /// <summary>
     /// 
     /// </summary>
-    MapperProfileContext Context { get; }
-
+    Type TargetType { get; }
     /// <summary>
     /// Invokes the Profile descriptor which creates the mapper profile
     /// </summary>
@@ -29,18 +25,16 @@ public interface IMapperProfile
     void Configure(IMapperProfileDescriptor descriptor);
 }
 
-
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="TContract"></typeparam>
-/// <typeparam name="TBinding"></typeparam>
-public interface IMapperProfile<TContract, TBinding> : IMapperProfile
+/// <typeparam name="TSource"></typeparam>
+/// <typeparam name="TTarget"></typeparam>
+public interface IMapperProfile<TSource, TTarget> : IMapperProfile
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="descriptor"></param>
-    void Configure(IMapperProfileDescriptor<TContract, TBinding> descriptor);
+    void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
 }
-

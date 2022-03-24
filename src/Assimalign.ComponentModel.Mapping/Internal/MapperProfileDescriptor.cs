@@ -1,230 +1,121 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping.Internal
+namespace Assimalign.ComponentModel.Mapping.Internal;
+
+internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfileDescriptor<TSource, TTarget>
 {
-    using Assimalign.ComponentModel.Mapping.Abstractions;
+    // Passing all added profiles from options as reference to be able to register nested profiles
+    public IList<IMapperProfile> Profiles { get; set; } 
 
+    public IMapperProfile Current { get; set; }
 
-    internal sealed class MapperProfileDescriptor : IMapperProfileDescriptor
+    public IMapperProfileDescriptor AddMapperAction(IMapperAction item)
     {
-        public MapperProfileDescriptor(MapperProfileContext context)
-        {
-            this.Context = context;
-        }
-
-        public MapperProfileContext Context { get; }
-
-        public IMapperProfileDescriptor<TSource, TTarget> Create<TSource, TTarget>()
-        {
-            return new MapperProfileDescriptor<TSource, TTarget>(Context);
-        }
+        throw new NotImplementedException();
     }
 
-    internal sealed class MapperProfileDescriptor<TSource, TTarget> : 
-        IMapperProfileDescriptor<TSource, TTarget>
+    public IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
+        Expression<Func<TSource, IEnumerable<TSourceMember>>> source, 
+        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, 
+        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+            where TSourceMember : class
+            where TTargetMember : class
     {
-        private readonly Type sourceType = typeof(TSource);
-        private readonly Type targetType = typeof(TTarget);
+        var profile = new MapperProfileDefault<TSourceMember, TTargetMember>(configure);
 
-        public MapperProfileDescriptor(MapperProfileContext context)
+        if (this.Profiles.Contains(profile))
         {
-            this.Context = context;
+            throw new Exception("");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public MapperProfileContext Context { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="action"></param>
-        public void AfterMap(Action<TSource, TTarget> action)
+        var descriptor = new MapperProfileDescriptor<TSourceMember, TTargetMember>()
         {
-            
-        }
+            Profiles = this.Profiles,
+            Current = profile
+        };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="action"></param>
-        public void BeforeMap(Action<TSource, TTarget> action)
-        {
-            
-        }
+        profile.Configure(descriptor);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DisableDefaultMapping()
-        {
-            
-        }
+        this.Profiles.Add(profile);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public IMapperProfileDescriptor<TSource, TTarget> ForMember(string source, string target)
-        {
-            var sourceMember = sourceType.GetMember(source, BindingFlags.IgnoreCase);
-
-
-
-            throw new NotImplementedException();
-        }
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TSourceMember"></typeparam>
-        /// <typeparam name="TTargetMember"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public IMapperProfileDescriptor<TSource, TTarget> ForMember<TSourceMember, TTargetMember>(
-            Expression<Func<TSource, TSourceMember>> source, 
-            Expression<Func<TTarget, TTargetMember>> target)
-        {
-            if (source.Body is MemberExpression sourceMember && target.Body is MemberExpression targetMember)
-            {
-                var sourceFunc = source.Compile();
-                var targetFunc = target.Compile();
-
-                // Check if mapped types match
-                if (targetMember.Type != sourceMember.Type)
-                {
-                    throw new InvalidCastException(
-                        $"Cannot implicitly convert '{sourceMember.Type}' to '{targetMember.Type}'. This is a transformation in must be done in the 'ForTarget()' or 'ForSource()' APIs.");
-                }
-                if (targetMember.Member is PropertyInfo targetProperty && sourceMember.Member is PropertyInfo sourceProperty)
-                {
-                    // Create the 'TSource' -> 'TTarget' Mapping
-                    Action<TSource, TTarget> forwardMapperAction = (sourceInstance, targetInstance) =>
-                    {
-                        var sourceValue = sourceFunc.Invoke(sourceInstance);
-
-                        targetProperty.SetValue(targetInstance, sourceValue);
-                    };
-
-                    // Create the reverse 'TSource' <- 'TTarget' Mapping
-                    Action<TTarget, TSource> reverseMapperAction = (targetInstance, sourceInstance) =>
-                    {
-                        var targetValue = targetFunc.Invoke(targetInstance);
-
-                        sourceProperty.SetValue(sourceInstance, targetValue);
-                    };
-                }
-                else
-                {
-                    // TODO: Throw Internal Exception
-                }
-
-                // this.Context.MapperActions.Add(mapperAction);
-
-                // .. TODO: Need to implement Mapper Profile Paths for Class to add delegates to
-            }
-            else
-            {
-                throw new ArgumentException("'ForMember' only excepts Lambda Expression that return a Member Expression");
-            }
-
-            return this;
-        }
-
-
-
-
-
-
-
-        IMapperProfileDescriptor<TSource, TTarget> IMapperProfileDescriptor.Create<TSource, TTarget>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMapperProfileTargetDescriptor<TTarget> ForSource(string member)
-        {
-            var descriptor = new MapperProfileTargetDescriptor<TTarget>();
-
-
-
-            return descriptor;
-        }
-
-        public IMapperProfileTargetDescriptor<TTarget> ForSource<TSourceMember>(Expression<Func<TSource, TSourceMember>> expression)
-        {
-            var descriptor = new MapperProfileTargetDescriptor<TTarget>();
-
-            Action<TSource, TTarget> forwardMapperAction = (sourceInstance, targetInstance) =>
-            {
-                var sourceValue = sourceFunc.Invoke(sourceInstance);
-
-                targetProperty.SetValue(targetInstance, sourceValue);
-            };
-
-
-            return descriptor;
-        }
-
-        public IMapperProfileSourceDescriptor<TSource> ForTarget(string member)
-        {
-            var descriptor = new MapperProfileSourceDescriptor<TSource>();
-
-
-
-            return descriptor;
-        }
-
-        public IMapperProfileSourceDescriptor<TSource> ForTarget<TTargetMember>(Expression<Func<TTarget, TTargetMember>> expression)
-        {
-            var descriptor = new MapperProfileSourceDescriptor<TSource>();
-
-
-
-            return descriptor;
-        }
-
-        public void ReverseMap()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target)
-        {
-
-            var profile = new MapperProfileDefault<TSourceMember, TTargetMember>();
-
-            this.Context.AddSubProfile(profile);
-
-            var descriptor = new MapperProfileDescriptor<TSourceMember, TTargetMember>(profile.Context);
-
-            return descriptor;
-        }
-
-        public IMapperProfileDescriptor<TSourceMember, TTargetMember> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target)
-        {
-            throw new NotImplementedException();
-        }
+        return this;
     }
 
-
-
-    public sealed class MapperReferences<T>
+    public IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
+        Expression<Func<TSource, TSourceMember>> source, 
+        Expression<Func<TTarget, TTargetMember>> target,
+        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+            where TSourceMember : class
+            where TTargetMember : class
     {
+        var profile = new MapperProfileDefault<TSourceMember, TTargetMember>(configure);
 
+        if (this.Profiles.Contains(profile))
+        {
+            throw new Exception("");
+        }
+
+        var descriptor = new MapperProfileDescriptor<TSourceMember, TTargetMember>()
+        {
+            Profiles = this.Profiles,
+            Current = profile
+        };
+
+        profile.Configure(descriptor);
+
+        this.Profiles.Add(profile);
+
+        return this;
+    }
+
+    public IMapperProfileDescriptor<TSource, TTarget> AfterMap(Action<TSource, TTarget> action)
+    {
+        
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileDescriptor<TSource, TTarget> BeforeMap(Action<TSource, TTarget> action)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DisableDefaultMapping()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileTargetDescriptor<TSource, TTarget> ForSource(string member)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileTargetDescriptor<TSource, TTarget> ForSource<TSourceMember>(System.Linq.Expressions.Expression<Func<TSource, TSourceMember>> expression)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileSourceDescriptor<TSource, TTarget> ForTarget(string member)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileSourceDescriptor<TSource, TTarget> ForTarget<TTargetMember>(System.Linq.Expressions.Expression<Func<TTarget, TTargetMember>> expression)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileDescriptor<TSource, TTarget> MapMembers(string source, string target)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMapperProfileDescriptor<TSource, TTarget> MapMembers<TSourceMember, TTargetMember>(System.Linq.Expressions.Expression<Func<TSource, TSourceMember>> source, System.Linq.Expressions.Expression<Func<TTarget, TTargetMember>> target) where TSourceMember : TTargetMember
+    {
+        throw new NotImplementedException();
     }
 }
