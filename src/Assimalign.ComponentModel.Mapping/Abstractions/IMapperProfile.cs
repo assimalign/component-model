@@ -6,12 +6,10 @@ namespace Assimalign.ComponentModel.Mapping;
 /// <summary>
 /// 
 /// </summary>
-public interface IMapperProfile : 
-    IEquatable<IMapperProfile>,
-    IEqualityComparer<IMapperProfile>
+public interface IMapperProfile
 {
     /// <summary>
-    /// 
+    /// Represents the Source Type to be used to copy values to the target type.
     /// </summary>
     Type SourceType { get; }
     /// <summary>
@@ -19,9 +17,9 @@ public interface IMapperProfile :
     /// </summary>
     Type TargetType { get; }
     /// <summary>
-    /// 
+    /// A collection of actions to be invoked on mapping.
     /// </summary>
-    IEnumerable<IMapperAction> Actions { get; }
+    IEnumerable<IMapperAction> MapActions { get; }
     /// <summary>
     /// Invokes the Profile descriptor which creates the mapper profile
     /// </summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
@@ -18,25 +19,44 @@ using Assimalign.ComponentModel.Mapping.Internal;
 /// </summary>
 /// <typeparam name="TSource"></typeparam>
 /// <typeparam name="TTarget"></typeparam>
-public abstract class MapperProfile<TSource, TTarget> :
-    IMapperProfile<TSource, TTarget>
+public abstract class MapperProfile<TSource, TTarget> : IMapperProfile<TSource, TTarget>
 {
-
+    private readonly IList<IMapperAction> before;
     private readonly IList<IMapperAction> actions;
+    private readonly IList<IMapperAction> after;
 
-    public MapperProfile()
+    public MapperProfile() 
     {
+        this.before = new List<IMapperAction>();
         this.actions = new List<IMapperAction>();
+        this.after = new List<IMapperAction>();
     }
 
-    /// <inheritdoc cref="IMapperProfile.SourceType"/>
+    /// <inheritdoc cref="IMapperProfile.SourceType" />
     public Type SourceType => typeof(TSource);
     
     /// <inheritdoc cref="IMapperProfile.TargetType"/>
     public Type TargetType => typeof(TTarget);
 
-    /// <inheritdoc cref="IMapperProfile.Actions"/>
-    public IEnumerable<IMapperAction> Actions => this.actions;
+    /// <inheritdoc cref="IMapperProfile.MapActions"/>
+    public IEnumerable<IMapperAction> MapActions
+    {
+        get
+        {
+            foreach (var item in before)
+            {
+                yield return item;
+            }
+            foreach (var item in actions)
+            {
+                yield return item;
+            }
+            foreach (var item in after)
+            {
+                yield return item;
+            }
+        }
+    }
 
     /// <inheritdoc cref="IMapperProfile{TSource, TTarget}.Configure(IMapperProfileDescriptor{TSource, TTarget})"/>
     public abstract void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
@@ -44,13 +64,17 @@ public abstract class MapperProfile<TSource, TTarget> :
     /// <inheritdoc cref="IMapperProfile.Configure(IMapperProfileDescriptor)"/>
     public void Configure(IMapperProfileDescriptor descriptor)
     {
-        if (descriptor is IMapperProfileDescriptor<TSource, TTarget> desc)
+        if (descriptor is MapperProfileDescriptor<TSource, TTarget> desc)
         {
+            desc.BeforeActions = before;
+            desc.MapActions = actions;
+            desc.AfterActions = after;
+
             this.Configure(desc);
         }
         else
         {
-            throw new ArithmeticException("");
+            throw new ArgumentException("");
         }
     }
 

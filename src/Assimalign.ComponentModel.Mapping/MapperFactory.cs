@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping.Internal;
+namespace Assimalign.ComponentModel.Mapping;
 
-public class MapperAction
+public abstract class MapperFactory
 {
 
 }

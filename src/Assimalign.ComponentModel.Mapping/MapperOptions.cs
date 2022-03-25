@@ -31,23 +31,30 @@ public sealed partial class MapperOptions
     public IEnumerable<IMapperProfile> Profiles => profiles;
 
 
-
-
-    public void AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="profile"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public MapperOptions AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
     {
-        if (profiles.Contains(profile))
+        if (profiles.Any(x => x.SourceType == typeof(TSource) && x.TargetType == typeof(TTarget)))
         {
-            throw new Exception("");
+            throw new Exception($"A profile with the same target type: '{profile.TargetType.Name}' and source type: '{profile.SourceType.Name}' has already been added.");
         }
 
         profiles.Add(profile);
 
-        var descriptor = new MapperProfileDescriptor<TSource, TTarget>()
+        IMapperProfileDescriptor descriptor = new MapperProfileDescriptor<TSource, TTarget>()
         {
-            Profiles = profiles,
-            Current = profile
+            Profiles = profiles
         };
 
         profile.Configure(descriptor);
+
+        return this;
     }
 }

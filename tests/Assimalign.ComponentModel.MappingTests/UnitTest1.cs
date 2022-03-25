@@ -63,17 +63,18 @@ namespace Assimalign.ComponentModel.MappingTests
                 //        source.Details ??= new EmployeeDetails();
                 //    });
 
-
-
                 descriptor
-                    //.ForTarget(target => target.FirstName).MapSource(source => source.Details.FirstName.ToLower())
-                    //.ForSource(source => source.Details.FirstName).MapTarget(target => target.FirstName.ToUpper())
-                    .MapMembers(source => source.Details.FirstName, target => target.FirstName); // this should cause an error
-                    //.MapMembers(source => source.Details.LastName, target => target.LastName)
-                    //.AddProfile(source => source.Details.PayrollTransactions, target => target.Transactions, configure =>
-                    //  {
-                    //      configure.MapMembers(source => source.Amount, target => target.Amount);
-                    //  });
+                    .BeforeMap((source, target) =>
+                    {
+                        source.Details ??= new EmployeeDetails();
+                    })
+                    .MapMembers(source => source.Details.FirstName, target => target.FirstName)
+                    .MapMembers(source => source.Details.LastName, target => target.LastName)
+                    .AddProfile(source => source.Details.PayrollTransactions, target => target.Transactions, configure =>
+                    {
+                        configure.MapMembers(source=>source.Amount, target=> target.Amount);
+                    });
+
             }
         }
 
@@ -82,7 +83,7 @@ namespace Assimalign.ComponentModel.MappingTests
         [Fact]
         public void MappingTest()
         {
-            var mapper = Mapping.Mapper.Create(configure =>
+            var mapper = Mapper.Create(configure =>
             {
                 configure.AddProfile(new MapperProfileTest());
             });
@@ -92,7 +93,18 @@ namespace Assimalign.ComponentModel.MappingTests
                 Details = new EmployeeDetails()
                 {
                     FirstName = "Chase",
-                    LastName = "Crawford"
+                    LastName = "Crawford",
+                    PayrollTransactions = new Payroll1[]
+                    {
+                        new Payroll1()
+                        {
+                             Amount = 10
+                        },
+                        new Payroll1()
+                        {
+                            Amount = 12
+                        }
+                    }
                 }
             };
 

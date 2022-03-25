@@ -2,7 +2,6 @@
 
 namespace Assimalign.ComponentModel.Mapping;
 
-
 /// <summary>
 /// 
 /// </summary>
@@ -11,31 +10,31 @@ public interface IMapper
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TContract"></typeparam>
-    /// <typeparam name="TBinding"></typeparam>
-    /// <param name="contract"></param>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="source"></param>
     /// <returns></returns>
-    TBinding Map<TContract, TBinding>(TContract contract)
-        where TBinding : new();
+    TTarget Map<TSource, TTarget>(TSource source)
+        where TTarget : new();
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TContract"></typeparam>
-    /// <typeparam name="TBinding"></typeparam>
-    /// <param name="contract"></param>
-    /// <param name="binding"></param>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
     /// <returns></returns>
-    TBinding Map<TContract, TBinding>(TContract contract, TBinding binding);
+    TTarget Map<TSource, TTarget>(TSource source, TTarget target);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="contract"></param>
-    /// <param name="contractType"></param>
-    /// <param name="bindingType"></param>
+    /// <param name="source"></param>
+    /// <param name="sourceType"></param>
+    /// <param name="targetType"></param>
     /// <returns></returns>
-    object Map(object contract, Type contractType, Type bindingType);
+    object Map(object source, Type sourceType, Type targetType);
 
     /// <summary>
     /// 

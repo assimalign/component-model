@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping;
 
-using Assimalign.ComponentModel.Mapping.Internal;
-
-
+using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
 /// <summary>
 /// 
@@ -17,8 +15,6 @@ using Assimalign.ComponentModel.Mapping.Internal;
 public sealed class Mapper : IMapper
 {
     private readonly MapperOptions options;
-    //private readonly IList<IMapperProfile> profiles;
-    //private readonly static ConcurrentDictionary<Type, MapperPaths> flattenedTypes;
 
 
     /// <summary>
@@ -28,29 +24,27 @@ public sealed class Mapper : IMapper
     public Mapper(MapperOptions options)
     {
         this.options = options;
-        // this.profiles = options.Profiles.ToList();
     }
-
-    /* Flow
-     * 1. Iterate through source properties
-     */
-
-
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TContract"></typeparam>
-    /// <typeparam name="TBinding"></typeparam>
-    /// <param name="contract"></param>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="source"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public TBinding Map<TContract, TBinding>(TContract contract)
-        where TBinding : new()
+    public TTarget Map<TSource, TTarget>(TSource source)
+        where TTarget : new()
     {
-        var results = this.Map(contract, typeof(TContract), typeof(TBinding));
+        if (source is null)
+        {
+            throw new ArgumentNullException("source");
+        }
 
-        if (results is TBinding binding)
+        var results = this.Map(source, typeof(TSource), typeof(TTarget));
+
+        if (results is TTarget binding)
         {
             return binding;
         }
@@ -71,11 +65,16 @@ public sealed class Mapper : IMapper
     /// <exception cref="NotImplementedException"></exception>
     public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
     {
+        if (source is null)
+        {
+            throw new ArgumentNullException("source");
+        }
+
         var results = this.Map(source, target, typeof(TSource), typeof(TTarget));
 
-        if (results is TTarget target1)
+        if (results is TTarget instance)
         {
-            return target1;
+            return instance;
         }
         else
         {
@@ -93,7 +92,21 @@ public sealed class Mapper : IMapper
     /// <exception cref="NotImplementedException"></exception>
     public object Map(object source, Type sourceType, Type targetType)
     {
-        var target = Activator.CreateInstance(targetType);
+        if (source is null)
+        {
+            throw new ArgumentNullException("source");
+        }
+        object target;
+
+        try
+        {
+            target = Activator.CreateInstance(targetType);
+        }
+        catch (Exception exception)
+        {
+            throw new MapperInstanceCreationException(targetType, exception);
+        }
+
         return this.Map(source, target, sourceType, targetType);
     }
 
@@ -108,13 +121,18 @@ public sealed class Mapper : IMapper
     /// <exception cref="NotImplementedException"></exception>
     public object Map(object source, object target, Type sourceType, Type targetType)
     {
+        if (source is null)
+        {
+            throw new ArgumentNullException("source");
+        }
+
         var context = new MapperContext(source, target);
 
         foreach (var profile in options.Profiles)
         {
             if (profile.SourceType == sourceType && profile.TargetType == targetType)
             {
-                foreach (var action in profile.Actions)
+                foreach (var action in profile.MapActions)
                 {
                     action.Invoke(context);
                 }

@@ -18,6 +18,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Abstractions\IMapperProfileSourceDescriptor.cs" />
+	  <Compile Remove="Abstractions\IMapperProfileTargetDescriptor.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="..\..\.assimalign.logo.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
