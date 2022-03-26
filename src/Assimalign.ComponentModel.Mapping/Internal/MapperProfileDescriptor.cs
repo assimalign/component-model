@@ -29,12 +29,9 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
         return this;
     }
 
-    public IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
-        Expression<Func<TSource, IEnumerable<TSourceMember>>> source,
-        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target,
-        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
-            where TSourceMember : class
-            where TTargetMember : class, new()
+    public IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+        where TSourceMember : class, new()
+        where TTargetMember : class, new()
     {
         var profile = new MapperProfileDefault<TSourceMember, TTargetMember>(configure);
 
@@ -52,7 +49,7 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
 
         this.Profiles.Add(profile);
 
-        var action = new MapperActionEnumerable<TSource, TSourceMember, TTarget, TTargetMember>(source, target)
+        var action = new MapperActionNestedEnumerable<TSource, TSourceMember, TTarget, TTargetMember>(source, target)
         {
             Profile = profile
         };
@@ -66,7 +63,7 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
         Expression<Func<TSource, TSourceMember>> source,
         Expression<Func<TTarget, TTargetMember>> target,
         Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
-            where TSourceMember : class
+            where TSourceMember : class, new()
             where TTargetMember : class, new()
     {
         var profile = new MapperProfileDefault<TSourceMember, TTargetMember>(configure);
@@ -110,19 +107,21 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
     {
         var sourceParameter = Expression.Parameter(typeof(TSource));
         var targetParameter = Expression.Parameter(typeof(TTarget));
-        var sourceParameterMember = Expression.PropertyOrField(sourceParameter, source);
-        var targetParameterMember = Expression.PropertyOrField(targetParameter, target);
-
+        
+        var sourceParameterMember = sourceParameter.GetMemberExpression(source);
+        var targetParameterMember = targetParameter.GetMemberExpression(target);
+       
         var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
         var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
 
-        var mapperActionType = typeof(MapperAction<,,,>).MakeGenericType(
+        var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
             typeof(TSource), 
             sourceParameterMember.Type, 
             typeof(TTarget), 
             targetParameterMember.Type);
 
         var mapperAction = Activator.CreateInstance(mapperActionType, sourceLambda, targetLambda) as IMapperAction;
+        
         this.AddMapAction(mapperAction);
 
         return this;
@@ -132,7 +131,7 @@ internal sealed class MapperProfileDescriptor<TSource, TTarget> : IMapperProfile
         Expression<Func<TTarget, TTargetMember>> target) 
             where TSourceMember : TTargetMember
     {
-        var action = new MapperAction<TSource, TSourceMember, TTarget, TTargetMember>(source, target);
+        var action = new MapperActionMember<TSource, TSourceMember, TTarget, TTargetMember>(source, target);
 
         //if (Current.MapActions.Contains(action))
         //{

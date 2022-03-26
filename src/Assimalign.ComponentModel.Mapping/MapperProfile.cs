@@ -78,10 +78,7 @@ public abstract class MapperProfile<TSource, TTarget> : IMapperProfile<TSource, 
         }
     }
 
-    public bool Equals(IMapperProfile profile) => this.SourceType == profile.SourceType && this.TargetType == profile.TargetType;
-    public bool Equals(IMapperProfile left, IMapperProfile right) => left.Equals(right);
     public override bool Equals(object obj) => obj is IMapperProfile profile ? Equals(profile) : false;
-    public int GetHashCode([DisallowNull] IMapperProfile profile) => profile.GetHashCode();
     public override int GetHashCode() => HashCode.Combine(this.SourceType, this.TargetType);
 }
 

@@ -136,6 +136,8 @@ public sealed class Mapper : IMapper
                 {
                     action.Invoke(context);
                 }
+
+                break;
             }
         }
 

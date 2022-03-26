@@ -1,6 +1,7 @@
 using Assimalign.ComponentModel.Mapping;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Xunit;
 
 namespace Assimalign.ComponentModel.MappingTests
@@ -30,6 +31,7 @@ namespace Assimalign.ComponentModel.MappingTests
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public string MiddleName { get; set; }
 
             public IEnumerable<Payroll1> PayrollTransactions { get; set; }
         }
@@ -38,7 +40,7 @@ namespace Assimalign.ComponentModel.MappingTests
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
-
+            public string MiddleName { get; set; }
             public IEnumerable<Payroll2> Transactions { get; set; }
         }
 
@@ -68,6 +70,7 @@ namespace Assimalign.ComponentModel.MappingTests
                     {
                         source.Details ??= new EmployeeDetails();
                     })
+                    .MapMembers("Details.MiddleName", "MiddleName")
                     .MapMembers(source => source.Details.FirstName, target => target.FirstName)
                     .MapMembers(source => source.Details.LastName, target => target.LastName)
                     .AddProfile(source => source.Details.PayrollTransactions, target => target.Transactions, configure =>
@@ -108,10 +111,17 @@ namespace Assimalign.ComponentModel.MappingTests
                 }
             };
 
+            var watch = new Stopwatch();
 
-            var results = mapper.Map<Employee1, Employee2>(employee);
+            watch.Start();
+            mapper.Map<Employee1, Employee2>(employee);
+            watch.Stop();
 
-            Assert.NotNull(results);
+            watch.Restart();
+            mapper.Map<Employee1, Employee2>(employee);
+            watch.Stop();
+
+            var ms = watch.ElapsedMilliseconds;
         }
     }
 }

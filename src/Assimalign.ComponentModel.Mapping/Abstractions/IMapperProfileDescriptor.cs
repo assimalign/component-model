@@ -34,12 +34,9 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <param name="target"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
-        Expression<Func<TSource, IEnumerable<TSourceMember>>> source,
-        Expression<Func<TTarget, IEnumerable<TTargetMember>>> target,
-        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
-            where TSourceMember : class
-            where TTargetMember : class, new();
+    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+        where TSourceMember : class, new()
+        where TTargetMember : class, new();
 
     /// <summary>
     /// 
@@ -50,12 +47,9 @@ public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDesc
     /// <param name="target"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(
-        Expression<Func<TSource, TSourceMember>> source,
-        Expression<Func<TTarget, TTargetMember>> target,
-        Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
-            where TSourceMember : class
-            where TTargetMember : class, new();
+    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target, Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
+        where TSourceMember : class, new()
+        where TTargetMember : class, new();
 
     /// <summary>
     /// 

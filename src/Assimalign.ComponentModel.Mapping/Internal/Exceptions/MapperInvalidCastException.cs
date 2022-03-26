@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping.Exceptions
 {
-    public class MapperInvalidCastException : InvalidCastException
+    internal class MapperInvalidCastException : InvalidCastException
     {
         
     }

@@ -6,16 +6,24 @@ using System.Linq;
 
 namespace Assimalign.ComponentModel.Mapping.Internal;
 
-internal sealed class MapperActionEnumerable<TSource, TSourceMember, TTarget, TTargetMember> : IMapperAction
+using Assimalign.ComponentModel.Mapping.Properties;
+
+internal sealed class MapperActionNestedEnumerable<TSource, TSourceMember, TTarget, TTargetMember> : IMapperAction
+	where TSourceMember : new()
 	where TTargetMember : new()
 {
 	private readonly MemberInfo targetMember;
 	private readonly Func<TSource, IEnumerable<TSourceMember>> sourceMember;
 
-	public MapperActionEnumerable(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target)
+	public MapperActionNestedEnumerable(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target)
 	{
 		if (target.Body is MemberExpression member)
 		{
+			if (member.Member.DeclaringType != typeof(TTarget))
+			{
+				throw new Exception(string.Format(Resources.MapperExceptionInvalidChaining, target, typeof(TTarget).Name));
+			}
+
 			targetMember = member.Member;
 			sourceMember = source.Compile();
 		}
@@ -25,7 +33,7 @@ internal sealed class MapperActionEnumerable<TSource, TSourceMember, TTarget, TT
 		}
 	}
 
-
+	// To prevent searching a profile in the Mapper options lets just store the reference in a property.
 	public IMapperProfile Profile { get; set; }
 
 
