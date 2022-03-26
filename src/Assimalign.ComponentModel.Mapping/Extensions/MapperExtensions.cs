@@ -4,14 +4,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping
+namespace Assimalign.ComponentModel.Mapping;
+
+public static partial class MapperExtensions
 {
-    internal static partial class MapperExtensions
+    /// <summary>
+    /// Converts a value type to nullable
+    /// </summary>
+    /// <typeparam name="TStruct"></typeparam>
+    /// <param name="valueType"></param>
+    /// <returns></returns>
+    public static TStruct? ToNullable<TStruct>(this TStruct valueType)
+         where TStruct : struct
     {
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
-        {
-            Parallel.ForEach(enumerable, action);
-        }
+        return new Nullable<TStruct>(valueType);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="enumerable"></param>
+    /// <param name="keySelector"></param>
+    /// <param name="valueSelector"></param>
+    /// <returns></returns>
+    public static Dictionary<TKey, TValue> ToDictionary<T, TKey, TValue>(this IEnumerable<T> enumerable, Func<T, TKey> keySelector, Func<T, TValue> valueSelector)
+    {
+        if (enumerable is null)
+        {
+            return null;
+        }
+
+        var dictionary = new Dictionary<TKey, TValue>();
+
+        foreach (var item in enumerable)
+        {
+            dictionary.Add(keySelector(item), valueSelector(item));
+        }
+
+        return dictionary;
+    }
+
+   // public static TOut ToReferenceType<Tin, TOut>()
+
 }
+

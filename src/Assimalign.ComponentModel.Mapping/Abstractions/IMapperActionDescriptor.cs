@@ -7,7 +7,7 @@ namespace Assimalign.ComponentModel.Mapping;
 /// <summary>
 /// The <see cref="IMapperActionDescriptor"/> represents a builder interface for pushing 
 /// <see cref="IMapperAction"/>'s into the <see cref="IMapperActionCollection"/> which lives on 
-/// and <see cref="IMapperProfile"/>.
+/// and <see cref="IMapperProfile"/>. 
 /// </summary>
 public interface IMapperActionDescriptor
 {
@@ -54,6 +54,22 @@ public interface IMapperActionDescriptor<TTarget, TSource> : IMapperActionDescri
         where TSourceMember : class, new();
 
     /// <summary>
+    /// Tries to map all Members of <typeparamref name="TTarget"/> and <typeparamref name="TSource"/> that share the same name.
+    /// </summary>
+    /// <returns></returns>
+    IMapperActionDescriptor<TTarget, TSource> MapAll();
+    /// <summary>
+    /// Tries to map only Field Members of <typeparamref name="TTarget"/> and <typeparamref name="TSource"/> that share the same name.
+    /// </summary>
+    /// <returns></returns>
+    IMapperActionDescriptor<TTarget, TSource> MapAllFields();
+    /// <summary>
+    /// Tries to map only Property Members of <typeparamref name="TTarget"/> and <typeparamref name="TSource"/> that share the same name.
+    /// </summary>
+    /// <returns></returns>
+    IMapperActionDescriptor<TTarget, TSource> MapAllProperties();
+
+    /// <summary>
     /// 
     /// <remarks>
     ///     For property chaining use a period '.' between each property for nested objects.
@@ -62,18 +78,18 @@ public interface IMapperActionDescriptor<TTarget, TSource> : IMapperActionDescri
     /// <param name="target"></param>
     /// <param name="source"></param>
     /// <returns></returns>
-    IMapperActionDescriptor<TTarget, TSource> MapMembers(string target, string source);
+    IMapperActionDescriptor<TTarget, TSource> MapTarget(string target, string source);
 
     /// <summary>
-    /// 
+    /// Creates a Member To Member mapping action. 
     /// </summary>
-    /// <typeparam name="TTargetMember"></typeparam>
+    /// <typeparam name="TTargetMember">MUST be a Member of type <typeparamref name="TSource"/></typeparam>
     /// <typeparam name="TSourceMember"></typeparam>
     /// <param name="source"></param>
-    /// <param name="target"></param>
+    /// <param name="target">An expression the MUST be a <see cref="MemberExpression"/>.</param>
     /// <returns><see cref="IMapperActionDescriptor{TTarget, TSource}"/></returns>
     /// <exception cref="ArgumentException">'MapMebers' should only except <see cref="MemberExpression"/>'s for both the source and target.</exception>
-    IMapperActionDescriptor<TTarget,TSource> MapMembers<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
+    IMapperActionDescriptor<TTarget, TSource> MapTarget<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
         where TSourceMember : TTargetMember;
 
     /// <summary>
@@ -88,6 +104,8 @@ public interface IMapperActionDescriptor<TTarget, TSource> : IMapperActionDescri
     /// <param name="action"></param>
     IMapperActionDescriptor<TTarget, TSource> AfterMap(Action<TTarget, TSource> action);
 }
+
+
 
 ///// <summary>
 ///// This will disable default mapping of the 'Target' and 'Source' on compiling the profile.

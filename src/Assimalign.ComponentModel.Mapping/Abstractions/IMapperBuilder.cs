@@ -21,7 +21,6 @@ public interface IMapperBuilder
     /// <param name="configure"></param>
     /// <returns></returns>
     IMapperBuilder Configure<TTarget, TSource>(Action<IMapperActionDescriptor<TTarget, TSource>> configure);
-
     /// <summary>
     /// 
     /// </summary>

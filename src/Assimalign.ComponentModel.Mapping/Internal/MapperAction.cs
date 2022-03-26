@@ -2,6 +2,8 @@
 
 namespace Assimalign.ComponentModel.Mapping.Internal;
 
+using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
+
 internal sealed class MapperAction<TTarget, TSource> : IMapperAction
 {
 	private readonly Action<TTarget, TSource> action;
@@ -11,6 +13,8 @@ internal sealed class MapperAction<TTarget, TSource> : IMapperAction
 		this.action = action;
     }
 
+    public int Id => this.GetHashCode();
+
     public void Invoke(MapperContext context)
     {
         if (context.Source is TSource source && context.Target is TTarget target)
@@ -19,7 +23,7 @@ internal sealed class MapperAction<TTarget, TSource> : IMapperAction
         }
 		else
         {
-			throw new Exception("Invalid Context");
+            throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
         }
     }
 }
