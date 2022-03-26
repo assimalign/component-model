@@ -1,13 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Reflection;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.ComponentModel.Mapping;
 
@@ -17,68 +8,44 @@ using Assimalign.ComponentModel.Mapping.Internal;
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="TSource"></typeparam>
 /// <typeparam name="TTarget"></typeparam>
-public abstract class MapperProfile<TSource, TTarget> : IMapperProfile<TSource, TTarget>
+/// <typeparam name="TSource"></typeparam>
+public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, TSource>
 {
-    private readonly IList<IMapperAction> before;
-    private readonly IList<IMapperAction> actions;
-    private readonly IList<IMapperAction> after;
+    private IMapperActionCollection mapActions;
 
     public MapperProfile() 
     {
-        this.before = new List<IMapperAction>();
-        this.actions = new List<IMapperAction>();
-        this.after = new List<IMapperAction>();
+        
     }
 
-    /// <inheritdoc cref="IMapperProfile.SourceType" />
-    public Type SourceType => typeof(TSource);
-    
-    /// <inheritdoc cref="IMapperProfile.TargetType"/>
+    /// <inheritdoc cref="IMapperProfile.TargetType" />
     public Type TargetType => typeof(TTarget);
 
+    /// <inheritdoc cref="IMapperProfile.SourceType"/>
+    public Type SourceType => typeof(TSource);
+
     /// <inheritdoc cref="IMapperProfile.MapActions"/>
-    public IEnumerable<IMapperAction> MapActions
+    public IMapperActionCollection MapActions => this.mapActions;
+
+    /// <inheritdoc cref="IMapperProfile{TTarget, TSource}.Configure(IMapperActionDescriptor{TTarget, TSource})"/>
+    public abstract void Configure(IMapperActionDescriptor<TTarget, TSource> descriptor);
+
+    /// <inheritdoc cref="IMapperProfile.Configure(IMapperActionDescriptor)"/>
+    public void Configure(IMapperActionDescriptor descriptor)
     {
-        get
+        if (descriptor is MapperActionDescriptor<TTarget, TSource> ds)
         {
-            foreach (var item in before)
-            {
-                yield return item;
-            }
-            foreach (var item in actions)
-            {
-                yield return item;
-            }
-            foreach (var item in after)
-            {
-                yield return item;
-            }
-        }
-    }
-
-    /// <inheritdoc cref="IMapperProfile{TSource, TTarget}.Configure(IMapperProfileDescriptor{TSource, TTarget})"/>
-    public abstract void Configure(IMapperProfileDescriptor<TSource, TTarget> descriptor);
-
-    /// <inheritdoc cref="IMapperProfile.Configure(IMapperProfileDescriptor)"/>
-    public void Configure(IMapperProfileDescriptor descriptor)
-    {
-        if (descriptor is MapperProfileDescriptor<TSource, TTarget> desc)
-        {
-            desc.BeforeActions = before;
-            desc.MapActions = actions;
-            desc.AfterActions = after;
-
-            this.Configure(desc);
+            this.Configure(ds);
+            mapActions = new MapperActionCollection(ds.PreActions, ds.MapActions, ds.PostActions);
         }
         else
         {
-            throw new ArgumentException("");
+            throw new NotSupportedException("");
         }
     }
 
-    public override bool Equals(object obj) => obj is IMapperProfile profile ? Equals(profile) : false;
+    public override bool Equals(object obj) => obj is IMapperProfile profile ? profile.SourceType == this.SourceType && profile.TargetType == this.TargetType : false;
     public override int GetHashCode() => HashCode.Combine(this.SourceType, this.TargetType);
 }
 

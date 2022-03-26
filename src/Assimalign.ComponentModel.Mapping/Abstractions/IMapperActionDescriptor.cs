@@ -5,90 +5,95 @@ using System.Collections.Generic;
 namespace Assimalign.ComponentModel.Mapping;
 
 /// <summary>
-/// 
+/// The <see cref="IMapperActionDescriptor"/> represents a builder interface for pushing 
+/// <see cref="IMapperAction"/>'s into the <see cref="IMapperActionCollection"/> which lives on 
+/// and <see cref="IMapperProfile"/>.
 /// </summary>
-public interface IMapperProfileDescriptor
+public interface IMapperActionDescriptor
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor AddMapAction(IMapperAction action);
+    IMapperActionDescriptor MapAction(IMapperAction action);
 }
 
 /// <summary>
-/// A <see cref="IMapperProfileDescriptor{TSource, TTarget}"/> describes the mapping (or condition)
+/// A <see cref="IMapperActionDescriptor{TSource, TTarget}"/> describes the mapping (or condition)
 /// that are contracted to the binding type.
 /// </summary>
 /// <typeparam name="TSource"></typeparam>
 /// <typeparam name="TTarget"></typeparam>
-public interface IMapperProfileDescriptor<TSource, TTarget> : IMapperProfileDescriptor
+public interface IMapperActionDescriptor<TTarget, TSource> : IMapperActionDescriptor
 {
     /// <summary>
-    /// 
+    /// Adds a nested profile which references complex types of <typeparamref name="TSource"/> and <typeparamref name="TTarget"/>.
     /// </summary>
-    /// <typeparam name="TSourceMember"></typeparam>
     /// <typeparam name="TTargetMember"></typeparam>
-    /// <param name="source"></param>
+    /// <typeparam name="TSourceMember"></typeparam>
     /// <param name="target"></param>
+    /// <param name="source"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
-        where TSourceMember : class, new()
-        where TTargetMember : class, new();
+    IMapperActionDescriptor<TTarget, TSource> MapProfile<TTargetMember, TSourceMember>(Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Action<IMapperActionDescriptor<TTargetMember, TSourceMember>> configure)
+        where TTargetMember : class, new()
+        where TSourceMember : class, new();
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSourceMember"></typeparam>
     /// <typeparam name="TTargetMember"></typeparam>
-    /// <param name="source"></param>
+    /// <typeparam name="TSourceMember"></typeparam>
     /// <param name="target"></param>
+    /// <param name="source"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> AddProfile<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target, Action<IMapperProfileDescriptor<TSourceMember, TTargetMember>> configure)
-        where TSourceMember : class, new()
-        where TTargetMember : class, new();
+    IMapperActionDescriptor<TTarget, TSource> MapProfile<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source, Action<IMapperActionDescriptor<TTargetMember, TSourceMember>> configure)
+        where TTargetMember : class, new()
+        where TSourceMember : class, new();
 
     /// <summary>
     /// 
+    /// <remarks>
+    ///     For property chaining use a period '.' between each property for nested objects.
+    /// </remarks>
     /// </summary>
-    /// <param name="source"></param>
     /// <param name="target"></param>
+    /// <param name="source"></param>
     /// <returns></returns>
-    IMapperProfileDescriptor<TSource, TTarget> MapMembers(string source, string target);
+    IMapperActionDescriptor<TTarget, TSource> MapMembers(string target, string source);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSourceMember"></typeparam>
     /// <typeparam name="TTargetMember"></typeparam>
+    /// <typeparam name="TSourceMember"></typeparam>
     /// <param name="source"></param>
     /// <param name="target"></param>
-    /// <returns><see cref="IMapperProfileDescriptor{TSource, TTarget}"/></returns>
+    /// <returns><see cref="IMapperActionDescriptor{TTarget, TSource}"/></returns>
     /// <exception cref="ArgumentException">'MapMebers' should only except <see cref="MemberExpression"/>'s for both the source and target.</exception>
-    IMapperProfileDescriptor<TSource, TTarget> MapMembers<TSourceMember, TTargetMember>(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target) where TSourceMember : TTargetMember;
+    IMapperActionDescriptor<TTarget,TSource> MapMembers<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
+        where TSourceMember : TTargetMember;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="action"></param>
-    IMapperProfileDescriptor<TSource, TTarget> BeforeMap(Action<TSource, TTarget> action);
+    IMapperActionDescriptor<TTarget, TSource> BeforeMap(Action<TTarget, TSource> action);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="action"></param>
-    IMapperProfileDescriptor<TSource, TTarget> AfterMap(Action<TSource, TTarget> action);
-
-    /// <summary>
-    /// This will disable default mapping of the 'Target' and 'Source' on compiling the profile.
-    /// If disabled then each property must be mapped individually.
-    /// </summary>
-    void DisableDefaultMapping();
+    IMapperActionDescriptor<TTarget, TSource> AfterMap(Action<TTarget, TSource> action);
 }
 
+///// <summary>
+///// This will disable default mapping of the 'Target' and 'Source' on compiling the profile.
+///// If disabled then each property must be mapped individually.
+///// </summary>
+//void DisableDefaultMapping();
 
 ///// <summary>
 ///// 

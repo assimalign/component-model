@@ -55,29 +55,26 @@ namespace Assimalign.ComponentModel.MappingTests
         }
 
 
-        public partial class MapperProfileTest : Mapping.MapperProfile<Employee1, Employee2>
+        public partial class MapperProfileTest : MapperProfile<Employee2, Employee1>
         {
-            public override void Configure(IMapperProfileDescriptor<Employee1, Employee2> descriptor)
+            public override void Configure(IMapperActionDescriptor<Employee2, Employee1> descriptor)
             {
-                //descriptor
-                //    .BeforeMap((source, target) =>
-                //    {
-                //        source.Details ??= new EmployeeDetails();
-                //    });
-
                 descriptor
-                    .BeforeMap((source, target) =>
+                    .BeforeMap((target, source) =>
                     {
                         source.Details ??= new EmployeeDetails();
                     })
-                    .MapMembers("Details.MiddleName", "MiddleName")
-                    .MapMembers(source => source.Details.FirstName, target => target.FirstName)
-                    .MapMembers(source => source.Details.LastName, target => target.LastName)
-                    .AddProfile(source => source.Details.PayrollTransactions, target => target.Transactions, configure =>
+                    .MapMembers("MiddleName", "Details.MiddleName")
+                    .MapMembers(target => target.FirstName, source => source.Details.FirstName)
+                    .MapMembers(target => target.LastName, source => source.Details.LastName)
+                    .MapProfile(target => target.Transactions, source => source.Details.PayrollTransactions, configure =>
                     {
-                        configure.MapMembers(source=>source.Amount, target=> target.Amount);
+                        configure.MapMembers(target => target.Amount, source => source.Amount);
+                    })
+                    .AfterMap((target, source) =>
+                    {
+                        
                     });
-
             }
         }
 
@@ -97,6 +94,7 @@ namespace Assimalign.ComponentModel.MappingTests
                 {
                     FirstName = "Chase",
                     LastName = "Crawford",
+                    MiddleName = "Ryan",
                     PayrollTransactions = new Payroll1[]
                     {
                         new Payroll1()
@@ -114,11 +112,11 @@ namespace Assimalign.ComponentModel.MappingTests
             var watch = new Stopwatch();
 
             watch.Start();
-            mapper.Map<Employee1, Employee2>(employee);
+            mapper.Map<Employee2, Employee1>(employee);
             watch.Stop();
 
             watch.Restart();
-            mapper.Map<Employee1, Employee2>(employee);
+            var v1 = mapper.Map<Employee2, Employee1>(employee);
             watch.Stop();
 
             var ms = watch.ElapsedMilliseconds;

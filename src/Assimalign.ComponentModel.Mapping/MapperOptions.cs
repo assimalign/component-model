@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping;
 
@@ -34,12 +32,12 @@ public sealed partial class MapperOptions
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TTarget"></typeparam>
+    /// <typeparam name="TSource"></typeparam>
     /// <param name="profile"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public MapperOptions AddProfile<TSource, TTarget>(IMapperProfile<TSource, TTarget> profile)
+    public MapperOptions AddProfile<TTarget, TSource>(IMapperProfile<TTarget, TSource> profile)
     {
         if (profiles.Any(x => x.SourceType == typeof(TSource) && x.TargetType == typeof(TTarget)))
         {
@@ -48,7 +46,7 @@ public sealed partial class MapperOptions
 
         profiles.Add(profile);
 
-        IMapperProfileDescriptor descriptor = new MapperProfileDescriptor<TSource, TTarget>()
+        IMapperActionDescriptor descriptor = new MapperActionDescriptor<TTarget, TSource>()
         {
             Profiles = profiles
         };

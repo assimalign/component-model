@@ -11,12 +11,12 @@ using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 /* 
  * This Mapper Action is for member to member mapping
  */
-internal sealed class MapperActionMember<TSource, TSourceMember, TTarget, TTargetMember> : IMapperAction
+internal sealed class MapperActionMember<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
 {
     private readonly MemberInfo targetMember;
     private readonly Func<TSource, TSourceMember> sourceMember;
 
-    public MapperActionMember(Expression<Func<TSource, TSourceMember>> source, Expression<Func<TTarget, TTargetMember>> target)
+    public MapperActionMember(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
     {
         if (target.Body is MemberExpression member)
         {

@@ -15,6 +15,7 @@ using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 public sealed class Mapper : IMapper
 {
     private readonly MapperOptions options;
+    private readonly ConcurrentDictionary<int, IMapperProfile> cache;
 
 
     /// <summary>
@@ -24,17 +25,19 @@ public sealed class Mapper : IMapper
     public Mapper(MapperOptions options)
     {
         this.options = options;
+        this.cache = new ConcurrentDictionary<int, IMapperProfile>(
+            options.Profiles.ToDictionary(key=> key.TargetType.GetHashCode() + key.SourceType.GetHashCode(), value=>value));
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TTarget"></typeparam>
+    /// <typeparam name="TSource"></typeparam>
     /// <param name="source"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public TTarget Map<TSource, TTarget>(TSource source)
+    public TTarget Map<TTarget, TSource>(TSource source)
         where TTarget : new()
     {
         if (source is null)
@@ -42,11 +45,11 @@ public sealed class Mapper : IMapper
             throw new ArgumentNullException("source");
         }
 
-        var results = this.Map(source, typeof(TSource), typeof(TTarget));
+        var results = this.Map(source, typeof(TTarget), typeof(TSource));
 
-        if (results is TTarget binding)
+        if (results is TTarget instance)
         {
-            return binding;
+            return instance;
         }
         else
         {
@@ -63,14 +66,14 @@ public sealed class Mapper : IMapper
     /// <param name="target"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public TTarget Map<TSource, TTarget>(TSource source, TTarget target)
+    public TTarget Map<TTarget, TSource>(TTarget target, TSource source)
     {
         if (source is null)
         {
             throw new ArgumentNullException("source");
         }
 
-        var results = this.Map(source, target, typeof(TSource), typeof(TTarget));
+        var results = this.Map(target, source, typeof(TTarget), typeof(TSource));
 
         if (results is TTarget instance)
         {
@@ -90,12 +93,13 @@ public sealed class Mapper : IMapper
     /// <param name="targetType"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object Map(object source, Type sourceType, Type targetType)
+    public object Map(object source, Type targetType, Type sourceType)
     {
         if (source is null)
         {
             throw new ArgumentNullException("source");
         }
+
         object target;
 
         try
@@ -107,7 +111,7 @@ public sealed class Mapper : IMapper
             throw new MapperInstanceCreationException(targetType, exception);
         }
 
-        return this.Map(source, target, sourceType, targetType);
+        return this.Map(target, source, targetType, sourceType);
     }
 
     /// <summary>
@@ -119,14 +123,14 @@ public sealed class Mapper : IMapper
     /// <param name="targetType"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public object Map(object source, object target, Type sourceType, Type targetType)
+    public object Map(object target, object source, Type targetType, Type sourceType)
     {
         if (source is null)
         {
             throw new ArgumentNullException("source");
         }
 
-        var context = new MapperContext(source, target);
+        var context = new MapperContext(target, source);
 
         foreach (var profile in options.Profiles)
         {
@@ -143,7 +147,6 @@ public sealed class Mapper : IMapper
 
         return target;
     }
-
 
     /// <summary>
     /// 

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Reflection;
-using System.Linq.Expressions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.ComponentModel.Mapping.Internal;
 
-internal sealed class MapperAction<TSource, TTarget> : IMapperAction
+internal sealed class MapperAction<TTarget, TSource> : IMapperAction
 {
-	private readonly Action<TSource, TTarget> action;
+	private readonly Action<TTarget, TSource> action;
     
-	public MapperAction(Action<TSource, TTarget> action)
+	public MapperAction(Action<TTarget, TSource> action)
     {
 		this.action = action;
     }
@@ -18,7 +15,7 @@ internal sealed class MapperAction<TSource, TTarget> : IMapperAction
     {
         if (context.Source is TSource source && context.Target is TTarget target)
         {
-			action.Invoke(source, target);
+			action.Invoke(target, source);
         }
 		else
         {

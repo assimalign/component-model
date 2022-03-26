@@ -12,15 +12,15 @@ public interface IMapperBuilder
     /// </summary>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperBuilder Configure(Action<IMapperProfileDescriptor> configure);
+    IMapperBuilder Configure(Action<IMapperActionDescriptor> configure);
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TTarget"></typeparam>
+    /// <typeparam name="TSource"></typeparam>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperBuilder Configure<TSource, TTarget>(Action<IMapperProfileDescriptor<TSource, TTarget>> configure);
+    IMapperBuilder Configure<TTarget, TSource>(Action<IMapperActionDescriptor<TTarget, TSource>> configure);
 
     /// <summary>
     /// 

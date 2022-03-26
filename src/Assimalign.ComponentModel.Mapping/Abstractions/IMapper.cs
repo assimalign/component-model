@@ -10,11 +10,11 @@ public interface IMapper
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TTarget"></typeparam>
+    /// <typeparam name="TSource"></typeparam>
     /// <param name="source"></param>
     /// <returns></returns>
-    TTarget Map<TSource, TTarget>(TSource source)
+    TTarget Map<TTarget, TSource>(TSource source)
         where TTarget : new();
 
     /// <summary>
@@ -25,7 +25,7 @@ public interface IMapper
     /// <param name="source"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    TTarget Map<TSource, TTarget>(TSource source, TTarget target);
+    TTarget Map<TTarget, TSource>(TTarget target, TSource source);
 
     /// <summary>
     /// 
@@ -34,7 +34,7 @@ public interface IMapper
     /// <param name="sourceType"></param>
     /// <param name="targetType"></param>
     /// <returns></returns>
-    object Map(object source, Type sourceType, Type targetType);
+    object Map(object source, Type targetType, Type sourceType);
 
     /// <summary>
     /// 
@@ -44,5 +44,5 @@ public interface IMapper
     /// <param name="sourceType"></param>
     /// <param name="targetType"></param>
     /// <returns></returns>
-    object Map(object source, object target, Type sourceType, Type targetType);
+    object Map(object target, object source, Type targetType, Type sourceType);
 }
