@@ -13,7 +13,7 @@ using Assimalign.ComponentModel.Validation.Internal;
 public abstract class ValidationProfile<T> : IValidationProfile<T>
 {
     private readonly Type validationType;
-    private readonly IList<IValidationItem> validationItems;
+    private readonly IValidationItemStack validationItems;
 
     /// <summary>
     /// 
@@ -21,14 +21,14 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     public ValidationProfile()
     {
         this.validationType = typeof(T);
-        this.validationItems = new List<IValidationItem>();
+        this.validationItems = new ValidationItemStack();
     }
 
     /// <summary>
     /// A collection validation rules to apply to the instance of <typeparamref name="T"/>
     /// for a given context.
     /// </summary>
-    public IEnumerable<IValidationItem> ValidationItems => this.validationItems;
+    public IValidationItemStack ValidationItems => this.validationItems;
 
     /// <summary>
     /// The type of <typeparamref name="T"/> being validated.
@@ -44,12 +44,12 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
     /// <summary>
     /// 
     /// </summary>
-    void IValidationProfile.Configure()
+    void IValidationProfile.Configure(IValidationRuleDescriptor descriptor)
     {
-        this.Configure(new ValidationRuleDescriptor<T>()
+        if (descriptor is ValidationRuleDescriptor<T> td)
         {
-            ValidationItems = this.ValidationItems as IList<IValidationItem>
-        });
+            this.Configure(td);
+        }
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public abstract class ValidationProfile<T> : IValidationProfile<T>
 public abstract class ValidationProfile : IValidationProfile
 {
     private readonly Type validationType;
-    private readonly IList<IValidationItem> validationItems;
+    private readonly IValidationItemStack validationItems;
 
     /// <summary>
     /// 
@@ -74,7 +74,7 @@ public abstract class ValidationProfile : IValidationProfile
     public ValidationProfile(Type type)
     {
         this.validationType = type;
-        this.validationItems = new List<IValidationItem>();
+        this.validationItems = new ValidationItemStack();
     }
 
     /// <summary>
@@ -90,10 +90,10 @@ public abstract class ValidationProfile : IValidationProfile
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<IValidationItem> ValidationItems => this.validationItems;
+    public IValidationItemStack ValidationItems => this.validationItems;
 
     /// <summary>
     /// 
     /// </summary>
-    public abstract void Configure();
+    public abstract void Configure(IValidationRuleDescriptor descriptor);
 }

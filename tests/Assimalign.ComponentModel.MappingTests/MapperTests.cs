@@ -14,7 +14,15 @@ public partial class MapperTests
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
+        public DateTime Birthdate { get; set; }
         public IDictionary<string, Person1> Following { get; set; } // id:  person
+        public Person1Address PrimaryAddress { get; set; }
+    }
+
+    public class Person1Address
+    {
+        public string StreetOne { get; set; }
+        public string City { get; set; }
     }
 
 
@@ -30,7 +38,15 @@ public partial class MapperTests
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
+        public DateTime? Birthdate { get; set; }
+        public Person2Address PrimaryAddress { get; set; }
         public IEnumerable<Person2Following> Following { get; set; }
+    }
+
+    public class Person2Address
+    {
+        public string StreetOne { get; set; }
+        public string City { get; set; }
     }
     public class Person2Following
     {
@@ -48,8 +64,7 @@ public partial class MapperTests
         public override void Configure(IMapperActionDescriptor<Person1, Person2Details> descriptor)
         {
             descriptor
-                .MapAllProperties()
-                .MapTarget(target => target.FirstName, source => source.FirstName);
+                .MapMember(target => target.FirstName, source => source.FirstName);
         }
     }
 
@@ -66,4 +81,17 @@ public partial class MapperTests
        
 
     }
+
+    public class Factory : MapperFactory
+    {
+        public override IMapperFactory Configure(IMapperFactoryBuilder builder)
+        {
+
+            builder.Configure
+
+
+            return this;
+        }
+    }
+
 }

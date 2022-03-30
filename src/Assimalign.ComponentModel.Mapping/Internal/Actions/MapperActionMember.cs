@@ -12,31 +12,28 @@ using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
  * This Mapper Action is for member to member mapping
  */
 internal sealed class MapperActionMember<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
-    where TSourceMember : TTargetMember
 {
+    private readonly TTarget target;
     public MapperActionMember(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
     {
-        if (target.Body is MemberExpression member)
-        {
-            // Ensure that the member is of type TTarget (Target Members cannot be nested.)
-            if (member.Member.DeclaringType != typeof(TTarget))
-            {
-                throw new Exception(string.Format(Resources.MapperExceptionInvalidChaining, target, typeof(TTarget).Name));
-            }
-
-            SourceExpression = source;
-            SourceGetter = source.Compile();
-            TargetExpression = target;
-            TargetMember = member.Member;
-            TargetGetter = target.Compile();
-        }
-        else
+        if (target.Body is not MemberExpression member)
         {
             throw new ArgumentException($"The target expression body: '{target}' must be a MemberExpression.");
         }
+        // Ensure that the member is of type TTarget (Target Members cannot be nested.)
+        if (member.Member.DeclaringType != typeof(TTarget))
+        {
+            throw new Exception(string.Format(Resources.MapperExceptionInvalidChaining, target, typeof(TTarget).Name));
+        }
+
+        SourceExpression = source;
+        SourceGetter = source.Compile();
+        TargetExpression = target;
+        TargetMember = member.Member;
+        TargetGetter = target.Compile();
     }
 
-    public int Id  => this.TargetType.GetHashCode() + TargetMember.GetHashCode();
+    public int Id => this.TargetType.GetHashCode() + TargetMember.GetHashCode();
     public Type TargetType => typeof(TTarget);
     public MemberInfo TargetMember { get; }
     public Func<TTarget, TTargetMember> TargetGetter { get; }
@@ -48,14 +45,16 @@ internal sealed class MapperActionMember<TTarget, TTargetMember, TSource, TSourc
 
     public void Invoke(MapperContext context)
     {
-        if (context.Source is TSource source && context.Target is TTarget target)
-        {
-            SetValue(target, GetValue(source));
-        }
-        else
+        if (context.Source is not TSource source)
         {
             throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
         }
+        if (context.Target is not TTarget target)
+        {
+            throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
+        }
+
+        SetValue(target, GetValue(source));
     }
     private object GetValue(TSource source)
     {

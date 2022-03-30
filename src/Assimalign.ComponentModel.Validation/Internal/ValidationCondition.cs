@@ -8,28 +8,12 @@ namespace Assimalign.ComponentModel.Validation.Internal;
 
 internal sealed class ValidationCondition<T> : IValidationCondition<T>
 {
-    private IList<IValidationItem> validationItems;
-
     public ValidationCondition()
     {
-        this.validationItems = new List<IValidationItem>();
+        this.ValidationItems = new ValidationItemStack();
     }
 
-    public IEnumerable<IValidationItem> ValidationItems
-    {
-        get => this.validationItems;
-        set
-        {
-            if (value is IList<IValidationItem> list)
-            {
-                this.validationItems = list;
-            }
-            else
-            {
-                this.validationItems = value.ToList();
-            }
-        }
-    }
+    public IValidationItemStack ValidationItems { get; set; }
 
     public Expression<Func<T, bool>> Condition { get; set; }
 
@@ -40,10 +24,9 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
             Condition = condition,
             ValidationItems = this.ValidationItems
         };
-
         var descriptor = new ValidationRuleDescriptor<T>()
         {
-            ValidationItems = new List<IValidationItem>(),
+            ValidationItems = new ValidationItemStack(),
             ValidationCondition = condition.Compile(),
         };
 
@@ -51,7 +34,7 @@ internal sealed class ValidationCondition<T> : IValidationCondition<T>
 
         foreach (var item in descriptor.ValidationItems)
         {
-            this.validationItems.Add(item);
+            this.ValidationItems.Push(item);
         }
 
         return validationCondition;

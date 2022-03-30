@@ -10,29 +10,26 @@ using Assimalign.ComponentModel.Mapping.Properties;
 using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
 internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
-    where TTargetMember : new()
-    where TSourceMember : new()
 {
+
     public MapperActionNestedObject(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
     {
-        if (target.Body is MemberExpression member)
-        {
-            if (member.Member.DeclaringType != typeof(TTarget))
-            {
-                throw new Exception(string.Format(Resources.MapperExceptionInvalidChaining, target, typeof(TTarget).Name));
-            }
-
-            SourceExpression = source;
-            SourceGetter = source.Compile();
-            TargetExpression = target;
-            TargetMember = member.Member;
-            TargetGetter = target.Compile();
-        }
-        else
+        if (target.Body is not MemberExpression member)
         {
             throw new ArgumentException($"The target expression body: '{target}' must be a MemberExpression.");
         }
+        if (member.Member.DeclaringType != typeof(TTarget))
+        {
+            throw new Exception(string.Format(Resources.MapperExceptionInvalidChaining, target, typeof(TTarget).Name));
+        }
+
+        SourceExpression = source;
+        SourceGetter = source.Compile();
+        TargetExpression = target;
+        TargetMember = member.Member;
+        TargetGetter = target.Compile();
     }
+
     public int Id => this.TargetType.GetHashCode() + TargetMember.GetHashCode();
     public Type TargetType => typeof(TTarget);
     public MemberInfo TargetMember { get; }
@@ -43,20 +40,23 @@ internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, 
     public Func<TSource, TSourceMember> SourceGetter { get; }
     public Expression<Func<TSource, TSourceMember>> SourceExpression { get; }
     // To prevent searching a profile in the Mapper options lets just store the reference in a property.
-    public IMapperProfile Profile { get; set; }
+    public IMapperProfile Profile { get; init; }
 
     public void Invoke(MapperContext context)
     {
-        if (context.Source is TSource source && context.Target is TTarget target)
+        if (context.Source is not TSource source)
         {
-            var targetValue = new TTargetMember();
-            var sourceValue = GetValue(source);
+            throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
+        }
+        if (context.Target is not TTarget target)
+        {
+            throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
+        }
 
-            if (sourceValue is null)
-            {
-                return;
-            }
-            
+        var sourceValue = GetValue(source);
+
+        if (sourceValue is not null)
+        {
             var nestedContext = new MapperContext(targetValue, sourceValue);
 
             foreach (var action in Profile.MapActions)
@@ -66,12 +66,7 @@ internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, 
 
             SetValue(target, targetValue);
         }
-        else
-        {
-            throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
-        }
     }
-
     private TSourceMember GetValue(TSource source)
     {
         try
@@ -83,8 +78,6 @@ internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, 
             return default;
         }
     }
-
-
     private void SetValue(object instance, object value)
     {
         if (TargetMember is PropertyInfo property)

@@ -9,11 +9,13 @@ namespace Assimalign.ComponentModel.Validation;
 /// </summary>
 public interface IValidationCondition
 {
-
     /// <summary>
-    /// 
+    /// Represents a 
+    /// <remarks>
+    ///     <b>This Should be set a </b>
+    /// </remarks>
     /// </summary>
-    IEnumerable<IValidationItem> ValidationItems { get; }
+    IValidationItemStack ValidationItems { get; }
 }
 
 

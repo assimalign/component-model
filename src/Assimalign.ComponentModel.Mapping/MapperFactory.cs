@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping;
 
-public abstract class MapperFactory
+public abstract class MapperFactory : IMapperFactory
 {
+    public abstract void Configure(string strategyName, Action<IMapperFactoryBuilder> builder);
 
+
+    public IMapper Create(string strategyName)
+    {
+        throw new NotImplementedException();
+    }
 }

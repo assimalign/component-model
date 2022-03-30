@@ -14,7 +14,6 @@ namespace Assimalign.ComponentModel.Validation;
 /// </remarks>
 public interface IValidationRuleStack : 
     IEnumerable<IValidationRule>, 
-    IEnumerable, 
     ICollection, 
     IReadOnlyCollection<IValidationRule>
 {

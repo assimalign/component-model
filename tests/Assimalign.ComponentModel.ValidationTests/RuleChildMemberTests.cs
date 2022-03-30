@@ -48,12 +48,12 @@ public class RuleChildMemberTests
                         });
 
                      configure
-                        .When(p => string.IsNullOrEmpty(p.ZipCode), op =>
+                        .When(p => Test(p.ZipCode), op =>
                          {
                              op.RuleFor(p => p.ZipCode)
                                 .NotEmpty();
                          })
-                        .When(p => !string.IsNullOrEmpty(p.ZipCode), ops =>
+                        .When(p => !Test(p.ZipCode), ops =>
                         {
                             ops.RuleFor(p => p.ZipCode)
                                 .Custom((value, context) =>
@@ -65,6 +65,15 @@ public class RuleChildMemberTests
                                 });
                         });
                  });
+
+
+           
+        }
+
+        bool Test(string t)
+        {
+            var r = string.IsNullOrEmpty(t);
+            return r;
         }
     }
 

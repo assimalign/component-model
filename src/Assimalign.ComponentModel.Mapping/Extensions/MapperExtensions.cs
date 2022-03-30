@@ -15,8 +15,12 @@ public static partial class MapperExtensions
     /// <param name="valueType"></param>
     /// <returns></returns>
     public static TStruct? ToNullable<TStruct>(this TStruct valueType)
-         where TStruct : struct
+         where TStruct : struct, IEquatable<TStruct>
     {
+        if (valueType.Equals(default(TStruct)))
+        {
+            return new Nullable<TStruct>();
+        }
         return new Nullable<TStruct>(valueType);
     }
 

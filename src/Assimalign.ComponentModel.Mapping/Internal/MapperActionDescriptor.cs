@@ -10,7 +10,8 @@ namespace Assimalign.ComponentModel.Mapping.Internal;
 
 using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
-internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDescriptor<TTarget, TSource>
+
+internal class MapperActionDescriptor<TTarget, TSource> : IMapperActionDescriptor<TTarget, TSource>
 {
     public MapperActionDescriptor()
     {
@@ -32,8 +33,6 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
         return this;
     }
     public IMapperActionDescriptor<TTarget, TSource> MapProfile<TTargetMember, TSourceMember>(Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Expression<Func<TSource, IEnumerable<TSourceMember>>> source, Action<IMapperActionDescriptor<TTargetMember, TSourceMember>> configure)
-        where TTargetMember : class, new()
-        where TSourceMember : class, new()
     {
         var profile = new MapperProfileDefault<TTargetMember, TSourceMember>(configure);
 
@@ -51,6 +50,11 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
 
         this.Profiles.Add(profile);
 
+        if (target is Expression<Func<TTarget, List<TTargetMember>>> list)
+        {
+
+        }
+
         var mapperAction = new MapperActionNestedEnumerable<TTarget, TTargetMember, TSource, TSourceMember>(target, source)
         {
             Profile = profile
@@ -62,8 +66,6 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
         return this.MapAction(mapperAction);
     }
     public IMapperActionDescriptor<TTarget, TSource> MapProfile<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source, Action<IMapperActionDescriptor<TTargetMember, TSourceMember>> configure)
-        where TTargetMember : class, new()
-        where TSourceMember : class, new()
     {
         var profile = new MapperProfileDefault<TTargetMember, TSourceMember>(configure);
 
@@ -94,129 +96,14 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
 
         return this;
     }
-    public IMapperActionDescriptor<TTarget, TSource> AfterMap(Action<TTarget, TSource> action)
+    public IMapperActionDescriptor<TTarget, TSource> OnMapComplete(Action<TTarget, TSource> action)
     {
         this.PostActions.Add(new MapperAction<TTarget, TSource>(action));
         return this;
     }
-    public IMapperActionDescriptor<TTarget, TSource> BeforeMap(Action<TTarget, TSource> action)
+    public IMapperActionDescriptor<TTarget, TSource> OnMapBegin(Action<TTarget, TSource> action)
     {
         this.PreActions.Add(new MapperAction<TTarget, TSource>(action));
-        return this;
-    }
-    public IMapperActionDescriptor<TTarget, TSource> MapAll()
-    {
-        var targetType = typeof(TTarget);
-        var sourceType = typeof(TSource);
-
-        var targetParameter = Expression.Parameter(targetType);
-        var sourceParameter = Expression.Parameter(sourceType);
-
-        foreach (var targetMember in targetType.GetMembers())
-        {
-            switch (targetMember)
-            {
-                case PropertyInfo targetProperty when targetProperty.CanWrite && targetProperty.CanRead:
-                    {
-                        var sourceProperty = sourceType.GetProperty(
-                            targetProperty.Name,
-                            BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-                        if (sourceProperty is not null && sourceProperty.CanRead && sourceProperty.CanWrite && sourceProperty.PropertyType == targetProperty.PropertyType)
-                        {
-                            var targetParameterMember = Expression.Property(targetParameter, targetProperty);
-                            var sourceParameterMember = Expression.Property(sourceParameter, sourceProperty);
-
-                            var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
-                            var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
-
-                            var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
-                                typeof(TTarget),
-                                targetParameterMember.Type,
-                                typeof(TSource),
-                                sourceParameterMember.Type);
-
-                            var mapperAction = Activator.CreateInstance(mapperActionType, targetLambda, sourceLambda) as IMapperAction;
-                            if (MapActions.Contains(mapperAction))
-                            {
-                                throw new MapperInvalidMappingException(targetLambda);
-                            }
-                            this.MapAction(mapperAction);
-                        }
-
-                        break;
-                    }
-                case FieldInfo targetField when targetField.IsPublic:
-                    {
-                        var sourceField = sourceType.GetField(
-                            targetField.Name,
-                            BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-                        if (sourceField is not null && sourceField.FieldType == targetField.FieldType)
-                        {
-                            var targetParameterMember = Expression.Field(targetParameter, targetField);
-                            var sourceParameterMember = Expression.Field(sourceParameter, sourceField);
-
-                            var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
-                            var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
-
-                            var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
-                                typeof(TTarget),
-                                targetParameterMember.Type,
-                                typeof(TSource),
-                                sourceParameterMember.Type);
-
-                            var mapperAction = Activator.CreateInstance(mapperActionType, targetLambda, sourceLambda) as IMapperAction;
-                            if (MapActions.Contains(mapperAction))
-                            {
-                                throw new MapperInvalidMappingException(targetLambda);
-                            }
-                            this.MapAction(mapperAction);
-                        }
-                        break;
-                    }
-            }
-
-        }
-        return this;
-    }
-    public IMapperActionDescriptor<TTarget, TSource> MapAllFields()
-    {
-        var targetType = typeof(TTarget);
-        var sourceType = typeof(TSource);
-
-        var targetParameter = Expression.Parameter(targetType);
-        var sourceParameter = Expression.Parameter(sourceType);
-
-        foreach (var targetField in targetType.GetFields().Where(x => x.IsPublic))
-        {
-            var sourceField = sourceType.GetField(
-                targetField.Name,
-                BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-            if (sourceField is not null && sourceField.FieldType == targetField.FieldType)
-            {
-                var targetParameterMember = Expression.Field(targetParameter, targetField);
-                var sourceParameterMember = Expression.Field(sourceParameter, sourceField);
-
-                var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
-                var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
-
-                var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
-                    typeof(TTarget),
-                    targetParameterMember.Type,
-                    typeof(TSource),
-                    sourceParameterMember.Type);
-
-                var mapperAction = Activator.CreateInstance(mapperActionType, targetLambda, sourceLambda) as IMapperAction;
-                if (MapActions.Contains(mapperAction))
-                {
-                    throw new MapperInvalidMappingException(targetLambda);
-                }
-                this.MapAction(mapperAction);
-            }
-        }
-
         return this;
     }
     public IMapperActionDescriptor<TTarget, TSource> MapAllProperties()
@@ -237,10 +124,8 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
             {
                 var targetParameterMember = Expression.Property(targetParameter, targetProperty);
                 var sourceParameterMember = Expression.Property(sourceParameter, sourceProperty);
-
                 var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
                 var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
-
                 var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
                     typeof(TTarget),
                     targetParameterMember.Type,
@@ -259,17 +144,56 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
 
         return this;
     }
-    public IMapperActionDescriptor<TTarget, TSource> MapTarget(string target, string source)
+    public IMapperActionDescriptor<TTarget, TSource> MapAllFields()
+    {
+        var targetType = typeof(TTarget);
+        var sourceType = typeof(TSource);
+
+        var targetParameter = Expression.Parameter(targetType);
+        var sourceParameter = Expression.Parameter(sourceType);
+
+        foreach (var targetField in targetType.GetFields().Where(x => x.IsPublic))
+        {
+            var sourceField = sourceType.GetField(
+                targetField.Name,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+            if (sourceField is not null && sourceField.FieldType == targetField.FieldType)
+            {
+                var targetParameterMember = Expression.Field(targetParameter, targetField);
+                var sourceParameterMember = Expression.Field(sourceParameter, sourceField);
+                var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
+                var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
+                var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
+                    typeof(TTarget),
+                    targetParameterMember.Type,
+                    typeof(TSource),
+                    sourceParameterMember.Type);
+
+                var mapperAction = Activator.CreateInstance(mapperActionType, targetLambda, sourceLambda) as IMapperAction;
+                
+                if (MapActions.Contains(mapperAction))
+                {
+                    throw new MapperInvalidMappingException(targetLambda);
+                }
+                this.MapAction(mapperAction);
+            }
+        }
+
+        return this;
+    }
+    public IMapperActionDescriptor<TTarget, TSource> MapAllMembers()
+    {
+        return MapAllFields().MapAllProperties();
+    }
+    public IMapperActionDescriptor<TTarget, TSource> MapMember(string target, string source)
     {
         var targetParameter = Expression.Parameter(typeof(TTarget));
         var sourceParameter = Expression.Parameter(typeof(TSource));
-
         var targetParameterMember = targetParameter.GetMemberExpression(target);
         var sourceParameterMember = sourceParameter.GetMemberExpression(source);
-
         var targetLambda = Expression.Lambda(targetParameterMember, targetParameter);
         var sourceLambda = Expression.Lambda(sourceParameterMember, sourceParameter);
-
         var mapperActionType = typeof(MapperActionMember<,,,>).MakeGenericType(
             typeof(TTarget),
             targetParameterMember.Type,
@@ -283,14 +207,24 @@ internal sealed class MapperActionDescriptor<TTarget, TSource> : IMapperActionDe
         }
         return this.MapAction(mapperAction);
     }
-    public IMapperActionDescriptor<TTarget, TSource> MapTarget<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
-        where TSourceMember : TTargetMember
+    public IMapperActionDescriptor<TTarget, TSource> MapMember<TTargetMember, TSourceMember>(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
     {
         var mapperAction = new MapperActionMember<TTarget, TTargetMember, TSource, TSourceMember>(target, source);
+
         if (MapActions.Contains(mapperAction))
         {
             throw new MapperInvalidMappingException(target);
         }
+
         return this.MapAction(mapperAction);
+    }
+
+    
+    private IMapperAction GetMapperAction<TTargetMember, TSourceMember>(Expression target, Expression source)
+    {
+        return target switch
+        {
+            Expression<Func<TTarget, IList<TTargetMember>>> ilt => new MapperAction
+        };
     }
 }

@@ -4,17 +4,17 @@ using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Mapping.Internal;
 
-internal sealed class MapperProfileDefault<TSource, TTarget> : MapperProfile<TSource, TTarget>
+internal sealed class MapperProfileDefault<TTarget, TSource> : MapperProfile<TTarget, TSource>
 {
-    private readonly Action<IMapperActionDescriptor<TSource, TTarget>> configure;
+    private readonly Action<IMapperActionDescriptor<TTarget, TSource>> configure;
 
-    public MapperProfileDefault(Action<IMapperActionDescriptor<TSource, TTarget>> configure)
+    public MapperProfileDefault(Action<IMapperActionDescriptor<TTarget, TSource>> configure)
     {
         this.configure = configure;
     }
 
 
-    public override void Configure(IMapperActionDescriptor<TSource, TTarget> descriptor)
+    public override void Configure(IMapperActionDescriptor<TTarget, TSource> descriptor)
     {
         configure.Invoke(descriptor);
     }

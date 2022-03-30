@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Assimalign.ComponentModel.Mapping;
+
+/// <summary>
+/// 
+/// </summary>
+public interface IMapperContext
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    object Source { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    object Target { get; }
+}

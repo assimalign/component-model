@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.ComponentModel.Validation.Internal;
+using System;
 using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Validation;
@@ -52,7 +53,8 @@ public sealed class ValidationOptions
     /// which will be used for an <see cref="IValidator"/> instance.
     /// </summary>
     /// <typeparam name="TValidationProfile"><see cref="IValidationProfile"/></typeparam>
-    public ValidationOptions AddProfile<TValidationProfile>() where TValidationProfile : IValidationProfile, new()
+    public ValidationOptions AddProfile<TValidationProfile>() 
+        where TValidationProfile : IValidationProfile, new()
     {
         return this.AddProfile(new TValidationProfile());
     }
@@ -77,7 +79,31 @@ public sealed class ValidationOptions
             throw new InvalidOperationException($"A Validation Profile for type: {profile.GetType().Name} has already been registered.");
         }
 
-        profile.Configure();
+        this.profiles[index] = profile;
+
+        return this;
+    }
+
+    public ValidationOptions AddProfile<T>(IValidationProfile<T> profile)
+    {
+        if (profile is null)
+        {
+            throw new ArgumentNullException(nameof(profile));
+        }
+
+        var index = profile.ValidationType.GetHashCode();
+
+        if (this.profiles.ContainsKey(index))
+        {
+            throw new InvalidOperationException($"A Validation Profile for type: {profile.GetType().Name} has already been registered.");
+        }
+
+        var descriptor = new ValidationRuleDescriptor<T>()
+        {
+            ValidationItems = profile.ValidationItems
+        };
+
+        profile.Configure(descriptor);
 
         this.profiles[index] = profile;
 

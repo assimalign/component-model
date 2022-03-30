@@ -8,6 +8,7 @@ using Assimalign.ComponentModel.Validation.Internal.Extensions;
 
 internal sealed class ValidationItem<T, TValue> : ValidationItemBase<T, TValue>
 {
+
     public override void Evaluate(IValidationContext context)
     {
         var isUseEntireChain = context.Options.TryGetValue("ContinueThroughValidationChain", out var results) ? 

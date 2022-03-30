@@ -13,9 +13,12 @@ internal sealed class MapperAction<TTarget, TSource> : IMapperAction
 		this.action = action;
     }
 
-    public int Id => this.GetHashCode();
+    // Since the default HashCode is unique
+    // for each instance created should always
+    // be different for every new action add
+    public int Id => this.GetHashCode(); 
 
-    public void Invoke(MapperContext context)
+    public void Invoke(IMapperContext context)
     {
         if (context.Source is TSource source && context.Target is TTarget target)
         {

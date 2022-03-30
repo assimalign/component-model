@@ -5,14 +5,8 @@ namespace Assimalign.ComponentModel.Mapping;
 /// <summary>
 /// 
 /// </summary>
-public interface IMapperBuilder
+public interface IMapperFactoryBuilder
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IMapperBuilder Configure(Action<IMapperActionDescriptor> configure);
     /// <summary>
     /// 
     /// </summary>
@@ -20,7 +14,7 @@ public interface IMapperBuilder
     /// <typeparam name="TSource"></typeparam>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IMapperBuilder Configure<TTarget, TSource>(Action<IMapperActionDescriptor<TTarget, TSource>> configure);
+    IMapperFactoryBuilder Configure<TTarget, TSource>(Action<IMapperProfile<TTarget, TSource>> configure);
     /// <summary>
     /// 
     /// </summary>

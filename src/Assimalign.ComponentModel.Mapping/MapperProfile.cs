@@ -12,11 +12,11 @@ using Assimalign.ComponentModel.Mapping.Internal;
 /// <typeparam name="TSource"></typeparam>
 public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, TSource>
 {
-    private IMapperActionCollection mapActions;
+    private IMapperActionStack mapActions;
 
-    public MapperProfile() 
+    public MapperProfile()
     {
-        
+
     }
 
     /// <inheritdoc cref="IMapperProfile.TargetType" />
@@ -26,7 +26,7 @@ public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, 
     public Type SourceType => typeof(TSource);
 
     /// <inheritdoc cref="IMapperProfile.MapActions"/>
-    public IMapperActionCollection MapActions => this.mapActions;
+    public IMapperActionStack MapActions => this.mapActions;
 
     /// <inheritdoc cref="IMapperProfile{TTarget, TSource}.Configure(IMapperActionDescriptor{TTarget, TSource})"/>
     public abstract void Configure(IMapperActionDescriptor<TTarget, TSource> descriptor);
@@ -34,15 +34,13 @@ public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, 
     /// <inheritdoc cref="IMapperProfile.Configure(IMapperActionDescriptor)"/>
     public void Configure(IMapperActionDescriptor descriptor)
     {
-        if (descriptor is MapperActionDescriptor<TTarget, TSource> ds)
-        {
-            this.Configure(ds);
-            mapActions = new MapperActionCollection(ds.PreActions, ds.MapActions, ds.PostActions);
-        }
-        else
+        if (descriptor is not MapperActionDescriptor<TTarget, TSource> ds)
         {
             throw new NotSupportedException("");
         }
+
+        this.Configure(ds);
+        mapActions = new MapperActionStack(ds.PreActions, ds.MapActions, ds.PostActions);
     }
 
     public override bool Equals(object obj) => obj is IMapperProfile profile ? profile.SourceType == this.SourceType && profile.TargetType == this.TargetType : false;

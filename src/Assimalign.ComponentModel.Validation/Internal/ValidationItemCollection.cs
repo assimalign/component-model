@@ -19,7 +19,6 @@ internal sealed class ValidationItemCollection<T, TValue> : ValidationItemBase<T
         this.paramType = typeof(T);
     }
 
-
     public override void Evaluate(IValidationContext context)
     {
         var isUseEntireChain = context.Options.TryGetValue("ContinueThroughValidationChain", out var results) ?

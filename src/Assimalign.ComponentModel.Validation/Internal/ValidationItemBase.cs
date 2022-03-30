@@ -35,7 +35,7 @@ internal abstract class ValidationItemBase<T, TValue> : IValidationItem<T, TValu
         }
     }
 
-    public Func<T,bool> ValidationCondition { get; set; }
+    public Func<T, bool> ValidationCondition { get; set; }
 
     public IValidationRuleStack ItemRuleStack { get; }
 

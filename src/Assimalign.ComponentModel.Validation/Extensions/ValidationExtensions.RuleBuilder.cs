@@ -32,7 +32,7 @@ public static partial class ValidationExtensions
     {
         var rule = new ChildValidationRule<TValue>()
         {
-            ValidationItems = new List<IValidationItem>(),
+            ValidationItems = new ValidationItemStack(),
             Name = $"Validate child members of {builder.ValidationItem}",
             Error = new ValidationError()
             {

@@ -29,14 +29,7 @@ public sealed class Mapper : IMapper
             options.Profiles.ToDictionary(key=> key.TargetType.GetHashCode() + key.SourceType.GetHashCode(), value=>value));
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <typeparam name="TSource"></typeparam>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+
     public TTarget Map<TTarget, TSource>(TSource source)
         where TTarget : new()
     {
@@ -56,26 +49,17 @@ public sealed class Mapper : IMapper
             throw new Exception("");
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public TTarget Map<TTarget, TSource>(TTarget target, TSource source)
     {
+        if (target is null)
+        {
+            throw new ArgumentNullException("target");
+        }
         if (source is null)
         {
             throw new ArgumentNullException("source");
         }
-
-        var results = this.Map(target, source, typeof(TTarget), typeof(TSource));
-
-        if (results is TTarget instance)
+        if (this.Map(target, source, typeof(TTarget), typeof(TSource)) is TTarget instance)
         {
             return instance;
         }
@@ -84,47 +68,29 @@ public sealed class Mapper : IMapper
             throw new Exception("");
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="sourceType"></param>
-    /// <param name="targetType"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object Map(object source, Type targetType, Type sourceType)
     {
         if (source is null)
         {
             throw new ArgumentNullException("source");
         }
-
-        object target;
-
         try
         {
-            target = Activator.CreateInstance(targetType);
+            object target = Activator.CreateInstance(targetType);
+
+            return this.Map(target, source, targetType, sourceType);
         }
         catch (Exception exception)
         {
             throw new MapperInstanceCreationException(targetType, exception);
         }
-
-        return this.Map(target, source, targetType, sourceType);
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    /// <param name="sourceType"></param>
-    /// <param name="targetType"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public object Map(object target, object source, Type targetType, Type sourceType)
     {
+        if (target is null)
+        {
+            throw new ArgumentNullException("target");
+        }
         if (source is null)
         {
             throw new ArgumentNullException("source");

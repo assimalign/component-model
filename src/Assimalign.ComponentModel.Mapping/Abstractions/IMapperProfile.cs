@@ -9,7 +9,7 @@ namespace Assimalign.ComponentModel.Mapping;
 public interface IMapperProfile
 {
     /// <summary>
-    /// 
+    /// Represents the Target Type in which values will be copied to.
     /// </summary>
     Type TargetType { get; }
     /// <summary>
@@ -19,7 +19,7 @@ public interface IMapperProfile
     /// <summary>
     /// A collection of actions to be invoked on mapping.
     /// </summary>
-    IMapperActionCollection MapActions { get; }
+    IMapperActionStack MapActions { get; }
     /// <summary>
     /// Invokes the Profile descriptor which creates the mapper profile
     /// </summary>

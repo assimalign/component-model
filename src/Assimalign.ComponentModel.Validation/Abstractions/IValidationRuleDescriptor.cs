@@ -6,10 +6,24 @@ using System.Linq.Expressions;
 namespace Assimalign.ComponentModel.Validation;
 
 
+public interface IValidationRuleDescriptor
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    IValidationItemStack ValidationItems { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    IValidationRuleDescriptor RuleFor(IValidationItem item);
+}
+
 /// <summary>
 /// Initializes a validation rule builder.
 /// </summary>
-public interface IValidationRuleDescriptor<T>
+public interface IValidationRuleDescriptor<T> : IValidationRuleDescriptor
 {
     /// <summary>
     /// 

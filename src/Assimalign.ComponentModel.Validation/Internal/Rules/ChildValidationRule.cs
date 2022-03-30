@@ -10,7 +10,7 @@ internal sealed class ChildValidationRule<TValue> : ValidationRuleBase<TValue>
 {
     public ValidationMode ValidationMode { get; set; }
 
-    public IList<IValidationItem> ValidationItems { get; set; }
+    public IValidationItemStack ValidationItems { get; set; }
 
     public override string Name { get; set; }
 
