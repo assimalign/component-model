@@ -9,10 +9,10 @@ namespace Assimalign.ComponentModel.Mapping.Internal;
 using Assimalign.ComponentModel.Mapping.Properties;
 using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
-internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
+internal sealed class MapperActionNestedProfile<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
 {
 
-    public MapperActionNestedObject(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
+    public MapperActionNestedProfile(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
     {
         if (target.Body is not MemberExpression member)
         {
@@ -42,7 +42,7 @@ internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, 
     // To prevent searching a profile in the Mapper options lets just store the reference in a property.
     public IMapperProfile Profile { get; init; }
 
-    public void Invoke(MapperContext context)
+    public void Invoke(IMapperContext context)
     {
         if (context.Source is not TSource source)
         {
@@ -55,17 +55,17 @@ internal sealed class MapperActionNestedObject<TTarget, TTargetMember, TSource, 
 
         var sourceValue = GetValue(source);
 
-        if (sourceValue is not null)
-        {
-            var nestedContext = new MapperContext(targetValue, sourceValue);
+        //if (sourceValue is not null)
+        //{
+        //    var nestedContext = new MapperContext(targetValue, sourceValue);
 
-            foreach (var action in Profile.MapActions)
-            {
-                action.Invoke(nestedContext);
-            }
+        //    foreach (var action in Profile.MapActions)
+        //    {
+        //        action.Invoke(nestedContext);
+        //    }
 
-            SetValue(target, targetValue);
-        }
+        //    SetValue(target, targetValue);
+        //}
     }
     private TSourceMember GetValue(TSource source)
     {

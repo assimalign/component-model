@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.ComponentModel.Mapping.Extensions
+namespace Assimalign.ComponentModel.Mapping;
+
+public enum MapperMemberHandling
 {
-    public static class MapperProfileExtensions
-    {
-        
-    }
+    Override = 0,
+    Ignore = 1
 }

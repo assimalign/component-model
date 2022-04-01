@@ -9,13 +9,13 @@ namespace Assimalign.ComponentModel.Mapping.Internal;
 using Assimalign.ComponentModel.Mapping.Properties;
 using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
-internal sealed class MapperActionNestedEnumerable<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
+internal sealed class MapperActionEnumerable<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
     where TSourceMember : new()
     where TTargetMember : new()
 {
-    private Action<MapperContext> handler;
+    private Func<IEnumerable<TTargetMember>, IEnumerable<TTargetMember>> convert;
 
-    public MapperActionNestedEnumerable(Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Expression<Func<TSource, IEnumerable<TSourceMember>>> source)
+    public MapperActionEnumerable(Expression<Func<TTarget, IEnumerable<TTargetMember>>> target, Expression<Func<TSource, IEnumerable<TSourceMember>>> source)
     {
         if (target.Body is not MemberExpression member)
         {
@@ -26,31 +26,32 @@ internal sealed class MapperActionNestedEnumerable<TTarget, TTargetMember, TSour
             throw new Exception(string.Format(Resources.MapperExceptionInvalidChaining, target, typeof(TTarget).Name));
         }
 
-        var t = (PropertyInfo)member.Member;
         SourceExpression = source;
         SourceGetter = source.Compile();
         TargetExpression = target;
         TargetMember = member.Member;
         TargetGetter = target.Compile();
+
+        SetEnumerableConverter();
     }
 
-    private void GetEnumerableMapHanlder(Type enumerableType)
+    private void SetEnumerableConverter()
     {
-        if (typeof(IList<TTargetMember>).IsAssignableTo(enumerableType))
+        if (typeof(List<TTargetMember>).IsAssignableTo(TargetExpression.ReturnType))
         {
-
+            convert = enumerable => enumerable.ToList();
         }
-
-        switch (enumerableType)
+        else if (typeof(TSourceMember[]).IsAssignableTo(TargetExpression.ReturnType))
         {
-            case typeof (List<TTargetMember>):
-                {
-                    break;
-                }
-            default:
-                {
-                    throw new NotSupportedException("Unsupported");
-                }
+            convert = enumerable => enumerable.ToArray();
+        }
+        else if (typeof(IEnumerable<TSourceMember>).IsAssignableTo(TargetExpression.ReturnType))
+        {
+            convert = enumerable => enumerable.AsEnumerable();
+        }
+        else
+        {
+            convert = enumerable => enumerable;
         }
     }
 
@@ -67,7 +68,7 @@ internal sealed class MapperActionNestedEnumerable<TTarget, TTargetMember, TSour
     // To prevent searching a profile in the Mapper options lets just store the reference in a property.
     public IMapperProfile Profile { get; init; }
 
-    public void Invoke(MapperContext context)
+    public void Invoke(IMapperContext context)
     {
         if (context.Source is not TSource source)
         {
@@ -82,11 +83,11 @@ internal sealed class MapperActionNestedEnumerable<TTarget, TTargetMember, TSour
 
         if (sourceValues is not null) // No need to try mapping target if there is no data to map
         {
-            var items = new List<object>();
+            var items = new List<TTargetMember>();
 
             foreach (var sourceValue in sourceValues)
             {
-                var targetValue = new TTargetMember();
+                TTargetMember targetValue = default;
                 var nestedContext = new MapperContext(targetValue, sourceValue);
 
                 foreach (var action in Profile.MapActions)
@@ -97,11 +98,9 @@ internal sealed class MapperActionNestedEnumerable<TTarget, TTargetMember, TSour
                 items.Add(targetValue);
             }
 
-            SetValue(target, items.Cast<TTargetMember>().AsEnumerable());
+            SetValue(target, convert.Invoke(items));
         }
     }
-
-
 
     private IEnumerable<TSourceMember> GetValue(TSource source)
     {

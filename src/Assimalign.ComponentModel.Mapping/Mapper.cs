@@ -15,7 +15,6 @@ using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 public sealed class Mapper : IMapper
 {
     private readonly MapperOptions options;
-    private readonly ConcurrentDictionary<int, IMapperProfile> cache;
 
 
     /// <summary>
@@ -25,8 +24,6 @@ public sealed class Mapper : IMapper
     public Mapper(MapperOptions options)
     {
         this.options = options;
-        this.cache = new ConcurrentDictionary<int, IMapperProfile>(
-            options.Profiles.ToDictionary(key=> key.TargetType.GetHashCode() + key.SourceType.GetHashCode(), value=>value));
     }
 
 

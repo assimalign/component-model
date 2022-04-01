@@ -14,11 +14,17 @@ using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 internal sealed class MapperActionMember<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
 {
     private readonly TTarget target;
+    
     public MapperActionMember(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
     {
         if (target.Body is not MemberExpression member)
         {
             throw new ArgumentException($"The target expression body: '{target}' must be a MemberExpression.");
+        }
+        // Check if the source type can be assigned to the target type
+        if (!typeof(TSourceMember).IsAssignableTo(typeof(TTargetMember)))
+        {
+            throw new InvalidCastException($"The source expression '{source}' cannot be assigned to the target expression '{target}'.");
         }
         // Ensure that the member is of type TTarget (Target Members cannot be nested.)
         if (member.Member.DeclaringType != typeof(TTarget))
@@ -43,7 +49,7 @@ internal sealed class MapperActionMember<TTarget, TTargetMember, TSource, TSourc
     public Func<TSource, TSourceMember> SourceGetter { get; }
     public Expression<Func<TSource, TSourceMember>> SourceExpression { get; }
 
-    public void Invoke(MapperContext context)
+    public void Invoke(IMapperContext context)
     {
         if (context.Source is not TSource source)
         {
@@ -54,9 +60,21 @@ internal sealed class MapperActionMember<TTarget, TTargetMember, TSource, TSourc
             throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
         }
 
-        SetValue(target, GetValue(source));
+        SetValue(target, GetSourceValue(source));
     }
-    private object GetValue(TSource source)
+    private TTargetMember GetTargetValue(TTarget target)
+    {
+        try
+        {
+            return TargetGetter.Invoke(target);
+        }
+        // Let's catch the exception for Null References only. This occurs when the Source Member Expression is chained and possibly null.
+        catch (Exception exception) when (exception is NullReferenceException)
+        {
+            return default(TTargetMember);
+        }
+    }
+    private TSourceMember GetSourceValue(TSource source)
     {
         try
         {

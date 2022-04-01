@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-internal sealed class MapperContext : IMapperContext
+public sealed class MapperContext : IMapperContext
 {
 	private readonly object target;
 	private readonly object source;

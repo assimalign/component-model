@@ -82,16 +82,16 @@ public partial class MapperTests
 
     }
 
-    public class Factory : MapperFactory
-    {
-        public override IMapperFactory Configure(IMapperFactoryBuilder builder)
-        {
+    //public class Factory : MapperFactory
+    //{
+    //    public override IMapperFactory Configure(IMapperFactoryBuilder builder)
+    //    {
 
-            builder.Configure
+    //        builder.Configure
 
 
-            return this;
-        }
-    }
+    //        return this;
+    //    }
+    //}
 
 }

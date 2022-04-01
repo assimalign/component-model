@@ -21,7 +21,8 @@ public interface IMapperProfile
     /// </summary>
     IMapperActionStack MapActions { get; }
     /// <summary>
-    /// Invokes the Profile descriptor which creates the mapper profile
+    /// Invokes the Profile descriptor which should add <see cref="IMapperAction"/>'s 
+    /// into the <see cref="IMapperProfile.MapActions"/> stack.
     /// </summary>
     /// <param name="descriptor"></param>
     void Configure(IMapperActionDescriptor descriptor);
@@ -34,9 +35,7 @@ public interface IMapperProfile
 /// <typeparam name="TSource"></typeparam>
 public interface IMapperProfile<TTarget, TSource> : IMapperProfile
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="descriptor"></param>
+    /// <inheritdoc cref="IMapperProfile.Configure(IMapperActionDescriptor)"/>
+    /// <param name="descriptor">A generic descriptor that wraps the Target and Source objects.</param>
     void Configure(IMapperActionDescriptor<TTarget, TSource> descriptor);
 }

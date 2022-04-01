@@ -8,6 +8,27 @@ namespace Assimalign.ComponentModel.Mapping;
 
 public static partial class MapperExtensions
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="mapper"></param>
+    /// <param name="sources"></param>
+    /// <returns></returns>
+    public static TTarget Map<TTarget>(this IMapper mapper, params object[] sources)
+        where TTarget : class, new()
+    {
+        var target = new TTarget();
+
+        foreach (var source in sources)
+        {
+            target = (TTarget)mapper.Map(target, source, target.GetType(), source.GetType());
+        }
+
+        return target;
+    }
+
     /// <summary>
     /// Converts a value type to nullable
     /// </summary>

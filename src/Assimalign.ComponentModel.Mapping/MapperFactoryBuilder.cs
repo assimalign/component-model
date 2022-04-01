@@ -28,15 +28,15 @@ internal sealed class MapperFactoryBuilder : IMapperFactoryBuilder
 
     public IMapperFactoryBuilder Configure<TTarget, TSource>(Action<IMapperProfile<TTarget, TSource>> configure)
     {
-        var profile = new MapperProfileDefault<TTarget, TSource>();
-        var descriptor = new MapperActionDescriptor<TTarget, TSource>()
-        {
-            Profiles = this.Profiles
-        };
+        //var profile = new MapperProfileDefault<TTarget, TSource>();
+        //var descriptor = new MapperActionDescriptor<TTarget, TSource>()
+        //{
+        //    Profiles = this.Profiles
+        //};
 
-        profile.Configure(descriptor);
+        //profile.Configure(descriptor);
 
-        Profiles.Add(profile);
+        //Profiles.Add(profile);
 
         return this;
     }

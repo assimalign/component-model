@@ -22,7 +22,14 @@ public sealed partial class MapperOptions
         this.profiles = new List<IMapperProfile>();
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    public MapperMemberHandling MemberHandling { get; set; } = MapperMemberHandling.Override;
+    /// <summary>
+    /// 
+    /// </summary>
+    public MapperCollectionHandling CollectionHandling { get; set; } = MapperCollectionHandling.Override;
     /// <summary>
     /// 
     /// </summary>
@@ -48,7 +55,8 @@ public sealed partial class MapperOptions
 
         IMapperActionDescriptor descriptor = new MapperActionDescriptor<TTarget, TSource>()
         {
-            Profiles = profiles
+            Profiles = profiles,
+            MapActions = profile.MapActions
         };
 
         profile.Configure(descriptor);

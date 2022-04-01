@@ -9,8 +9,6 @@ using System.Runtime.CompilerServices;
 
 namespace System.Reflection;
 
-
-
 internal static class MapperTypeExtensions
 {
 	/// <summary>

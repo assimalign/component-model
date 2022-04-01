@@ -16,8 +16,7 @@ public partial class MapperTests
         public override void Configure(IMapperActionDescriptor<Person1, Person2> descriptor)
         {
             descriptor
-                .
-                .MapMember(target => target.Age, source => source.Details.Age.ToNullable())
+                .MapMember(target => target.Age, source => source.Details.Age)
                 .MapMember(target => target.Birthdate, source => source.Details.Birthdate.GetValueOrDefault())
                 .MapMember(target => target.FirstName, source => source.Details.FirstName)
                 .MapMember(target => target.LastName, source => source.Details.LastName)
@@ -26,26 +25,26 @@ public partial class MapperTests
                 {
                     FirstName = value.FirstName
                 }))
-                .MapProfile(target => target.PrimaryAddress, source=>source.Details.PrimaryAddress, descriptor =>
-                {
-                    descriptor.MapAllProperties();
-                });
+                .MapProfile(target => target.PrimaryAddress, source => source.Details.PrimaryAddress, descriptor =>
+                  {
+                      descriptor.MapAllProperties();
+                  });
         }
     }
 
-    public partial class MapperMemberToMember1Profile : MapperProfile<Person2Details, Person1>
-    {
-        public override void Configure(IMapperActionDescriptor<Person2Details, Person1> descriptor)
-        {
-            descriptor
-                .MapProfile(target => target.Following, source => source.Following, descripto =>
-                {
-                    descripto
-                        .MapMember(target => target.FirstName, source => source.Value.FirstName)
-                        .MapAllFields();
-                });
-        }
-    }
+    //public partial class MapperMemberToMember1Profile : MapperProfile<Person2Details, Person1>
+    //{
+    //    public override void Configure(IMapperActionDescriptor<Person2Details, Person1> descriptor)
+    //    {
+    //        descriptor
+    //            .MapProfile(target => target.Following, source => source.Following, descripto =>
+    //            {
+    //                descripto
+    //                    .MapMember(target => target.FirstName, source => source.Value.FirstName)
+    //                    .MapAllFields();
+    //            });
+    //    }
+    //}
 
     [Fact]
     public void RunMemberToMemberTest()
@@ -59,6 +58,7 @@ public partial class MapperTests
         {
             Details = new Person2Details()
             {
+                Age = 12,
                 FirstName = "Chase",
                 LastName = "Crawford",
                 MiddleName = "Ryan",

@@ -16,7 +16,7 @@ public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, 
 
     public MapperProfile()
     {
-
+        this.mapActions = new MapperActionStack();
     }
 
     /// <inheritdoc cref="IMapperProfile.TargetType" />
@@ -28,20 +28,25 @@ public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, 
     /// <inheritdoc cref="IMapperProfile.MapActions"/>
     public IMapperActionStack MapActions => this.mapActions;
 
-    /// <inheritdoc cref="IMapperProfile{TTarget, TSource}.Configure(IMapperActionDescriptor{TTarget, TSource})"/>
-    public abstract void Configure(IMapperActionDescriptor<TTarget, TSource> descriptor);
-
     /// <inheritdoc cref="IMapperProfile.Configure(IMapperActionDescriptor)"/>
     public void Configure(IMapperActionDescriptor descriptor)
     {
-        if (descriptor is not MapperActionDescriptor<TTarget, TSource> ds)
+        if (descriptor is MapperActionDescriptor<TTarget, TSource> ds1)
+        {
+            this.Configure(ds1);
+        }
+        else if (descriptor is IMapperActionDescriptor<TTarget, TSource> ds2)
+        {
+            this.Configure(ds2);
+        }
+        else
         {
             throw new NotSupportedException("");
-        }
-
-        this.Configure(ds);
-        mapActions = new MapperActionStack(ds.PreActions, ds.MapActions, ds.PostActions);
+        }       
     }
+
+    /// <inheritdoc cref="IMapperProfile{TTarget, TSource}.Configure(IMapperActionDescriptor{TTarget, TSource})"/>
+    public abstract void Configure(IMapperActionDescriptor<TTarget, TSource> descriptor);
 
     public override bool Equals(object obj) => obj is IMapperProfile profile ? profile.SourceType == this.SourceType && profile.TargetType == this.TargetType : false;
     public override int GetHashCode() => HashCode.Combine(this.SourceType, this.TargetType);
