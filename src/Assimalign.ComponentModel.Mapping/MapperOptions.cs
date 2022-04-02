@@ -1,7 +1,7 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Mapping;
 
@@ -23,18 +23,17 @@ public sealed partial class MapperOptions
     }
 
     /// <summary>
-    /// 
+    /// Specifies whether a target member should be 
+    /// ignored when writing nulls or defaults from source member.
+    /// <remarks>
+    ///     <b>The default is 'Never'</b>
+    /// </remarks>
     /// </summary>
-    public MapperMemberHandling MemberHandling { get; set; } = MapperMemberHandling.Override;
-    /// <summary>
-    /// 
-    /// </summary>
-    public MapperCollectionHandling CollectionHandling { get; set; } = MapperCollectionHandling.Override;
+    public MapperIgnoreHandling IgnoreHandling { get; set; } = MapperIgnoreHandling.Never;
     /// <summary>
     /// 
     /// </summary>
     public IEnumerable<IMapperProfile> Profiles => profiles;
-
 
     /// <summary>
     /// 

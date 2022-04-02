@@ -12,7 +12,7 @@ namespace Assimalign.ComponentModel.Mapping;
 public interface IMapperActionDescriptor
 {
     /// <summary>
-    /// A FIFO (First-In First-Out) collection of Actions 
+    /// A FIFO (First-In First-Out) collection of Mapper Actions. 
     /// </summary>
     IMapperActionStack MapActions { get; }
     /// <summary>
@@ -21,12 +21,7 @@ public interface IMapperActionDescriptor
     /// <param name="action"></param>
     /// <returns></returns>
     IMapperActionDescriptor MapAction(IMapperAction action);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IMapperActionDescriptor MapAction(Action<IMapperContext> configure);
+
 }
 
 /// <summary>
@@ -38,6 +33,19 @@ public interface IMapperActionDescriptor
 public interface IMapperActionDescriptor<TTarget, TSource> : IMapperActionDescriptor
 {
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns><see cref="IMapperActionDescriptor{TTarget, TSource}"/></returns>
+    IMapperActionDescriptor<TTarget, TSource> MapAction(Action<IMapperContext> configure);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns><see cref="IMapperActionDescriptor{TTarget, TSource}"/></returns>
+    IMapperActionDescriptor<TTarget, TSource> MapAction(Action<TTarget, TSource> configure);
+    /// <summary>
     /// Creates a Member Expression from the property names provided.
     /// <remarks>
     ///     For property chaining use a period '.' between each property for nested objects.
@@ -45,9 +53,9 @@ public interface IMapperActionDescriptor<TTarget, TSource> : IMapperActionDescri
     /// </summary>
     /// <param name="target"></param>
     /// <param name="source"></param>
-    /// <returns></returns>
+    /// <returns><see cref="IMapperActionDescriptor{TTarget, TSource}"/></returns>
     IMapperActionDescriptor<TTarget, TSource> MapMember(string target, string source);
-    
+
     /// <summary>
     /// Creates a Member To Member mapping action. 
     /// </summary>

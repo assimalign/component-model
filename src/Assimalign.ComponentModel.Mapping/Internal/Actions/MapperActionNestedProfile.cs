@@ -10,6 +10,8 @@ using Assimalign.ComponentModel.Mapping.Properties;
 using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
 internal sealed class MapperActionNestedProfile<TTarget, TTargetMember, TSource, TSourceMember> : IMapperAction
+    where TTargetMember : class
+    where TSourceMember : class
 {
 
     public MapperActionNestedProfile(Expression<Func<TTarget, TTargetMember>> target, Expression<Func<TSource, TSourceMember>> source)
@@ -53,21 +55,31 @@ internal sealed class MapperActionNestedProfile<TTarget, TTargetMember, TSource,
             throw new MapperInvalidContextException(context.Source.GetType(), context.Target.GetType(), typeof(TSource), typeof(TTarget));
         }
 
-        var sourceValue = GetValue(source);
+        var targetValue = GetTargetValue(target);
+        var sourceValue = GetSourceValue(source);
 
-        //if (sourceValue is not null)
-        //{
-        //    var nestedContext = new MapperContext(targetValue, sourceValue);
 
-        //    foreach (var action in Profile.MapActions)
-        //    {
-        //        action.Invoke(nestedContext);
-        //    }
+        if (sourceValue is null)
+        {
+            return;
+        }
+        if (context is MapperContext ictx)
+        {
+            var ncontext = new MapperContext(targetValue, sourceValue)
+            {
+                MapOptions = ictx.MapOptions
+            };
 
-        //    SetValue(target, targetValue);
-        //}
+            foreach (var action in Profile.MapActions)
+            {
+                action.Invoke(ncontext);
+            }
+
+            SetValue(target, targetValue);
+        }
     }
-    private TSourceMember GetValue(TSource source)
+
+    private TSourceMember GetSourceValue(TSource source)
     {
         try
         {
@@ -78,15 +90,37 @@ internal sealed class MapperActionNestedProfile<TTarget, TTargetMember, TSource,
             return default;
         }
     }
-    private void SetValue(object instance, object value)
+    private TTargetMember GetTargetValue(TTarget target)
     {
-        if (TargetMember is PropertyInfo property)
+        try
         {
-            property.SetValue(instance, value);
+            return TargetGetter.Invoke(target) ?? Activator.CreateInstance<TTargetMember>();
         }
-        else if (TargetMember is FieldInfo field)
+        // Let's catch the exception for Null References only. This occurs when the Source Member Expression is chained and possibly null.
+        catch (Exception exception) when (exception is NullReferenceException)
         {
-            field.SetValue(instance, value);
+            return default(TTargetMember);
+        }
+    }
+    private void SetValue(object targetInstance, object targetValue)
+    {
+        switch (TargetMember)
+        {
+            case PropertyInfo property:
+                {
+                    property.SetValue(targetInstance, targetValue);
+                    break;
+                }
+            case FieldInfo field:
+                {
+                    field.SetValue(targetInstance, targetValue);
+                    break;
+                }
+            default:
+                {
+                    // This should never hit, but added just encase
+                    throw new NotSupportedException($"The Target Member  of expression '{TargetExpression}' is not supported. Unknown System.Reflection.MemberInfo.");
+                }
         }
     }
 }

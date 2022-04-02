@@ -41,7 +41,7 @@ public abstract class MapperProfile<TTarget, TSource> : IMapperProfile<TTarget, 
         }
         else
         {
-            throw new NotSupportedException("");
+            throw new NotSupportedException($"The descriptor type: '{descriptor.GetType().Name}' is not supported for this MapperProfile.");
         }       
     }
 

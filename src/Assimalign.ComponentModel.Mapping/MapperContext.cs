@@ -21,5 +21,8 @@ public sealed class MapperContext : IMapperContext
 	/// 
 	/// </summary>
 	public object Source => this.source;
-	
+	/// <summary>
+	/// 
+	/// </summary>
+    public MapperOptions MapOptions { get; init; }
 }

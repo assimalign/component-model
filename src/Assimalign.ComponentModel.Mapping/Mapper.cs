@@ -93,7 +93,10 @@ public sealed class Mapper : IMapper
             throw new ArgumentNullException("source");
         }
 
-        var context = new MapperContext(target, source);
+        var context = new MapperContext(target, source)
+        {
+            MapOptions = this.options
+        };
 
         foreach (var profile in options.Profiles)
         {

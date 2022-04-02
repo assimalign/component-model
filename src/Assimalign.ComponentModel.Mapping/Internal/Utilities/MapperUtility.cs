@@ -8,8 +8,6 @@ using Assimalign.ComponentModel.Mapping.Internal;
 
 internal static class MapperUtility
 {
-
-
     public static MemberExpression GetMemberExpression(this ParameterExpression parameter, string memberName)
     {
         String[] paths = memberName.Split('.');
@@ -21,13 +19,6 @@ internal static class MapperUtility
         }
 
         return expression as MemberExpression;
-    }
-
-    public static bool IsInternalMapperAction(this IMapperAction action)
-    {
-        var type = action.GetType();
-
-        return type.IsAssignableTo(typeof(MapperActionMember<,,,>));
     }
 }
 

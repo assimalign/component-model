@@ -1,5 +1,4 @@
-﻿using Assimalign.ComponentModel.Mapping.Internal;
-using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.ComponentModel.Mapping;
+
+using Assimalign.ComponentModel.Mapping.Internal;
+using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
 public static class MapperActionDescriptorExtensions
 {
@@ -65,7 +67,6 @@ public static class MapperActionDescriptorExtensions
         {
             // TODO: Decide whether to throw NotSupportedException();
         }
-        
 
         return descriptor;
     }
@@ -74,6 +75,15 @@ public static class MapperActionDescriptorExtensions
         where TTargetMember : class
         where TSourceMember : class
     {
+        //if (descriptor is MapperActionDescriptor<TTarget, TSource> ind)
+        //{
+           
+        //}
+        //else
+        //{
+        //    // TODO: Decide whether to throw NotSupportedException();
+        //}
+
         //var profile = new MapperProfileDefault<TTargetMember, TSourceMember>(configure);
 
         //if (this.Profiles.Contains(profile))

@@ -30,6 +30,30 @@ public static partial class MapperExtensions
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <typeparam name="TSource"></typeparam>
+    /// <param name="mapper"></param>
+    /// <param name="sources"></param>
+    /// <returns></returns>
+    public static IEnumerable<TTarget> Map<TTarget, TSource>(this IMapper mapper, IEnumerable<TSource> sources)
+        where TTarget : class, new()
+    {
+        var targets = new List<TTarget>();
+
+        foreach (var source in sources)
+        {
+            var target = new TTarget();
+
+            targets.Add(mapper.Map(target, source));
+        }
+
+        return targets;
+    }
+
+
+    /// <summary>
     /// Converts a value type to nullable
     /// </summary>
     /// <typeparam name="TStruct"></typeparam>

@@ -39,8 +39,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mapping", "mapping", "{8796
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cloning", "cloning", "{6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Mapping.Configurable", "Assimalign.ComponentModel.Mapping.Configurable\Assimalign.ComponentModel.Mapping.Configurable.csproj", "{2CBF5391-A9EB-4DB7-A67B-B5824201950A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.ValidationBenchmarks", "..\benchmarks\Assimalign.ComponentModel.ValidationBenchmarks\Assimalign.ComponentModel.ValidationBenchmarks.csproj", "{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}"
@@ -53,10 +51,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.Configurable.XmlTests", "..\tests\Assimalign.ComponentModel.Validation.Configurable.XmlTests\Assimalign.ComponentModel.Validation.Configurable.XmlTests.csproj", "{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Mapping.Configurable.Json", "Assimalign.ComponentModel.Mapping.Configurable.Json\Assimalign.ComponentModel.Mapping.Configurable.Json.csproj", "{5E5D968E-A922-4A5D-91D8-07BD3B09A92E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Mapping.Configurable.Xml", "Assimalign.ComponentModel.Mapping.Configurable.Xml\Assimalign.ComponentModel.Mapping.Configurable.Xml.csproj", "{2964BEE6-FEB9-477F-BED1-67511860868D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ComponentModel.Validation.Configurable.JsonBenchmarks", "..\benchmarks\Assimalign.ComponentModel.Validation.Configurable.JsonBenchmarks\Assimalign.ComponentModel.Validation.Configurable.JsonBenchmarks.csproj", "{0E0779A7-FCE6-44C0-A504-BC94384FED9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", "{DFE01D99-D4AB-49B0-A560-993BE72A4A8B}"
@@ -67,9 +61,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microsoft", "microsoft", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assimalign", "assimalign", "{AABED604-2ED8-413A-8249-EA4077BCEC6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation", "..\.azure\Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation\Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation.csproj", "{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation", "..\.azure\Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation\Assimalign.Azure.WebJobs.Bindings.ComponentModel.Validation.csproj", "{262B3D76-6A6C-4174-9F9C-9BC77EA2CE11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.DependencyInjection.ComponentModel.Validation", "..\.microsoft\Assimalign.DependencyInjection.ComponentModel.Validation\Assimalign.DependencyInjection.ComponentModel.Validation.csproj", "{591C64DC-B3B0-4F8D-97BD-1F61AF933489}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.DependencyInjection.ComponentModel.Validation", "..\.microsoft\Assimalign.DependencyInjection.ComponentModel.Validation\Assimalign.DependencyInjection.ComponentModel.Validation.csproj", "{591C64DC-B3B0-4F8D-97BD-1F61AF933489}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,10 +99,6 @@ Global
 		{39B76E44-14BA-47DC-87F3-47B84B515BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B76E44-14BA-47DC-87F3-47B84B515BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B76E44-14BA-47DC-87F3-47B84B515BF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CBF5391-A9EB-4DB7-A67B-B5824201950A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,14 +119,6 @@ Global
 		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E5D968E-A922-4A5D-91D8-07BD3B09A92E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E5D968E-A922-4A5D-91D8-07BD3B09A92E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E5D968E-A922-4A5D-91D8-07BD3B09A92E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E5D968E-A922-4A5D-91D8-07BD3B09A92E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2964BEE6-FEB9-477F-BED1-67511860868D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2964BEE6-FEB9-477F-BED1-67511860868D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2964BEE6-FEB9-477F-BED1-67511860868D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2964BEE6-FEB9-477F-BED1-67511860868D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -164,14 +146,11 @@ Global
 		{C2D5A786-D653-40F8-AEA5-366930220CE6} = {C314584B-F572-4824-91CE-611E1E28D8BE}
 		{87967BC9-852D-4E5B-8EDF-6D5381777A23} = {C314584B-F572-4824-91CE-611E1E28D8BE}
 		{6D90A8FE-8DE4-4390-AD55-CA2994C2B1BF} = {C314584B-F572-4824-91CE-611E1E28D8BE}
-		{2CBF5391-A9EB-4DB7-A67B-B5824201950A} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 		{C1084282-48AA-4C2A-BB62-9EC6E7B9B01E} = {E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}
 		{948A2100-4178-4B45-A536-97ECEBB51AC3} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
 		{D6806EE5-7E6E-4135-BB51-04F1E3048BAD} = {C2D5A786-D653-40F8-AEA5-366930220CE6}
 		{EF3069EF-9642-4702-AB74-4C0156C19F77} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
 		{D6D62029-8EF9-4BB5-A20F-D7F44AE45A0A} = {6796623E-222E-444F-90F9-A6AAA4805CF4}
-		{5E5D968E-A922-4A5D-91D8-07BD3B09A92E} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
-		{2964BEE6-FEB9-477F-BED1-67511860868D} = {87967BC9-852D-4E5B-8EDF-6D5381777A23}
 		{0E0779A7-FCE6-44C0-A504-BC94384FED9D} = {E7CAEEE9-CDE9-42EA-9B0F-342BF562520B}
 		{B19B73DC-552F-4611-9CC6-BE741C69E892} = {DFE01D99-D4AB-49B0-A560-993BE72A4A8B}
 		{239B77EF-88D7-4828-9BDA-B40A5B2DEC14} = {DFE01D99-D4AB-49B0-A560-993BE72A4A8B}

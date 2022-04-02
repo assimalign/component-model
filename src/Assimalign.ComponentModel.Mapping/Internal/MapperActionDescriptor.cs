@@ -13,20 +13,24 @@ using Assimalign.ComponentModel.Mapping.Internal.Exceptions;
 
 internal class MapperActionDescriptor<TTarget, TSource> : IMapperActionDescriptor<TTarget, TSource>
 {
-    public MapperOptions Options { get; set; }
-    public IMapperActionStack MapActions { get; set; }
-    public IList<IMapperProfile> Profiles { get; set; } // Passing all added profiles from options as reference to be able to register nested profiles
+    public IMapperActionStack MapActions { get; init; }
+    public IList<IMapperProfile> Profiles { get; init; } // Passing all added profiles from options as reference to be able to register nested profiles
 
     IMapperActionDescriptor IMapperActionDescriptor.MapAction(IMapperAction action) => MapAction(action);
-    IMapperActionDescriptor IMapperActionDescriptor.MapAction(Action<IMapperContext> configure)
-    {
-        return this.MapAction(new MapperActionDefault(configure));
-    }
+    
 
     public IMapperActionDescriptor<TTarget, TSource> MapAction(IMapperAction action) 
     {
         MapActions.Push(action);
         return this;
+    }
+    public IMapperActionDescriptor<TTarget, TSource> MapAction(Action<IMapperContext> configure)
+    {
+        return this.MapAction(new MapperActionDefault(configure));
+    }
+    public IMapperActionDescriptor<TTarget, TSource> MapAction(Action<TTarget, TSource> configure)
+    {
+        return this.MapAction(new MapperActionDefault<TTarget, TSource>(configure));
     }
     public IMapperActionDescriptor<TTarget, TSource> MapMember(string target, string source)
     {

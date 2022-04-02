@@ -25,6 +25,7 @@ public partial class MapperTests
                 {
                     FirstName = value.FirstName
                 }))
+                
                 .MapProfile(target => target.PrimaryAddress, source => source.Details.PrimaryAddress, descriptor =>
                   {
                       descriptor.MapAllProperties();
@@ -51,6 +52,8 @@ public partial class MapperTests
     {
         var mapper = Mapper.Create(configure =>
         {
+
+
             configure.AddProfile(new MapperMemberToMemberProfile());
         });
 
