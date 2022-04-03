@@ -11,16 +11,13 @@
 		<PackageTags>Validation</PackageTags>
 		<!--Company Branding Information-->
 		<PackageIcon>.assimalign.logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Description>
 			A library base on Design by Contract programming for mapping object-to-object based on specified
 			conditions.
 		</Description>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <Compile Remove="Abstractions\IMapperProfileSourceDescriptor.cs" />
-	  <Compile Remove="Abstractions\IMapperProfileTargetDescriptor.cs" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\.assimalign.logo.png">
@@ -42,6 +39,12 @@
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

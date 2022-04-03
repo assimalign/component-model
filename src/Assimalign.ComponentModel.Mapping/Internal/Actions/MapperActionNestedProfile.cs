@@ -58,24 +58,26 @@ internal sealed class MapperActionNestedProfile<TTarget, TTargetMember, TSource,
         var targetValue = GetTargetValue(target);
         var sourceValue = GetSourceValue(source);
 
-
-        if (sourceValue is null)
-        {
-            return;
-        }
         if (context is MapperContext ictx)
         {
-            var ncontext = new MapperContext(targetValue, sourceValue)
+            if (ictx.MapOptions.IgnoreHandling == MapperIgnoreHandling.Never && sourceValue is null)
             {
-                MapOptions = ictx.MapOptions
-            };
-
-            foreach (var action in Profile.MapActions)
-            {
-                action.Invoke(ncontext);
+                SetValue(target, null);
             }
+            if (ictx.MapOptions.IgnoreHandling == MapperIgnoreHandling.Always && sourceValue is not null)
+            {
+                var ncontext = new MapperContext(targetValue, sourceValue)
+                {
+                    MapOptions = ictx.MapOptions
+                };
 
-            SetValue(target, targetValue);
+                foreach (var action in Profile.MapActions)
+                {
+                    action.Invoke(ncontext);
+                }
+
+                SetValue(target, targetValue);
+            }
         }
     }
 

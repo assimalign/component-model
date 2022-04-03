@@ -21,7 +21,6 @@ public interface IMapperActionDescriptor
     /// <param name="action"></param>
     /// <returns></returns>
     IMapperActionDescriptor MapAction(IMapperAction action);
-
 }
 
 /// <summary>

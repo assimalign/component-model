@@ -33,6 +33,10 @@ public sealed partial class MapperOptions
     /// <summary>
     /// 
     /// </summary>
+    public MapperCollectionHandling CollectionHandling { get; set; } = MapperCollectionHandling.Override;
+    /// <summary>
+    /// 
+    /// </summary>
     public IEnumerable<IMapperProfile> Profiles => profiles;
 
     /// <summary>

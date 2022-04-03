@@ -25,7 +25,7 @@ public partial class MapperTests
                 {
                     FirstName = value.FirstName
                 }))
-                
+
                 .MapProfile(target => target.PrimaryAddress, source => source.Details.PrimaryAddress, descriptor =>
                   {
                       descriptor.MapAllProperties();
@@ -52,10 +52,20 @@ public partial class MapperTests
     {
         var mapper = Mapper.Create(configure =>
         {
-
-
+            configure.CollectionHandling = MapperCollectionHandling.Merge;
             configure.AddProfile(new MapperMemberToMemberProfile());
         });
+
+        var person1 = new Person1()
+        {
+            Following = new Dictionary<string, Person1>()
+            {
+                { "ccrawford", new Person1()
+                {
+                    FirstName = "Chase"
+                } }
+            }
+        };
 
         var person2 = new Person2()
         {
@@ -81,7 +91,7 @@ public partial class MapperTests
             }
         };
 
-        var person1 = mapper.Map<Person1, Person2>(person2);
+        var person = mapper.Map<Person1, Person2>(person1, person2);
 
         Assert.Equal("Chase", person1.FirstName);
         Assert.Equal("Crawford", person1.LastName);

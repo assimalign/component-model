@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assimalign.ComponentModel.Mapping;
 
@@ -7,6 +8,11 @@ namespace Assimalign.ComponentModel.Mapping;
 /// </summary>
 public interface IMapper
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    IEnumerable<IMapperProfile> Profiles { get; }
+
     /// <summary>
     /// 
     /// </summary>

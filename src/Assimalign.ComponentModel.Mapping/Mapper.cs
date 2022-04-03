@@ -26,6 +26,8 @@ public sealed class Mapper : IMapper
         this.options = options;
     }
 
+    /// <inheritdoc cref="IMapper.Profiles"/>
+    public IEnumerable<IMapperProfile> Profiles => this.options.Profiles;
 
     public TTarget Map<TTarget, TSource>(TSource source)
         where TTarget : new()
